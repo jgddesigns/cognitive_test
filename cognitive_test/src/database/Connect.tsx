@@ -1,12 +1,24 @@
 // Import AWS SDK and configure
+'use client'
 import AWS from 'aws-sdk';
+import React from 'react';
+import Image from 'next/image'
+import {Button, ButtonGroup} from "@nextui-org/react"
+import Config from "../database/Connect"
+
+
 
 export default function Connect (props: any) {
+  const [TestDB, setTestDB] = React.useState(false)
+
+  const AWS_KEY = 'AKIAV3QMJHML43DMYOGG';
+  const AWS_SECRET =  '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';
+  const AWS_REGION = 'us-west-1';
 
   AWS.config.update({
-    accessKeyId: props.key,
-    secretAccessKey: props.secret,
-    region: props.region,
+    accessKeyId: AWS_KEY,
+    secretAccessKey: AWS_SECRET,
+    region: AWS_REGION,
   });
   
   const dynamoDB = new AWS.DynamoDB();
@@ -14,7 +26,7 @@ export default function Connect (props: any) {
   const retrieve_params = {
       TableName: 'crowddoing',
       Key: {
-        primaryKey: { S: 'id' }, 
+        id: { S: '2' }, 
       },
   };
     
@@ -22,8 +34,8 @@ export default function Connect (props: any) {
   const insert_params = {
     TableName: 'crowddoing',
     Item: {
-      primaryKey: { S: 'id'},
-      attribute1: {S: 'insert attribute here'},
+      id: { S: '2'},
+      test: {S: 'test successful'},
     },
   };
 
@@ -32,9 +44,9 @@ export default function Connect (props: any) {
   //@param items: Object containing the desired items to return (if any) if null, returns all items
   //@return: The retrieved items, error if function fails 
   function retrieve(items: any){
-    dynamoDB.getItem(retrieve_params, (err, data) => {
+    dynamoDB.getItem(retrieve_params, (err, data: any) => {
       if (!err) {
-        console.log('Success:', data);
+        console.log('Success:', data.Item.id.S);
         return data;
       } else {
         console.error('Error:', err);
@@ -60,8 +72,24 @@ export default function Connect (props: any) {
   }
 
 
+  const testHandler = () => {
+    if(!TestDB){
+      setTestDB(true)
+    }
+  }
+
+
   return(
-    null
+    <div>
+        <div className="row">
+        <Button color="primary" onClick={insert}>Insert</Button>
+        </div>
+        <div className="row mt-8">
+          <Button color="primary" onClick={retrieve}>Retrieve</Button>
+        </div>
+        
+    </div>
+
   )
 
 }
