@@ -53,3 +53,13 @@ Example:
         renderResults(resultsMap)
     }
 ================================================
+
+
+
+================================================
+DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
+
+Related files located in 'src/database'
+
+Keys are hardcoded in app currently, to be seperated and access with backed after production launch
+================================================
