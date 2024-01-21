@@ -2,9 +2,7 @@
 'use client'
 import AWS from 'aws-sdk';
 import React from 'react';
-import Image from 'next/image'
 import {Button, ButtonGroup} from "@nextui-org/react"
-import Config from "../database/Connect"
 
 
 
@@ -84,8 +82,8 @@ export default function Connect (props: any) {
         <div className="row">
         <Button color="primary" onClick={insert}>Insert</Button>
         </div>
-        <div className="row mt-8">
-          <Button color="primary" onClick={retrieve}>Retrieve</Button>
+        <div className="row text-blue">
+          <Button color="primary" className="mt-[200px] text-sky-400" onClick={retrieve}>Retrieve</Button>
         </div>
         
     </div>
