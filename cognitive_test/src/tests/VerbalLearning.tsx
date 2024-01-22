@@ -55,10 +55,25 @@ export default function VerbalLearning (props: any) {
     const [OriginalWords, setOriginalWords] = React.useState(null)
     const [KeptWords, setKeptWords] = React.useState(null)
     const [NextWords, setNextWords] = React.useState(null)
-
+    const [MemoryWords, setMemoryWords] = React.useState([])
+    const [DisplayWord, setDisplayWord] = React.useState("")
     const [OriginalSet, isOriginalSet] = React.useState(false)
     const [KeptSet, isKeptSet] = React.useState(false)
     const [NextSet, isNextSet] = React.useState(false)
+    const [StartButton, setStartButton] = React.useState(true)
+    const [StartPrompt, setStartPrompt] = React.useState(false)
+    const [StartWords, setStartWords] = React.useState(false)
+    const [StartTest, setStartTest] = React.useState(false)
+    const [TimerDisplay, setTimerDisplay] = React.useState(0)
+    const [EndCount, setEndCount] = React.useState(0)
+    const [WordCount, setWordCount]= React.useState(12)
+    const [MemoryWordCount, setMemoryWordCount]= React.useState(12)
+    const [StartMemory, setStartMemory] = React.useState(false)
+    const [YesWords, setYesWords] = React.useState([])
+    const [NoWords, setNoWords] = React.useState([])
+    const [Continue, setContinue] = React.useState(false)
+    const [End, setEnd] = React.useState(false)
+
 
     useEffect(() => {
         if(!OriginalSet){
@@ -66,11 +81,13 @@ export default function VerbalLearning (props: any) {
         }   
     }, [OriginalSet])
 
+
     useEffect(() => {
         if(OriginalSet){
             kept_words(OriginalWords, null, [])
         }
     }, [OriginalSet])
+
 
     useEffect(() => {
         if(KeptSet){
@@ -79,12 +96,65 @@ export default function VerbalLearning (props: any) {
     }, [KeptSet])
 
 
+    useEffect(() => {
+        while(StartTest && TimerDisplay > 0){
+            var time = TimerDisplay - 1 
+            const timeoutId = setTimeout(() => {
+            setTimerDisplay(time)
+            if(time < 1){
+                setEndCount(3)
+            } 
+            }, 1000);
+            if(TimerDisplay < 1){
+                setEndCount(1)
+            } 
+            return () => clearTimeout(timeoutId);
+        }
+      }, [TimerDisplay]); 
+
+
+    useEffect(() => {
+        while(EndCount > 0){
+            var time = EndCount - 1 
+            const timeoutId = setTimeout(() => {
+            setEndCount(time)
+            }, 1000);
+            if(time < 1){
+                setStartTest(false)
+                setStartWords(true)
+            } 
+            return () => clearTimeout(timeoutId);
+        }
+    }, [EndCount, StartWords]); 
+
+
+    useEffect(() => {
+        while(StartWords){
+            var count = WordCount - 1
+            const timeoutId = setTimeout(() => {
+                if(count >= 0){
+                    setDisplayWord(set_next_word())
+                    setWordCount(count)
+                }else{
+                    setStartWords(false)
+                    setContinue(true)
+                }
+            }, 3000);
+            console.log(NextWords)
+
+            return () => clearTimeout(timeoutId);
+        }
+    }, [StartWords, WordCount]); 
+
+
     function original_words(word_bank: any, arr:any){
         var place = Math.floor(Math.random() * (word_bank.length + 1))
 
         if(arr.length < 12){
-            arr.push(word_bank[place])
-            word_bank.splice(place, 1)
+            if(!arr.includes(word_bank[place]) && word_bank[place]){
+                arr.push(word_bank[place])
+                word_bank.splice(place, 1)
+            }
             original_words(word_bank, arr)
         }else{
             toggle_original(arr)
@@ -112,9 +182,11 @@ export default function VerbalLearning (props: any) {
 
         var place = Math.floor(Math.random() * (word_bank.length) + 1) - 1
 
-        arr.push(word_bank[place])
-        word_bank.splice(place+1, 1)
-        count--
+        if(!arr.includes(word_bank[place])){
+            arr.push(word_bank[place])
+            word_bank.splice(place+1, 1)
+            count--
+        }
         count > 0 ? kept_words(word_bank, count, arr) : toggle_kept(arr)
     }
 
@@ -136,26 +208,14 @@ export default function VerbalLearning (props: any) {
         var place = Math.floor(Math.random() * (word_bank.length + 1))
 
         if(arr.length < 12){
-            arr.push(word_bank[place])
-            word_bank.splice(place, 1)
+            if(!arr.includes(word_bank[place]) && word_bank[place]){
+                arr.push(word_bank[place])
+                word_bank.splice(place, 1)
+            }
             next_words(word_bank, arr)
         }else{
-            console.log(arr)
-            shuffle_next(arr, [])
-            
-        }
-    }
-
-    function shuffle_next(word_bank: any, arr: any){
-        var place = (word_bank.length-1) - (Math.floor(Math.random() * word_bank.length)) 
-
-
-        if(arr.length < 12){
-            arr.push(word_bank[place])
-            word_bank.splice(place, 1)
-            shuffle_next(word_bank, arr)
-        }else{
             toggle_next(arr)
+            console.log(arr)       
         }
     }
 
@@ -165,13 +225,103 @@ export default function VerbalLearning (props: any) {
             console.log(arr)
             console.log("")
             setNextWords(arr)
+            
             isNextSet(true)
         }else{
             isNextSet(false)
         }
     }
+
+    function set_start(){
+        setStartButton(false)
+        toggle_prompt()
+    }
+
+    function toggle_prompt(){
+        setStartPrompt(!StartPrompt)
+    }
+
+
+    function toggle_test(){
+        setTimerDisplay(5)
+        setStartPrompt(!StartPrompt)
+        setStartTest(!StartTest)
+    }
+
+    function set_next_word(){
+        console.log("memory words")
+        console.log(MemoryWords)
+        var arr: any = MemoryWords
+        var word_bank: any = []
+        NextWords ? word_bank = NextWords : word_bank = []
+        var place = (word_bank.length-1) - (Math.floor(Math.random() * word_bank.length)) 
+
+        var display_word = word_bank[place]
+        arr.push(word_bank[place])
+        setMemoryWords(arr)
+        console.log("display_word")
+        console.log(display_word)
+        word_bank.splice(place, 1)
+        setNextWords(word_bank)
+
+        return display_word
+    }
+
+    function set_memory_word(){
+
+        var word_bank: any = []
+        MemoryWords ? word_bank = MemoryWords : word_bank = []
+        var place = (word_bank.length-1) - (Math.floor(Math.random() * word_bank.length)) 
+
+        var display_word = word_bank[place]
+        console.log("display_word")
+        console.log(display_word)
+        word_bank.splice(place, 1)
+        setMemoryWords(word_bank)
+        // console.log(word_bank)
+
+        return display_word
+    }
     
-      
+
+    //NEED A FUNCTION TO INCLUDE SOME WORDS FROM ORIGINAL LIST IN MEMORY LIST
+
+
+    function start_memory(){
+        setContinue(false)
+        setStartMemory(true)
+        show_memory()
+    }
+
+    function yes_word(){
+        var arr: any = []
+        arr = YesWords
+        arr.push(DisplayWord)
+        setYesWords(arr)
+        show_memory()
+    }
+
+    function no_word(){
+        var arr: any = []
+        arr = NoWords
+        arr.push(DisplayWord)
+        setNoWords(arr)
+        show_memory()
+    }
+
+    function show_memory(){
+        var count = MemoryWordCount - 1
+        setDisplayWord(set_memory_word())
+        setMemoryWordCount(count)
+
+
+        if(count < 1){
+            setStartMemory(false)
+            setEnd(true)
+        } 
+    }
+    
+
   return(
     <div>
         <div className="row">
@@ -180,6 +330,70 @@ export default function VerbalLearning (props: any) {
         <div className="row mt-12 text-sky-400">
             A series of twelve words will be shown on the screen for three seconds each. Afterward, twelve words will be shown again. While each is shown, decide if it was in the original sequence.
         </div>
+        <div className="mt-[200px]">
+            {StartButton ? 
+                <Button color="primary" className="text-sky-400" onClick={set_start}>Start</Button> 
+            : null}
+            <div className="row">
+                {StartPrompt ? 
+                    <div>
+                        <div>This will start the exercise. Be prepared to memorize all twelve words.</div>
+                        <div className="row">
+                            <div className="col-md-8">
+                                <div className="col-md-4">
+                                    <Button color="primary" className="text-sky-400" onClick={toggle_test}>Okay</Button>
+                                </div>
+                                <div className="col-md-4">
+                                        <Button color="primary" className="text-sky-400" onClick={toggle_prompt}>No</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                : null}
+                {StartTest ? 
+                    <div>
+                    <div>Test starting in:</div>
+                    <div className="row">
+                        {TimerDisplay > 0 ? TimerDisplay : null}
+                        {EndCount > 0 ? <div className="text-green-400">Start!</div> : null}
+                    </div>
+                </div>
+                    : null}
+                {StartWords ? DisplayWord : null}
+                {Continue ? 
+                    <div>
+                        <div className="row">First Section Over</div>
+                        <div className="row col-md-4">
+                            <Button color="primary" className="mt-[200px] text-sky-400 col" onClick={start_memory}>Continue?</Button>
+                        </div>
+                    </div>   
+                : null}
+                {StartMemory ? 
+                    <div>
+                        <div className="row mt-4">
+                            {DisplayWord} 
+                        </div>
+                        <div className="row mt-4">
+                            In Original Sequence?
+                        </div>
+                        <div className="row mt-8">
+                            <div className="col-md-8">
+                                <div className="col-md-4">
+                                    <Button color="primary" onClick={yes_word}>Yes</Button>
+                                </div>
+                                <div className="col-md-4">
+                                    <Button color="primary" onClick={no_word}>No</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            : null}
+            {End ? <div className="text-green-400">Memory Section Over</div> :null}
+
+            </div>
+        </div>
+
     </div>
   )
 
