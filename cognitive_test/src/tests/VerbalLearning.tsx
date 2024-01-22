@@ -282,9 +282,10 @@ export default function VerbalLearning (props: any) {
 
         return display_word
     }
-    
 
-    //NEED A FUNCTION TO INCLUDE SOME WORDS FROM ORIGINAL LIST IN MEMORY LIST
+
+    //NEED A FUNCTION TO INCLUDE SOME WORDS FROM ORIGINAL LIST IN MEMORY LIST 
+    //NEW FUNCTION TO ADD NEW WORDS TO MEMORY LIST
 
 
     function start_memory(){
