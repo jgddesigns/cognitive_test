@@ -56,7 +56,6 @@ export default function ReactionTime (props: any) {
 
     function set_interval(){
         var time = Math.abs((3.5 - (Math.ceil(Math.random() * 4))))
-        // console.log(time)
         console.log(ResponsesArray)
         setIntervalTime(time)
     }
