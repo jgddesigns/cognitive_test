@@ -1,10 +1,7 @@
 // Import AWS SDK and configure
 'use client'
-import AWS from 'aws-sdk';
 import React, {useEffect} from 'react';
-import {Button, ButtonGroup} from "@nextui-org/react"
-import { addAbortListener } from 'events';
-
+import {Button} from "@nextui-org/react"
 
 
 export default function ReactionTime (props: any) {
@@ -17,6 +14,7 @@ export default function ReactionTime (props: any) {
     const [ResponseTime, setResponseTime] = React.useState(100)
     const [PressedCount, setPressedCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
+    const [AvgTime, setAvgTime] = React.useState(0)
 
     useEffect(() => {
         if(ClickedButton){
@@ -42,7 +40,7 @@ export default function ReactionTime (props: any) {
     }, [IntervalTime])
 
     useEffect(() => {
-        var count;
+        var count
         while(ShowButton && ResponseTime >= 0){
             const timeoutId = setTimeout(() => {
                 count = ResponseTime
@@ -53,6 +51,11 @@ export default function ReactionTime (props: any) {
         }
     
     }, [ShowButton, ResponseTime])
+
+    useEffect(() => {
+        EndTest ? setAvgTime(ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length) : null
+    }, [EndTest])
+
 
     function set_interval(){
         var time = Math.abs((3.5 - (Math.ceil(Math.random() * 4))))
@@ -74,9 +77,12 @@ export default function ReactionTime (props: any) {
         set_interval()
 
         //5 for test length, will be 25 during launch
-        if(ResponsesArray.length == 5){
-            setEndTest(true)
-        }
+        ResponsesArray.length == 5 ? setEndTest(true) : null
+    }
+
+
+    function get_avg_time(){
+        return ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length
     }
 
 
@@ -91,17 +97,42 @@ export default function ReactionTime (props: any) {
         {!EndTest ?
             <div className="mt-[200px]">
                 <div className="row mt-12"> 
-                    <Button color="primary" onClick={clicked_button}>Start</Button>
+                    {!ClickedButton ? 
+                        <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={clicked_button}>
+                            Start
+                        </Button>
+                        : 
+                        <span className="text-xl italic">
+                            Test is Running
+                        </span>
+                    }
                 </div>        
                 {ShowButton ? 
                     <div className="row mt-12"> 
-                        <Button color="primary" className="row mt-[12px]" onClick={toggle_pressed}>Okay</Button>
+                        <Button color="primary" className="bg-blue-400 rounded px-10 h-12 text-white" onClick={toggle_pressed}>
+                            Okay
+                        </Button>
                     </div>
                 : null}
             </div>
         :
-            <div className="mt-[200px]">
-                <div className="row mt-12"> 
+            <div className="grid grid-rows-3 grid-cols-2 mt-[200px]">
+                <div className="mt-12"> 
+                    <span>
+                        Test is Over
+                    </span>
+                </div>
+                <div className="grid grid-rows-1 grid-cols-2 mt-12">
+                    <span>
+                        Average Time: 
+                    </span>
+                    {AvgTime > 0 ? 
+                        <span>
+                            {AvgTime}
+                        </span> 
+                    : null}
+                </div>
+                <div className="mt-12"> 
                     <span>
                         Test is Over
                     </span>

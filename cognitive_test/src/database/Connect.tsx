@@ -3,15 +3,15 @@
 import AWS from 'aws-sdk';
 import React from 'react';
 import {Button, ButtonGroup} from "@nextui-org/react"
-
+import credentials from "./config.js"
 
 
 export default function Connect (props: any) {
   const [TestDB, setTestDB] = React.useState(false)
 
-  const AWS_KEY = 'AKIAV3QMJHML43DMYOGG';
-  const AWS_SECRET =  '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';
-  const AWS_REGION = 'us-west-1';
+  const AWS_KEY = credentials[0]
+  const AWS_SECRET = credentials[1]
+  const AWS_REGION = credentials[2]
 
   AWS.config.update({
     accessKeyId: AWS_KEY,
@@ -19,7 +19,7 @@ export default function Connect (props: any) {
     region: AWS_REGION,
   });
   
-  const dynamoDB = new AWS.DynamoDB();
+  const dynamoDB = new AWS.DynamoDB()
   
   const retrieve_params = {
       TableName: 'crowddoing',

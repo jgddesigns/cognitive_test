@@ -1,10 +1,11 @@
+import React from 'react'
+import './globals.css'
 import Image from 'next/image'
 import {Button, ButtonGroup} from "@nextui-org/react"
 import Connect from "../database/Connect"
 import VerbalLearning from "../tests/VerbalLearning"
 import ReactionTime from "../tests/ReactionTime"
-import React from 'react'
-import './globals.css'
+import NumberVigilance from '@/tests/NumberVigilance'
 
 export default function Home() {
 
@@ -16,7 +17,8 @@ export default function Home() {
         
         {/* <Connect/> */}
         {/* <VerbalLearning/> */}
-        <ReactionTime/>
+        {/* <ReactionTime/> */}
+        <NumberVigilance/>
       </div>
     </main>
   )
