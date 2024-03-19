@@ -6,6 +6,7 @@ import Connect from "../database/Connect"
 import VerbalLearning from "../tests/VerbalLearning"
 import ReactionTime from "../tests/ReactionTime"
 import NumberVigilance from '@/tests/NumberVigilance'
+import ChoiceReaction from '@/tests/ChoiceReaction'
 
 export default function Home() {
 
@@ -18,7 +19,8 @@ export default function Home() {
         {/* <Connect/> */}
         {/* <VerbalLearning/> */}
         {/* <ReactionTime/> */}
-        <NumberVigilance/>
+        {/* <NumberVigilance/> */}
+        {<ChoiceReaction/>}
       </div>
     </main>
   )
