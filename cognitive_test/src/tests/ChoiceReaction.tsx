@@ -46,6 +46,8 @@ export default function ChoiceReaction (props: any) {
     ]
 
     const [PromptList, setPromptList] = React.useState(prompt_list)
+    const [CurrentPrompt, setCurrentPrompt] = React.useState("")
+    const [TestStart, setTestStart] = React.useState(false)
 
 
 
@@ -56,10 +58,15 @@ export default function ChoiceReaction (props: any) {
         console.log("==========================")
         console.log("Current Prompt:")
         console.log(curr_prompt)
+        setCurrentPrompt(curr_prompt)
         console.log("==========================")
         temp_arr.splice(pos, 1)
         setPromptList(temp_arr)
         temp_arr.length > 0 ? get_prompt() : null
+    }
+
+    function start_handler(){
+        setTestStart(true)
     }
 
   return(
@@ -71,11 +78,19 @@ export default function ChoiceReaction (props: any) {
             Either the word Yes or the word No is presented in the center of the screen. The user is presented a simple question and has to press the button corresponding to the answer as quickly as possible. There are 20 trials and the intertrial interval varies randomly between 1 and 2.5 seconds.
         </div>
         {!EndTest ?
-            <div className="mt-[200px] grid grid-cols-3">
-                {/* <span>{Statement}</span> */}
-                <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={get_prompt}>Start</Button>
+
+            !TestStart ? 
+                <div className="mt-[200px] grid grid-cols-3">              
+
+                <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={start_handler}>Start</Button>
                                                   
-            </div>
+                </div>
+            : 
+                <div className="mt-[200px] grid grid-cols-3">
+                    <span>lididilidlihlvv</span>
+                </div>                                  
+            
+
         :
             <div className="grid grid-rows-1 mt-[200px]">
                 <div className="mt-12"> 
