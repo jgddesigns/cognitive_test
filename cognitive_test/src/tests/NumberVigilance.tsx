@@ -26,7 +26,6 @@ export default function NumberVigilance (props: any) {
     useEffect(() => {
         if(ClickedButton){
             setPressedCount(PressedCount + 1)
-            // set_interval()
         }   
     }, [ClickedButton])
 
@@ -70,14 +69,6 @@ export default function NumberVigilance (props: any) {
 
     function toggle_pressed(){
         TestNumber == CurrentNumber ? correct_press() : null
-        // setResponsePressed(true)
-        // var arr = ResponsesArray
-        // arr.push(ResponseTime*.001) 
-        // setResponseTime(100)
-        // setShowNumber(false)
-
-        //10 for test length, will be 240 during launch
-        // ShownCount >= 10 ? setEndTest(true) : null
     }
 
     function generate_number(){

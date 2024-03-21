@@ -1,4 +1,3 @@
-// Import AWS SDK and configure
 'use client'
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
@@ -7,13 +6,14 @@ import {Button} from "@nextui-org/react"
 export default function ChoiceReaction (props: any) {
 
     const [EndTest, setEndTest] = React.useState(false)
-    const [Prompt, setPrompt] = React.useState(false)
     const [CurrentPrompt, setCurrentPrompt] = React.useState("")
     const [TestStart, setTestStart] = React.useState(false)
     const [Answer, setAnswer] = React.useState(false)
     const [YesCount, setYesCount] = React.useState(0)
     const [NoCount, setNoCount] = React.useState(0)
     const [AnswerCount, setAnswerCount] = React.useState(0)
+    const [IntervalTime, setIntervalTime] = React.useState(0)
+    const [ShowPrompt, setShowPrompt] = React.useState(false)
 
     // const number_class = ["text-2xl bold", "text-2xl bold text-green-400"]
     // const [NumberClass, setNumberClass] = React.useState(number_class[0])
@@ -46,13 +46,23 @@ export default function ChoiceReaction (props: any) {
 
     const [PromptList, setPromptList] = React.useState(prompt_list)
 
+    useEffect(() => {
+        var count = 1
+        while(IntervalTime > 0){
+            const timeoutId = setTimeout(() => {
+                setIntervalTime(IntervalTime-.5)
+                count = IntervalTime
+                if(count <= .5){
+                    set_interval()
+                    setShowPrompt(true) 
+                }
+            }, 500 )
 
+            return () => clearTimeout(timeoutId)
+        }
 
-    // useEffect(() => {
-    //     if(){
+    }, [IntervalTime])
 
-    //     }   
-    // }, [])
 
 
     function get_prompt(){
@@ -65,25 +75,19 @@ export default function ChoiceReaction (props: any) {
         for(var i = 0; i < prompt_list.length; i++){
             if(prompt_list[i] == curr_prompt){
                 spot = i
-                // console.log("spot")
-                // console.log(spot)
                 break
             }
         }
         spot < 10 ? setAnswer(true) : setAnswer(false)
-        // console.log("==========================")
-        // console.log("Current Prompt:")
-        // console.log(curr_prompt)
         setCurrentPrompt(curr_prompt)
-        // console.log("==========================")
         temp_arr.splice(pos, 1)
-        // console.log(temp_arr)
         setPromptList(temp_arr)
     }
 
     function start_handler(){
-        get_prompt()
         setTestStart(true)
+        setShowPrompt(true)
+        get_prompt()
     }
 
     function yes_handler(){
@@ -99,14 +103,18 @@ export default function ChoiceReaction (props: any) {
     }
 
     function answer_handler(answer: any){
-        // console.log("Answer Count")
-        // console.log(AnswerCount)
         answer == Answer ? console.log("correct") : null
         answer == Answer ? setAnswerCount(AnswerCount + 1) : null
+        setShowPrompt(false)
+        set_interval()
     }
 
     function calculate_ratio(){
         return Math.round((AnswerCount/20)*100)
+    }
+
+    function set_interval(){
+        setIntervalTime(Math.random() * 2.5)
     }
 
   return(
@@ -124,20 +132,21 @@ export default function ChoiceReaction (props: any) {
                         Start
                     </Button>                                  
                 </div>
-            : 
-                <div className="mt-[200px] grid grid-rows-2">
-                    <span>
-                        {CurrentPrompt}
-                    </span>
-                    <div className="mt-12 grid grid-cols-2">
-                        <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
-                            Yes
-                        </Button>
-                        <Button className="bg-red-400 rounded px-10 h-12 text-white" onClick={no_handler}>
-                            No
-                        </Button>
-                    </div>
-                </div>      
+            :   ShowPrompt ?
+                    <div className="mt-[200px] grid grid-rows-2">
+                        <span>
+                            {CurrentPrompt}
+                        </span>
+                        <div className="mt-12 grid grid-cols-2">
+                            <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
+                                Yes
+                            </Button>
+                            <Button className="bg-red-400 rounded px-10 h-12 text-white" onClick={no_handler}>
+                                No
+                            </Button>
+                        </div>
+                    </div>    
+                : null  
         :
             <div className="grid grid-rows-3 mt-[200px]"> 
                 <span className="mt-12">
@@ -146,7 +155,6 @@ export default function ChoiceReaction (props: any) {
                 <span className="mt-12">
                     {AnswerCount} answers correct out of 20. ({calculate_ratio()}%)
                 </span>
-
             </div>
         }
     </div>
