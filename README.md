@@ -14,7 +14,7 @@ GETTING STARTED
 
 2. next run 'npm run build'
 
-3. to launch server 'npm start' (default url is localhost:3000)
+3. to launch server 'npm run dev' (default url is localhost:3000)
 
 
 
