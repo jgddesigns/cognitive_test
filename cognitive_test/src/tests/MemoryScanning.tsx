@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 
 
-export default function ChoiceReaction (props: any) {
+export default function MemoryScanning (props: any) {
 
     const [EndTest, setEndTest] = React.useState(false)
     const [CurrentPrompt, setCurrentPrompt] = React.useState("")
@@ -16,6 +16,7 @@ export default function ChoiceReaction (props: any) {
     const [ShowPrompt, setShowPrompt] = React.useState(false)
 
     const [DigitList, setDigitList] = React.useState([])
+    const [CurrentDigit, setCurrentDigit] = React.useState("")
     const [CompareList, setCompareList] = React.useState([])
 
     // const number_class = ["text-2xl bold", "text-2xl bold text-green-400"]
@@ -25,13 +26,19 @@ export default function ChoiceReaction (props: any) {
 
     useEffect(() => {
         var count = 1
+        var digits = 3
         while(IntervalTime > 0){
             const timeoutId = setTimeout(() => {
                 setIntervalTime(IntervalTime-.5)
                 count = IntervalTime
                 if(count <= .5){
                     set_interval()
-                    setShowPrompt(true) 
+                    if(digits %2 == 0){
+                        setCurrentDigit(DigitList[digits]) 
+                    }else{
+                        setCurrentDigit("")
+                    }
+                    digits-=1
                 }
             }, 500 )
 
@@ -49,6 +56,9 @@ export default function ChoiceReaction (props: any) {
             temp_list.push(Math.floor(Math.random() * ((1000-1)+1)) + 1)
             i++
         }
+        //setDigitList(temp_list)
+        setCurrentDigit(temp_list[0])
+        temp_list.pop(0)
         setDigitList(temp_list)
         compare_list(temp_list)
     }
@@ -116,7 +126,7 @@ export default function ChoiceReaction (props: any) {
 
         // shuffle_list(DigitList, DigitList.length)
         // setTestStart(true)
-        // setShowPrompt(true)
+        setShowPrompt(true)
         // get_prompt()
     }
 
@@ -167,7 +177,7 @@ export default function ChoiceReaction (props: any) {
             :   ShowPrompt ?
                     <div className="mt-[200px] grid grid-rows-2">
                         <span>
-                            {CurrentPrompt}
+                            {CurrentDigit}
                         </span>
                         {/* <div className="mt-12 grid grid-cols-2">
                             <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
