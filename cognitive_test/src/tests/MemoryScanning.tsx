@@ -6,33 +6,31 @@ import {Button} from "@nextui-org/react"
 export default function MemoryScanning (props: any) {
 
     const [EndTest, setEndTest] = React.useState(false)
-    const [CurrentPrompt, setCurrentPrompt] = React.useState("")
     const [TestStart, setTestStart] = React.useState(false)
-    const [Answer, setAnswer] = React.useState(false)
-    const [YesCount, setYesCount] = React.useState(0)
-    const [NoCount, setNoCount] = React.useState(0)
     const [AnswerCount, setAnswerCount] = React.useState(0)
-    const [IntervalTime, setIntervalTime] = React.useState(0)
     const [ShowPrompt, setShowPrompt] = React.useState(false)
     const [ShowCompare, setShowCompare] = React.useState(false)
     const [CompareMessage, setCompareMessage] = React.useState(false)
     const [CompareNumbers, setCompareNumbers] = React.useState(false)
-    const [ShowButtons, setShowButtons] = React.useState(false)  
+    const [ShowButtons, setShowButtons] = React.useState(false)
+    const [Answered, setAnswered] = React.useState(true) 
+    const [AnsweredString, setAnsweredString] = React.useState("")  
     const [CompareDigits, setCompareDigits] = React.useState(-1)
     const [DigitList, setDigitList] = React.useState([])
     const [StaticList, setStaticList] = React.useState([])
     const [CurrentDigit, setCurrentDigit] = React.useState("4")
     const [CompareList, setCompareList] = React.useState([])
-    const [CompareString, setCompareString] = React.useState("ftstsg")
+    const [CompareString, setCompareString] = React.useState("")
+    const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
 
+    const answered_style = ["text-red-400", "text-green-400"]
 
-
-
+    const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
     useEffect(() => {
-
         var temp_arr: any = DigitList
         var compare_arr: any = CompareList
+
         while(Digits >= 0){
 
             const timeoutId = setTimeout(() => {
@@ -46,6 +44,7 @@ export default function MemoryScanning (props: any) {
                 }
 
                 setDigits(Digits - 1)
+
                 if(Digits < 1){
                     setCompareString("")
                     setShowPrompt(false)
@@ -53,7 +52,6 @@ export default function MemoryScanning (props: any) {
                     setCompareMessage(true)
                     setCompareDigits(4)
                 }
-                console.log(StaticList)
 
             }, 2500 )
 
@@ -61,7 +59,9 @@ export default function MemoryScanning (props: any) {
         }
 
         while(CompareDigits >= 0 && (CompareMessage || CompareNumbers)){
+
             const timeoutId = setTimeout(() => {
+
                 if(CompareMessage){
                     if(CompareDigits == 4){
                         setCompareString("Compare the digits to the next 18 numbers.")
@@ -77,38 +77,35 @@ export default function MemoryScanning (props: any) {
                         setCompareNumbers(true)
                         setCompareMessage(false)
                         setCompareDigits(36)
-                        console.log("12345")
                     }
                 }
 
+
                 if(CompareNumbers){
                     compare_arr = CompareList
-                    console.log("\n\ncompare list")
-                    console.log(compare_arr)
-                    console.log(StaticList)
+
                     if(CompareDigits %2 != 0){
+                        setAnsweredString("Missed!")
+                        setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
-                        setShowCompare(true)  
                         setCompareString(CompareList[CompareList.length-1])
+                        StaticList.includes(CompareList[CompareList.length-1]) ? setAnswer("Answer was: Yes, number is original digit.") : setAnswer("Answer was: No, number isn't original digit.")              
                         compare_arr.pop(0)
                         setCompareList(compare_arr)
                     }else{
-                        setShowButtons(false)
-                        setShowCompare(false) 
-                        setCompareString("")      
+                        check_answer(CompareString)
+                        setShowButtons(false)   
                     }
 
                     if(CompareDigits == 0){
+                        setShowCompare(false)
                         setCompareNumbers(false)
                         setEndTest(true)
                     }
 
                 }
-                console.log(CompareDigits)
-
-                    CompareDigits == 0 ? setCompareDigits(36) :              setCompareDigits(CompareDigits - 1)
-
-
+            
+                CompareDigits == 0 ? setCompareDigits(36) :  setCompareDigits(CompareDigits - 1)
 
             }, 2500 )
 
@@ -116,9 +113,9 @@ export default function MemoryScanning (props: any) {
 
         }
 
+    }, [Digits, DigitList, CompareDigits, Answered])
 
 
-    }, [IntervalTime, Digits, DigitList, CompareDigits])
 
     //partially from chat gpt
     function create_list(){
@@ -141,14 +138,12 @@ export default function MemoryScanning (props: any) {
     }
 
 
+
     function compare_list(list: any){
-        console.log("temp list set compare")
-        console.log(list)
         var temp_list: any  = []
         temp_list = temp_list.concat(list)
-        console.log(temp_list)
-
         var i = temp_list.length
+
         while(i < 18){
             var num: any = Math.floor(Math.random() * ((1000-1)+1)) 
             if(!temp_list.includes(num)){
@@ -156,14 +151,14 @@ export default function MemoryScanning (props: any) {
                 i++
             }
         }
-        console.log(temp_list)
         temp_list = shuffle_list(temp_list, temp_list.length)
 
         setCompareList(temp_list)
     }
 
+
+
     function shuffle_list(list: any, size: any){
-        console.log(list)
         var new_list: any = []
 
         while(new_list.length < size){
@@ -174,19 +169,13 @@ export default function MemoryScanning (props: any) {
             console.log(new_list)
         }
 
-        console.log("new list")
-        console.log(new_list)
-
         setShowPrompt(true)
         return new_list
     }
 
 
+
     function create_string(){
-        var temp_arr: any = CompareList
-        console.log("compare create string")
-        console.log(temp_arr)
-        console.log(CompareList)
         var str: any = ""
 
         for(var i=0; i<CompareList.length; i++){
@@ -197,30 +186,36 @@ export default function MemoryScanning (props: any) {
     }
 
 
+
     function yes_handler(){
-        // setYesCount(YesCount + 1)
+        setAnsweredString("You answered: Yes")
+        setAnswered(true)
         answer_handler(true)
-        // get_prompt()
+        setShowButtons(false)
     }
+
 
 
     function no_handler(){
-        // setNoCount(NoCount + 1)
+        setAnsweredString("You answered: No")
+        setAnswered(true)
         answer_handler(false)
-        // get_prompt()
+        setShowButtons(false)
     }
+
 
 
     function answer_handler(answer: any){
         setCompareString("")
-        setShowButtons(false)
-        var temp_arr: any = StaticList
-        console.log(StaticList)
-        console.log(CompareString)
-        console.log(answer)
-        answer && temp_arr.includes(CompareString) || (!answer && !temp_arr.includes(CompareString)) ? setAnswerCount(AnswerCount + 1) : null
 
+        var temp_arr: any = StaticList
+        if (answer && temp_arr.includes(CompareString) || (!answer && !temp_arr.includes(CompareString))){
+            setAnswerCount(AnswerCount + 1)
+            setAnsweredStyle(answered_style[1])
+        }
+        // setShowButtons(false)
     }
+
 
 
     function start_handler(){
@@ -231,9 +226,33 @@ export default function MemoryScanning (props: any) {
     }
 
 
+
     function calculate_ratio(){
         return Math.round((AnswerCount/18)*100)
     }
+
+
+
+    function check_answer(compare: any){
+        console.log("\n\ncompare string")
+        console.log(compare)
+        var temp_arr: any = StaticList
+
+        if(temp_arr.includes(compare)){
+            setAnswer("Answer was: Yes, number is original digit.")          
+        }
+
+        if(!temp_arr.includes(compare)){
+            setAnswer("Answer was: No, number isn't original digit.")              
+        }
+
+        if(compare == ""){
+            setAnswer("")
+        }
+
+        setCompareString("")
+    }
+
 
 
   return(
@@ -274,7 +293,20 @@ export default function MemoryScanning (props: any) {
                                 No
                             </Button>
                         </div>
-                    : null}
+                    :  CompareDigits >= 0 ?
+                    <div className="mt-12 grid grid-cols-2">
+                        <span className={AnsweredStyle}>
+                            {AnsweredString}
+                        </span>
+                        <span>
+                            {Answer}
+                        </span>
+                    </div>  
+                
+                
+                
+                : null}
+
                 </div>    
             : null
         :
