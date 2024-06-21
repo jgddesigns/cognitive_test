@@ -8,6 +8,7 @@ import ReactionTime from "../tests/ReactionTime"
 import NumberVigilance from '@/tests/NumberVigilance'
 import ChoiceReaction from '@/tests/ChoiceReaction'
 import MemoryScanning from '@/tests/MemoryScanning'
+import PictureRecognition from '@/tests/PictureRecognition'
 
 export default function Home() {
 
@@ -22,7 +23,8 @@ export default function Home() {
         {/* <ReactionTime/> */}
         {/* <NumberVigilance/> */}
         {/* {<ChoiceReaction/>} */}
-        {<MemoryScanning/>}
+        {/* {<MemoryScanning/>} */}
+        {<PictureRecognition/>}
       </div>
     </main>
   )

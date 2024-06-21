@@ -1,6 +1,6 @@
 'use client'
 import React, {useEffect} from 'react';
-import {Button} from "@nextui-org/react"
+import {Button, useTimeInput} from "@nextui-org/react"
 
 
 export default function PictureRecognition (props: any) {
@@ -16,31 +16,38 @@ export default function PictureRecognition (props: any) {
     const [Answered, setAnswered] = React.useState(true) 
     const [AnsweredString, setAnsweredString] = React.useState("")  
     const [CompareDigits, setCompareDigits] = React.useState(-1)
-    const [DigitList, setDigitList] = React.useState([])
-    const [StaticList, setStaticList] = React.useState([])
-    const [CurrentDigit, setCurrentDigit] = React.useState("4")
-    const [CompareList, setCompareList] = React.useState([])
+    const [PictureArray, setPictureArray] = React.useState([])
+    const [ShownArray, setShownArray] = React.useState([])
+    const [StaticArray, setStaticArray] = React.useState([""])
+    const [CurrentPicture, setCurrentPicture] = React.useState("")
+    const [CompareArray, setCompareArray] = React.useState([])
     const [CompareString, setCompareString] = React.useState("")
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
+    const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 14 pictures.")
+    const [ShowMessage, setShowMessage] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
 
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
+
+
     useEffect(() => {
-        var temp_arr: any = DigitList
-        var compare_arr: any = CompareList
+        var temp_arr: any = ShownArray
+        var compare_arr: any = CompareArray
 
         while(Digits >= 0){
 
+            console.log(Digits)
+
             const timeoutId = setTimeout(() => {
 
-                if(Digits % 2 != 0){
-                    setCurrentDigit(DigitList[DigitList.length-1]) 
-                    temp_arr.pop(0)
-                    setDigitList(temp_arr)
+                Digits > 29 ? setShowMessage(true) : setShowMessage(false)
+
+                if(Digits % 2 != 0 && Digits <= 28){
+                    current_picture(1)
                 }else{
-                    setCurrentDigit("")
+                    setCurrentPicture("")
                 }
 
                 setDigits(Digits - 1)
@@ -50,10 +57,11 @@ export default function PictureRecognition (props: any) {
                     setShowPrompt(false)
                     setShowCompare(true)
                     setCompareMessage(true)
-                    setCompareDigits(4)
+                    setCompareDigits(32)
+                    setShowMessage(true)
                 }
 
-            }, 2500 )
+            }, 1500 )
 
             return () => clearTimeout(timeoutId)
         }
@@ -63,110 +71,140 @@ export default function PictureRecognition (props: any) {
             const timeoutId = setTimeout(() => {
 
                 if(CompareMessage){
-                    if(CompareDigits == 4){
-                        setCompareString("Compare the digits to the next 18 numbers.")
+
+                    if(CompareDigits == 32){
+                        setCompareString("Were the images from the following set in the first set?")
                     }
-                    if(CompareDigits == 3){
+                    if(CompareDigits == 31){
                         setCompareString("")
                     }
-                    if(CompareDigits == 2){
-                        create_string()
-                    }
-                    if(CompareDigits == 0){
-                        setCompareString("")
-                        setCompareNumbers(true)
-                        setCompareMessage(false)
-                        setCompareDigits(36)
-                    }
-                }
 
-
-                if(CompareNumbers){
-                    compare_arr = CompareList
-
-                    if(CompareDigits %2 != 0){
+                    if(CompareDigits % 2 != 0 && CompareDigits <= 28){
                         setAnsweredString("Missed!")
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
-                        setCompareString(CompareList[CompareList.length-1])
-                        StaticList.includes(CompareList[CompareList.length-1]) ? setAnswer("Answer was: Yes, number is original digit.") : setAnswer("Answer was: No, number isn't original digit.")              
-                        compare_arr.pop(0)
-                        setCompareList(compare_arr)
+                        console.log(StaticArray)
+                        StaticArray.includes(current_picture(0)) ? setAnswer("Answer was: Yes, picture is in original set.") : setAnswer("Answer was: No, picture isn't in original set.")
                     }else{
-                        check_answer(CompareString)
-                        setShowButtons(false)   
-                    }
-
-                    if(CompareDigits == 0){
-                        setShowCompare(false)
-                        setCompareNumbers(false)
-                        setEndTest(true)
+                        check_answer(CurrentPicture)
+                        setShowButtons(false)
+                        setCurrentPicture("")
                     }
 
                 }
-            
-                CompareDigits == 0 ? setCompareDigits(36) :  setCompareDigits(CompareDigits - 1)
 
-            }, 2500 )
+                CompareDigits == 0 ? setCompareDigits(32) :  setCompareDigits(CompareDigits - 1)
+
+            }, 1500 )
 
             return () => clearTimeout(timeoutId)
 
         }
 
-    }, [Digits, DigitList, CompareDigits, Answered])
+    }, [Digits, CompareDigits, Answered])
 
 
 
     //partially from chat gpt
-    function create_list(){
-        var temp_list: any = []
-        var static_list: any = []
+    function build_array(){
+        var temp_arr: any = []
+        var shown_arr: any = []
+        var copy_arr: any = []
 
-        var i = 0
-        while(i < 3){
-            var num: any = Math.floor(Math.random() * ((1000-1)+1)) + 1
-            temp_list.push(num)
-            static_list.push(num)
+        var i: any = 1
+        while(i <= 50){
+            var str: any = "/img/"
+            if(i < 10){
+                str = str + "0" + String(i) + ".jpg"
+            }else{
+                str = str + String(i) + ".jpg"
+            }
+            temp_arr.push(str)
             i++
         }
 
-        setCurrentDigit(temp_list[temp_list.length-1])
-        setStaticList(static_list)
-        temp_list.pop(0)
-        setDigitList(temp_list)
-        compare_list(static_list)
-    }
+        temp_arr = shuffle_array(temp_arr, temp_arr.length)
+
+        console.log("\n\ntemp arr")
+        console.log(temp_arr)
+        setPictureArray(temp_arr)
+
+        shown_arr = temp_arr.splice(0,14)
+
+        console.log("\n\nshown arr")
+        console.log(shown_arr)
+
+        console.log("\n\ntemp arr (after splice)")
+        console.log(temp_arr)
+
+        setCurrentPicture(shown_arr[0])
+
+        shown_arr.splice(0, 1)
+
+        setShownArray(shown_arr)
 
 
-
-    function compare_list(list: any){
-        var temp_list: any  = []
-        temp_list = temp_list.concat(list)
-        var i = temp_list.length
-
-        while(i < 18){
-            var num: any = Math.floor(Math.random() * ((1000-1)+1)) 
-            if(!temp_list.includes(num)){
-                temp_list.push(num)
-                i++
-            }
+        for(var i: any = 0; i<shown_arr.length; i++){
+            copy_arr.push(shown_arr[i])
         }
-        temp_list = shuffle_list(temp_list, temp_list.length)
 
-        setCompareList(temp_list)
+        setStaticArray(copy_arr)
+        build_compare(temp_arr, copy_arr)
+        
+    }
+
+
+    function build_compare(temp_arr: any, copy_arr: any){
+        var temp_list: any  = []
+        var i: any = 0
+        var num: any = 0
+
+        copy_arr = shuffle_array(copy_arr, copy_arr.length)
+
+        console.log("\n\nshown arr (after shuffle)")
+        console.log(copy_arr)
+
+        while(i<10){
+            num = Math.floor(Math.random() * ((2-1)+1)) 
+
+            if(num == 0){
+                temp_list.push(copy_arr[0])
+                copy_arr.splice(0,1)
+            }
+
+            i++
+        }
+
+        console.log("\n\ncompare list")
+        console.log(temp_list)
+
+        while(temp_list.length < 14){
+            temp_list.push(temp_arr[0])
+            temp_arr.splice(0, 1)
+        }
+
+        console.log("\n\ncompare list (full)")
+        console.log(temp_list)
+
+
+        temp_list = shuffle_array(temp_list, temp_list.length)
+
+
+        console.log("\n\ncompare list (shuffled)")
+        console.log(temp_list)
+        setCompareArray(temp_list)
     }
 
 
 
-    function shuffle_list(list: any, size: any){
+    function shuffle_array(list: any, size: any){
         var new_list: any = []
+        var num: any = 0
 
         while(new_list.length < size){
-            var num = Math.floor(Math.random() * ((list.length-1)+1)) + 1
-            console.log(num)
+            num = Math.floor(Math.random() * ((list.length-1)+1)) + 1
             new_list.push(list[num-1])
             list.splice(num-1, 1)
-            console.log(new_list)
         }
 
         setShowPrompt(true)
@@ -178,13 +216,31 @@ export default function PictureRecognition (props: any) {
     function create_string(){
         var str: any = ""
 
-        for(var i=0; i<CompareList.length; i++){
-            str = str + " " + CompareList[i]
+        for(var i=0; i<CompareArray.length; i++){
+            str = str + " " + CompareArray[i]
         }
 
         setCompareString(str)
-    }
+    }`  `
 
+
+    //event parameter
+    //0 for initial display of pictures
+    //1 for compare display
+    function current_picture(event: any){
+        var temp_arr: any = []
+        var img: any = ""
+        event ? temp_arr = ShownArray : temp_arr = CompareArray
+        console.log(event)
+        console.log(temp_arr)
+        img = temp_arr[0]
+        setCurrentPicture(temp_arr[0])
+        temp_arr.splice(0, 1)
+
+        event ? setShownArray(temp_arr) : setCompareArray(temp_arr)
+
+        return img
+    }
 
 
     function yes_handler(){
@@ -208,8 +264,8 @@ export default function PictureRecognition (props: any) {
     function answer_handler(answer: any){
         setCompareString("")
 
-        var temp_arr: any = StaticList
-        if (answer && temp_arr.includes(CompareString) || (!answer && !temp_arr.includes(CompareString))){
+        var temp_arr: any = StaticArray
+        if (answer && temp_arr.includes(CurrentPicture) || (!answer && !temp_arr.includes(CurrentPicture))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
         }
@@ -219,8 +275,9 @@ export default function PictureRecognition (props: any) {
 
 
     function start_handler(){
-        create_list()
-        setDigits(4)
+        build_array()
+        setDigits(32)
+        setShowMessage(true)
         setTestStart(true)
         setShowPrompt(true)
     }
@@ -236,7 +293,7 @@ export default function PictureRecognition (props: any) {
     function check_answer(compare: any){
         console.log("\n\ncompare string")
         console.log(compare)
-        var temp_arr: any = StaticList
+        var temp_arr: any = StaticArray
 
         if(temp_arr.includes(compare)){
             setAnswer("Answer was: Yes, number is original digit.")          
@@ -258,10 +315,10 @@ export default function PictureRecognition (props: any) {
   return(
     <div>
         <div className="row">
-            TEST #5: MEMORY SCANNING TASK TEST
+            TEST #6: PICTURE RECOGNITION TEST
         </div>
         <div className="row mt-12 text-sky-400">
-            Three digits are presented singly at the rate of one every 2.5 seconds for the player to remember. A series of 18 digits is then presented. For each, the player must press Yes or No according to whether the digit is thought to be one of the three presented initially.
+            Fourteen pictures are displayed, one every 1.5 seconds. The player is told to memorize each picture. Afterward, fourteen more pictures are shown. This time the picture set only contains some of the items from the original display. The player is asked if each displayed picture from the second set was in the original set.
         </div>
         {!EndTest ?
             !TestStart ? 
@@ -272,18 +329,27 @@ export default function PictureRecognition (props: any) {
                 </div>
             :   ShowPrompt ?
 
+
                     <div className="mt-[200px] grid grid-rows-2">
-                        <span>
-                           {CurrentDigit}
-                        </span>
+                        {ShowMessage ? 
+                            <span>
+                                {CurrentMessage} 
+                            </span>
+                        : 
+                            <img src={CurrentPicture}/> 
+                        }
 
                     </div>    
                 : ShowCompare ?
 
                 <div className="mt-[200px] grid grid-rows-2">
-                    <span>
-                       {CompareString}
-                    </span>
+                        { ShowMessage ? 
+                            <span>
+                                {CompareMessage} 
+                            </span>
+                        : 
+                            <img src={CurrentPicture}/> 
+                        }
                     {ShowButtons ?
                         <div className="mt-12 grid grid-cols-2">
                             <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
