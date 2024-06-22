@@ -1,7 +1,6 @@
 'use client'
 import React, {useEffect} from 'react';
-import {Button, useTimeInput} from "@nextui-org/react"
-
+import {Button} from "@nextui-org/react"
 
 export default function PictureRecognition (props: any) {
 
@@ -11,17 +10,14 @@ export default function PictureRecognition (props: any) {
     const [ShowPrompt, setShowPrompt] = React.useState(false)
     const [ShowCompare, setShowCompare] = React.useState(false)
     const [CompareMessage, setCompareMessage] = React.useState(false)
-    const [CompareNumbers, setCompareNumbers] = React.useState(false)
     const [ShowButtons, setShowButtons] = React.useState(false)
     const [Answered, setAnswered] = React.useState(true) 
     const [AnsweredString, setAnsweredString] = React.useState("")  
     const [CompareDigits, setCompareDigits] = React.useState(-1)
-    const [PictureArray, setPictureArray] = React.useState([])
     const [ShownArray, setShownArray] = React.useState([])
     const [StaticArray, setStaticArray] = React.useState([""])
     const [CurrentPicture, setCurrentPicture] = React.useState("")
     const [CompareArray, setCompareArray] = React.useState([])
-    const [CompareString, setCompareString] = React.useState("")
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
     const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 14 pictures.")
@@ -34,11 +30,8 @@ export default function PictureRecognition (props: any) {
 
     useEffect(() => {
         var temp_arr: any = ShownArray
-        var compare_arr: any = CompareArray
 
         while(Digits >= 0){
-
-            console.log(Digits)
 
             const timeoutId = setTimeout(() => {
 
@@ -53,12 +46,11 @@ export default function PictureRecognition (props: any) {
                 setDigits(Digits - 1)
 
                 if(Digits < 1){
-                    setCompareString("")
-                    setShowPrompt(false)
                     setShowCompare(true)
                     setCompareMessage(true)
-                    setCompareDigits(32)
                     setShowMessage(true)
+                    setCompareDigits(31)
+                    setCurrentMessage("What images from the following set were in the first set?")
                 }
 
             }, 1500 )
@@ -66,39 +58,36 @@ export default function PictureRecognition (props: any) {
             return () => clearTimeout(timeoutId)
         }
 
-        while(CompareDigits >= 0 && (CompareMessage || CompareNumbers)){
+        while(CompareDigits >= 0){
 
             const timeoutId = setTimeout(() => {
 
                 if(CompareMessage){
 
-                    if(CompareDigits == 32){
-                        setCompareString("Were the images from the following set in the first set?")
-                    }
-                    if(CompareDigits == 31){
-                        setCompareString("")
-                    }
+                    CompareDigits == 30 ? setShowPrompt(false) : null
+                    
+                    CompareDigits == 29 ? setShowMessage(false) : null
 
                     if(CompareDigits % 2 != 0 && CompareDigits <= 28){
                         setAnsweredString("Missed!")
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
-                        console.log(StaticArray)
-                        StaticArray.includes(current_picture(0)) ? setAnswer("Answer was: Yes, picture is in original set.") : setAnswer("Answer was: No, picture isn't in original set.")
+                        temp_arr = StaticArray
+                        temp_arr.includes(current_picture(0)) ? setAnswer("Answer was: Yes, picture is in original set.") : setAnswer("Answer was: No, picture isn't in original set.")
                     }else{
                         check_answer(CurrentPicture)
                         setShowButtons(false)
                         setCurrentPicture("")
                     }
 
+                    CompareDigits == 0 ? setEndTest(true) : null
                 }
 
-                CompareDigits == 0 ? setCompareDigits(32) :  setCompareDigits(CompareDigits - 1)
+                setCompareDigits(CompareDigits - 1)
 
-            }, 1500 )
+            }, 3000 )
 
             return () => clearTimeout(timeoutId)
-
         }
 
     }, [Digits, CompareDigits, Answered])
@@ -110,9 +99,10 @@ export default function PictureRecognition (props: any) {
         var temp_arr: any = []
         var shown_arr: any = []
         var copy_arr: any = []
+        var static_arr: any = []
 
         var i: any = 1
-        while(i <= 50){
+        while(i <= 100){
             var str: any = "/img/"
             if(i < 10){
                 str = str + "0" + String(i) + ".jpg"
@@ -124,34 +114,20 @@ export default function PictureRecognition (props: any) {
         }
 
         temp_arr = shuffle_array(temp_arr, temp_arr.length)
-
-        console.log("\n\ntemp arr")
-        console.log(temp_arr)
-        setPictureArray(temp_arr)
-
-        shown_arr = temp_arr.splice(0,14)
-
-        console.log("\n\nshown arr")
-        console.log(shown_arr)
-
-        console.log("\n\ntemp arr (after splice)")
-        console.log(temp_arr)
-
+        shown_arr = temp_arr.splice(0,15)
         setCurrentPicture(shown_arr[0])
-
         shown_arr.splice(0, 1)
-
         setShownArray(shown_arr)
-
 
         for(var i: any = 0; i<shown_arr.length; i++){
             copy_arr.push(shown_arr[i])
+            static_arr.push(shown_arr[i])
         }
 
-        setStaticArray(copy_arr)
+        setStaticArray(static_arr)
         build_compare(temp_arr, copy_arr)
-        
     }
+
 
 
     function build_compare(temp_arr: any, copy_arr: any){
@@ -160,9 +136,6 @@ export default function PictureRecognition (props: any) {
         var num: any = 0
 
         copy_arr = shuffle_array(copy_arr, copy_arr.length)
-
-        console.log("\n\nshown arr (after shuffle)")
-        console.log(copy_arr)
 
         while(i<10){
             num = Math.floor(Math.random() * ((2-1)+1)) 
@@ -175,23 +148,13 @@ export default function PictureRecognition (props: any) {
             i++
         }
 
-        console.log("\n\ncompare list")
-        console.log(temp_list)
-
         while(temp_list.length < 14){
             temp_list.push(temp_arr[0])
             temp_arr.splice(0, 1)
         }
 
-        console.log("\n\ncompare list (full)")
-        console.log(temp_list)
-
-
         temp_list = shuffle_array(temp_list, temp_list.length)
 
-
-        console.log("\n\ncompare list (shuffled)")
-        console.log(temp_list)
         setCompareArray(temp_list)
     }
 
@@ -213,17 +176,6 @@ export default function PictureRecognition (props: any) {
 
 
 
-    function create_string(){
-        var str: any = ""
-
-        for(var i=0; i<CompareArray.length; i++){
-            str = str + " " + CompareArray[i]
-        }
-
-        setCompareString(str)
-    }`  `
-
-
     //event parameter
     //0 for initial display of pictures
     //1 for compare display
@@ -231,10 +183,9 @@ export default function PictureRecognition (props: any) {
         var temp_arr: any = []
         var img: any = ""
         event ? temp_arr = ShownArray : temp_arr = CompareArray
-        console.log(event)
-        console.log(temp_arr)
+
         img = temp_arr[0]
-        setCurrentPicture(temp_arr[0])
+        setCurrentPicture(img)
         temp_arr.splice(0, 1)
 
         event ? setShownArray(temp_arr) : setCompareArray(temp_arr)
@@ -262,14 +213,13 @@ export default function PictureRecognition (props: any) {
 
 
     function answer_handler(answer: any){
-        setCompareString("")
+        setCurrentPicture("")
 
         var temp_arr: any = StaticArray
         if (answer && temp_arr.includes(CurrentPicture) || (!answer && !temp_arr.includes(CurrentPicture))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
         }
-        // setShowButtons(false)
     }
 
 
@@ -285,7 +235,7 @@ export default function PictureRecognition (props: any) {
 
 
     function calculate_ratio(){
-        return Math.round((AnswerCount/18)*100)
+        return Math.round((AnswerCount/14)*100)
     }
 
 
@@ -296,24 +246,23 @@ export default function PictureRecognition (props: any) {
         var temp_arr: any = StaticArray
 
         if(temp_arr.includes(compare)){
-            setAnswer("Answer was: Yes, number is original digit.")          
+            setAnswer("Answer was: Yes, picture is in original set.")          
         }
 
         if(!temp_arr.includes(compare)){
-            setAnswer("Answer was: No, number isn't original digit.")              
+            setAnswer("Answer was: No, picture isn't in original set.")              
         }
 
         if(compare == ""){
             setAnswer("")
         }
 
-        setCompareString("")
     }
 
 
 
   return(
-    <div>
+    <div className="h-[96em]">
         <div className="row">
             TEST #6: PICTURE RECOGNITION TEST
         </div>
@@ -322,66 +271,61 @@ export default function PictureRecognition (props: any) {
         </div>
         {!EndTest ?
             !TestStart ? 
-                <div className="mt-[200px]">              
+                <div className="h-[48rem] mt-24">              
                     <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={start_handler}>
                         Start   
                     </Button>  
                 </div>
             :   ShowPrompt ?
-
-
-                    <div className="mt-[200px] grid grid-rows-2">
+                    <div className="h-[60%] mt-12 grid grid-rows-2 gap-4 place-items-center">
                         {ShowMessage ? 
                             <span>
                                 {CurrentMessage} 
                             </span>
                         : 
-                            <img src={CurrentPicture}/> 
+                            <img src={CurrentPicture} className="h-[518px]"/> 
                         }
-
                     </div>    
                 : ShowCompare ?
-
-                <div className="mt-[200px] grid grid-rows-2">
-                        { ShowMessage ? 
-                            <span>
-                                {CompareMessage} 
-                            </span>
-                        : 
-                            <img src={CurrentPicture}/> 
-                        }
-                    {ShowButtons ?
-                        <div className="mt-12 grid grid-cols-2">
-                            <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
-                                Yes
-                            </Button>
-                            <Button className="bg-red-400 rounded px-10 h-12 text-white" onClick={no_handler}>
-                                No
-                            </Button>
+                    <div className="h-[40%] mt-12 grid grid-rows-2 gap-4 place-items-center">
+                        <div className="h-[100%] mt-[20px]">
+                            {CompareDigits >= 0 && CurrentPicture != "" ? 
+                                <img src={CurrentPicture} className="h-[518px]"/> 
+                            :
+                                <div className="h-[15%] mt-[200px] grid-cols-2 gap-x-[100px] place-items-center">
+                                    <span className={AnsweredStyle}>
+                                        {AnsweredString}
+                                    </span>
+                                    <span className="ml-48">
+                                        {Answer}
+                                    </span>
+                                </div>  
+                            }
                         </div>
-                    :  CompareDigits >= 0 ?
-                    <div className="mt-12 grid grid-cols-2">
-                        <span className={AnsweredStyle}>
-                            {AnsweredString}
-                        </span>
-                        <span>
-                            {Answer}
-                        </span>
-                    </div>  
-                
-                
-                
-                : null}
 
-                </div>    
+                        <div>
+                            {ShowButtons ?
+                                <div className="h-[55%] mt-[200px] grid-cols-2 gap-x-[100px] place-items-center">
+                                    <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
+                                        Yes
+                                    </Button>
+                                    <Button className="bg-red-400 rounded px-10 h-12 ml-12 text-white" onClick={no_handler}>
+                                        No
+                                    </Button>
+                                </div>
+                            : null}
+                        </div>
+
+                    </div>  
+
             : null
         :
-            <div className="grid grid-rows-3 mt-[200px]"> 
+            <div className="grid grid-rows-3 mt-[200px] place-items-center"> 
                 <span className="mt-12">
                     Test is Over
                 </span> 
                 <span className="mt-12">
-                    {AnswerCount} answers correct out of 18. ({calculate_ratio()}%)
+                    {AnswerCount} answers correct out of 14. ({calculate_ratio()}%)
                 </span>
             </div>
         }
