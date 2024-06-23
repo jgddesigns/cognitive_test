@@ -119,7 +119,7 @@ export default function ReactionTime (props: any) {
             <div className="grid grid-rows-3 grid-cols-2 mt-[200px]">
                 <div className="mt-12"> 
                     <span>
-                        Test is Over
+                        The Test is Over.
                     </span>
                 </div>
                 <div className="grid grid-rows-1 grid-cols-2 mt-12">
@@ -134,7 +134,7 @@ export default function ReactionTime (props: any) {
                 </div>
                 <div className="mt-12"> 
                     <span>
-                        Test is Over
+                        The Test is Over.
                     </span>
                 </div>        
             </div>

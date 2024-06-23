@@ -7,6 +7,9 @@ import VerbalLearning from "../tests/VerbalLearning"
 import ReactionTime from "../tests/ReactionTime"
 import NumberVigilance from '@/tests/NumberVigilance'
 import ChoiceReaction from '@/tests/ChoiceReaction'
+import MemoryScanning from '@/tests/MemoryScanning'
+import PictureRecognition from '@/tests/PictureRecognition'
+import DigitVigilance from '@/tests/DigitVigilance'
 
 export default function Home() {
 
@@ -20,7 +23,10 @@ export default function Home() {
         {/* <VerbalLearning/> */}
         {/* <ReactionTime/> */}
         {/* <NumberVigilance/> */}
-        {<ChoiceReaction/>}
+        {/* {<ChoiceReaction/>} */}
+        {/* {<MemoryScanning/>} */}
+        {/* {<PictureRecognition/>} */}
+        {<DigitVigilance/>}
       </div>
     </main>
   )
