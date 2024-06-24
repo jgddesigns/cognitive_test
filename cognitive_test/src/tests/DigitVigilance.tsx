@@ -190,7 +190,7 @@ export default function DigitVigilance(props: any) {
             TEST #7: DIGIT VIGILANCE TEST
         </div>
         <div className="row mt-12 text-sky-400">
-            Players are asked to find two specified numbers, which appear randomly within one-hundred rows of twenty single digits. The goal is to find as many of the numbers as possible.
+            Players are asked to find two specified numbers, which appear randomly within fifty rows of fifty single digits. The goal is to find as many of the numbers as possible.
         </div>
         {!EndTest ?
             !TestStart ? 
