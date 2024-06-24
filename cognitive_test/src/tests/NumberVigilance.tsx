@@ -129,7 +129,7 @@ export default function NumberVigilance (props: any) {
             <div className="grid grid-rows-1 mt-[200px]">
                 <div className="mt-12"> 
                     <span>
-                        Test is Over
+                        The Test is Over.
                     </span>
                 </div>     
             </div>

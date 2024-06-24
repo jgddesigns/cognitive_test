@@ -65,7 +65,13 @@ DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
 Related files located in 'src/database'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Keys are hardcoded in app currently, to be seperated and access with backed after production launch
 =======
 >>>>>>> d7ca61ac224dd8f2dc27ff51cd7ba7ffb599298f
+=======
+=======
+Keys are hardcoded in app currently, to be seperated and access with backed after production launch
+>>>>>>> main
+>>>>>>> 1f01123624b8f4580d71a432039f4e1e0defc92e
 ================================================

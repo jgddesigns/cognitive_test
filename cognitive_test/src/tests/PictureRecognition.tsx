@@ -322,7 +322,7 @@ export default function PictureRecognition (props: any) {
         :
             <div className="grid grid-rows-3 mt-[200px] place-items-center"> 
                 <span className="mt-12">
-                    Test is Over
+                    The Test is Over.
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of 14. ({calculate_ratio()}%)

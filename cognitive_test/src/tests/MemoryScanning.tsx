@@ -312,7 +312,7 @@ export default function MemoryScanning (props: any) {
         :
             <div className="grid grid-rows-3 mt-[200px]"> 
                 <span className="mt-12">
-                    Test is Over
+                    The Test is Over.
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of 18. ({calculate_ratio()}%)
