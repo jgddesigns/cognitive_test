@@ -10,6 +10,7 @@ import ChoiceReaction from '@/tests/ChoiceReaction'
 import MemoryScanning from '@/tests/MemoryScanning'
 import PictureRecognition from '@/tests/PictureRecognition'
 import DigitVigilance from '@/tests/DigitVigilance'
+import WorkingMemory from '@/tests/WorkingMemory'
 
 export default function Home() {
 
@@ -26,7 +27,8 @@ export default function Home() {
         {/* {<ChoiceReaction/>} */}
         {/* {<MemoryScanning/>} */}
         {/* {<PictureRecognition/>} */}
-        {<DigitVigilance/>}
+        {/* {<DigitVigilance/>} */}
+        {<WorkingMemory/>}
       </div>
     </main>
   )

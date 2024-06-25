@@ -258,7 +258,7 @@ export default function MemoryScanning (props: any) {
   return(
     <div>
         <div className="row">
-            TEST #5: MEMORY SCANNING TASK TEST
+            TEST #5: MEMORY SCANNING 
         </div>
         <div className="row mt-12 text-sky-400">
             Three digits are presented singly at the rate of one every 2.5 seconds for the player to remember. A series of 18 digits is then presented. For each, the player must press Yes or No according to whether the digit is thought to be one of the three presented initially.

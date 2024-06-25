@@ -377,7 +377,7 @@ export default function VerbalLearning (props: any) {
   return(
     <div>
         <div className="row">
-            TEST #1: VERBAL LEARNING TEST
+            TEST #1: VERBAL LEARNING 
         </div>
         <div className="row mt-12 text-sky-400">
             A series of twelve words will be shown on the screen for three seconds each. Afterward, twelve words will be shown again. While each is shown, decide if it was in the original sequence.

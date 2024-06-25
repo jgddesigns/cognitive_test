@@ -264,7 +264,7 @@ export default function PictureRecognition (props: any) {
   return(
     <div className="h-[96em]">
         <div className="row">
-            TEST #6: PICTURE RECOGNITION TEST
+            TEST #6: PICTURE RECOGNITION
         </div>
         <div className="row mt-12 text-sky-400">
             Fourteen pictures are displayed, one every 1.5 seconds. The player is told to memorize each picture. Afterward, fourteen more pictures are shown. This time the picture set only contains some of the items from the original display. The player is asked if each displayed picture from the second set was in the original set.

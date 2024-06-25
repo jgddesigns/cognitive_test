@@ -10,10 +10,10 @@ export default function DigitVigilance(props: any) {
     const [ShowData, setShowData] = React.useState(false)
     const [Numbers, setNumbers] = React.useState<any[]>([])
     const [SearchNumbers, setSearchNumbers] = React.useState<any[]>([]) 
-    const [Points, setPoints] = React.useState(0)
+    const [Found, setFound] = React.useState(0)
     const [CorrectMarks, setCorrectMarks] = React.useState(0)
     const [IncorrectMarks, setIncorrectMarks] = React.useState(0)
-    const [PossiblePoints, setPossiblePoints] = React.useState(0)
+    const [PossibleFound, setPossibleFound] = React.useState(0)
     const [TotalTime, setTotalTime] = React.useState(0)
     const [EndDelay, setEndDelay] = React.useState(-1)
     const [ClockDisplay, setClockDisplay] = React.useState("0:00")
@@ -90,11 +90,11 @@ export default function DigitVigilance(props: any) {
             if(SearchNumbers.includes(value.target.id)){
                 value.target.className = number_style[1]
                 setCorrectMarks(CorrectMarks + 1)
-                setPoints(Points + 1)
+                setFound(Found + 1)
             }else{
                 value.target.className = number_style[2]
                 setIncorrectMarks(IncorrectMarks + 1)
-                setPoints(Points - 1)
+                setFound(Found - 1)
             }
         }
     }
@@ -106,7 +106,7 @@ export default function DigitVigilance(props: any) {
         var row_array: any = []
         var search_numbers = get_search_numbers()
 
-        while(number_array.length < 50){
+        while(number_array.length < 25){
             while(row_array.length < 50){
                 row_array.push(create_row(search_numbers))
             }
@@ -122,20 +122,20 @@ export default function DigitVigilance(props: any) {
             row_array = []
         }
 
-        get_possible_points(number_array, search_numbers[0])
+        get_possible_found(number_array, search_numbers[0])
 
         setNumbers(number_array)
     }
 
 
-    function get_possible_points(numbers: any, find: any){
+    function get_possible_found(numbers: any, find: any){
         var count = 0
         for(var i=0; i<numbers.length; i++){
             for(var j=0; j<numbers[i].length; j++){
                 numbers[i][j]["number"] == find[0] || numbers[i][j]["number"] == find[1] ? count++ : null
             }
         }
-        setPossiblePoints(count)
+        setPossibleFound(count)
     }
 
 
@@ -146,7 +146,7 @@ export default function DigitVigilance(props: any) {
         var random = Math.floor(Math.random() * 7)
 
         if(chance == 0 || chance == 1){
-            setPossiblePoints(PossiblePoints + 1)
+            setPossibleFound(PossibleFound + 1)
             return numbers[0][chance]
         }
 
@@ -187,7 +187,7 @@ export default function DigitVigilance(props: any) {
   return(
     <div className="h-full">
         <div className="row">
-            TEST #7: DIGIT VIGILANCE TEST
+            TEST #7: DIGIT VIGILANCE
         </div>
         <div className="row mt-12 text-sky-400">
             Players are asked to find two specified numbers, which appear randomly within fifty rows of fifty single digits. The goal is to find as many of the numbers as possible.
@@ -201,12 +201,19 @@ export default function DigitVigilance(props: any) {
                 </div>
             :   ShowData ?
                     <div className="h-full grid grid-flow-rows auto-rows-max mt-24 gap-y-12">
-                        <div className="grid grid-cols-2">
-                            <span>
-                                Search Numbers: {SearchNumbers[0]}, {SearchNumbers[1]}
+                        <div className="grid grid-cols-4">
+                            <span className="text-center">
+                                Search for Numbers: {SearchNumbers[0]}, {SearchNumbers[1]}
                             </span>
-                            <span>
+                            <span></span>
+                            <span></span>
+                            <span className="text-center">
                                 Timer: {ClockDisplay}
+                            </span>
+                        </div>
+                        <div className="mt-12 italic grid place-items-center">
+                            <span className="">
+                                Find a number by clicking on it
                             </span>
                         </div>
                         <div>
@@ -232,7 +239,7 @@ export default function DigitVigilance(props: any) {
                     The Test is Over
                 </span> 
                 <span className="mt-16">
-                    {Points} points were obtained in 3 minutes.
+                    {Found} numbers were found in 3 minutes.
                 </span>
                 {CorrectMarks > 0 && IncorrectMarks > 0 ?
                     <div className="mt-12">
@@ -244,7 +251,7 @@ export default function DigitVigilance(props: any) {
                         </span>
                         <span className="text-red-400">
                             {IncorrectMarks} Incorrect Marks
-                        </span> = {Points} Points  
+                        </span> = {Found} Numbers Found  
                     </div>
                 : 
                     <div className="mt-12">
@@ -252,7 +259,7 @@ export default function DigitVigilance(props: any) {
                     </div>
                 }
                 <span className="mt-12">
-                    {PossiblePoints} possible points out of 2500 total digits.
+                    {PossibleFound} possible numbers out of {Numbers.length * Numbers[0].length} total digits.
                 </span>
             </div>
         }
