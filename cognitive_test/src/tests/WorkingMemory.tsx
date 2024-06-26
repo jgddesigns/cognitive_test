@@ -18,10 +18,10 @@ export default function WorkingMemory(props: any) {
     const [TokenPattern, setTokenPattern] = React.useState<any[]>([])
     const [BoxCount, setBoxCount] = React.useState(3)
 
-    const box_style = ["h-32 w-32 bg-gray-400", "h-32 w-32 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
+    const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
     const [Boxes, setBoxes] = React.useState<any[]>([box_style[0], box_style[0], box_style[0]]) 
-    const [BoxGrid, setBoxGrid] = React.useState<any[]>([box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0], box_style[0]])  
+    const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
     const [BoxesFound, setBoxesFound] = React.useState<any[]>([box_style[0], box_style[0], box_style[0]]) 
     const [BoxesFoundMap, setBoxesFoundMap] = React.useState<any[]>([]) 
 
@@ -62,14 +62,15 @@ export default function WorkingMemory(props: any) {
 
 
 
-    function build_token(value: any){
+    function build_token(){
         var token_arr = []
         var num = null
-        var i = 0
 
+        var i = 0
         while(i < BoxCount){
             num = Math.floor(Math.random() * BoxCount)
             token_arr.push(num)
+            i++
         }
 
         setTokenPattern(token_arr)
@@ -78,16 +79,19 @@ export default function WorkingMemory(props: any) {
 
 
     function randomize_layout(){
+        var token_arr = []
         var temp_arr = BoxGrid 
 
         var i = 0
         while(i < BoxCount){
             var num = Math.floor(Math.random() * 24) 
             temp_arr[num] = box_style[0]
+            token_arr.push(num)
             i++
         } 
 
        setBoxGrid(temp_arr)
+       setTokenPattern(token_arr)
     }
 
 
@@ -105,12 +109,18 @@ export default function WorkingMemory(props: any) {
 
     function start_handler(){
         randomize_layout()
+        //build_token()
         setTestStart(true)
         setShowData(true)
     }
 
 
     function check_token(event: any){
+    
+        console.log("\n\n\nbox id:")
+        console.log(event.target.id)
+        console.log("token pattern:")
+        console.log(TokenPattern)
         event.target.id == TokenPattern[0] ? token_found(true, event) : token_found(false, event) 
     }
 
@@ -143,7 +153,7 @@ export default function WorkingMemory(props: any) {
             // boxes_arr[event.target.id] = box_style[2]     
             reset_round()     
         }
-        setBoxGrid(boxes_arr)
+        setBoxGrid(grid_arr)
     }
 
 
@@ -166,39 +176,39 @@ export default function WorkingMemory(props: any) {
             :   ShowData ?
                     <div className="h-full grid grid-flow-rows auto-rows-max mt-24 gap-y-12">
                         <div className="grid grid-cols-5">
-                            <div id="0" style={BoxGrid[0]} onClick={(event) => check_token(event)}/>
-                            <div id="1" style={BoxGrid[1]} onClick={(event) => check_token(event)}/>
-                            <div id="2" style={BoxGrid[2]} onClick={(event) => check_token(event)}/>
-                            <div id="3" style={BoxGrid[3]} onClick={(event) => check_token(event)}/>
-                            <div id="4" style={BoxGrid[4]} onClick={(event) => check_token(event)}/>
+                            <div id="0" className={BoxGrid[0]} onClick={(event) => check_token(event)}/>
+                            <div id="1" className={BoxGrid[1]} onClick={(event) => check_token(event)}/>
+                            <div id="2" className={BoxGrid[2]} onClick={(event) => check_token(event)}/>
+                            <div id="3" className={BoxGrid[3]} onClick={(event) => check_token(event)}/>
+                            <div id="4" className={BoxGrid[4]} onClick={(event) => check_token(event)}/>
                         </div>
                         <div className="grid grid-cols-5">
-                            <div id="5" style={BoxGrid[5]} onClick={(event) => check_token(event)}/>
-                            <div id="6" style={BoxGrid[6]} onClick={(event) => check_token(event)}/>
-                            <div id="7" style={BoxGrid[7]} onClick={(event) => check_token(event)}/>
-                            <div id="8" style={BoxGrid[8]} onClick={(event) => check_token(event)}/>
-                            <div id="9" style={BoxGrid[9]} onClick={(event) => check_token(event)}/>
+                            <div id="5" className={BoxGrid[5]} onClick={(event) => check_token(event)}/>
+                            <div id="6" className={BoxGrid[6]} onClick={(event) => check_token(event)}/>
+                            <div id="7" className={BoxGrid[7]} onClick={(event) => check_token(event)}/>
+                            <div id="8" className={BoxGrid[8]} onClick={(event) => check_token(event)}/>
+                            <div id="9" className={BoxGrid[9]} onClick={(event) => check_token(event)}/>
                         </div>
                         <div className="grid grid-cols-5">
-                            <div id="10" style={BoxGrid[10]} onClick={(event) => check_token(event)}/>
-                            <div id="11" style={BoxGrid[11]} onClick={(event) => check_token(event)}/>
-                            <div id="12" style={BoxGrid[12]} onClick={(event) => check_token(event)}/>
-                            <div id="13" style={BoxGrid[13]} onClick={(event) => check_token(event)}/>
-                            <div id="14" style={BoxGrid[14]} onClick={(event) => check_token(event)}/>
+                            <div id="10" className={BoxGrid[10]} onClick={(event) => check_token(event)}/>
+                            <div id="11" className={BoxGrid[11]} onClick={(event) => check_token(event)}/>
+                            <div id="12" className={BoxGrid[12]} onClick={(event) => check_token(event)}/>
+                            <div id="13" className={BoxGrid[13]} onClick={(event) => check_token(event)}/>
+                            <div id="14" className={BoxGrid[14]} onClick={(event) => check_token(event)}/>
                         </div>
                         <div className="grid grid-cols-5">
-                            <div id="15" style={BoxGrid[15]} onClick={(event) => check_token(event)}/>
-                            <div id="16" style={BoxGrid[16]} onClick={(event) => check_token(event)}/>
-                            <div id="17" style={BoxGrid[17]} onClick={(event) => check_token(event)}/>
-                            <div id="18" style={BoxGrid[18]} onClick={(event) => check_token(event)}/>
-                            <div id="19" style={BoxGrid[19]} onClick={(event) => check_token(event)}/>
+                            <div id="15" className={BoxGrid[15]} onClick={(event) => check_token(event)}/>
+                            <div id="16" className={BoxGrid[16]} onClick={(event) => check_token(event)}/>
+                            <div id="17" className={BoxGrid[17]} onClick={(event) => check_token(event)}/>
+                            <div id="18" className={BoxGrid[18]} onClick={(event) => check_token(event)}/>
+                            <div id="19" className={BoxGrid[19]} onClick={(event) => check_token(event)}/>
                         </div>
                         <div className="grid grid-cols-5">
-                            <div id="20" style={BoxGrid[20]} onClick={(event) => check_token(event)}/>
-                            <div id="21" style={BoxGrid[21]} onClick={(event) => check_token(event)}/>
-                            <div id="22" style={BoxGrid[22]} onClick={(event) => check_token(event)}/>
-                            <div id="23" style={BoxGrid[23]} onClick={(event) => check_token(event)}/>
-                            <div id="24" style={BoxGrid[24]} onClick={(event) => check_token(event)}/>
+                            <div id="20" className={BoxGrid[20]} onClick={(event) => check_token(event)}/>
+                            <div id="21" className={BoxGrid[21]} onClick={(event) => check_token(event)}/>
+                            <div id="22" className={BoxGrid[22]} onClick={(event) => check_token(event)}/>
+                            <div id="23" className={BoxGrid[23]} onClick={(event) => check_token(event)}/>
+                            <div id="24" className={BoxGrid[24]} onClick={(event) => check_token(event)}/>
                         </div>
                     </div>
             : null
