@@ -46,6 +46,7 @@ export default function WorkingMemory(props: any) {
                     console.log("1")
                     setDelay(false)
                     setDelayTime(0)
+                    setCurrentAttempts(0)
                 }
             }, 1000 )
 
@@ -72,7 +73,7 @@ export default function WorkingMemory(props: any) {
     function build_next_round(){
         setTokensFound(false)
         setFoundCount(0)
-        setCurrentAttempts(1)
+
         setRoundCount(RoundCount + 1)
         setBoxCount(BoxCount + 1)
         setNextRound(false)
@@ -145,7 +146,7 @@ export default function WorkingMemory(props: any) {
             } 
         } 
 
-        setCurrentAttempts(1)
+        setCurrentAttempts(0)
         setBoxGrid(temp_arr)
         setTokenPattern(token_arr)
     }
@@ -187,7 +188,8 @@ export default function WorkingMemory(props: any) {
         var token_arr = TokenPlace
         var pattern_arr = TokenPattern
         var round_arr = RoundAttempts
-
+        setCurrentAttempts(CurrentAttempts + 1)
+        console.log(CurrentAttempts + 1)
         if(!TokensFound){
             if(found){
                 console.log("\n\nToken found.")
@@ -218,7 +220,8 @@ export default function WorkingMemory(props: any) {
                 }
 
                 setFoundCount(0)
-                setCurrentAttempts(CurrentAttempts + 1)
+
+
                 console.log("\n\nfound count")
                 console.log(FoundCount)
                 // reset_round()     
@@ -246,11 +249,12 @@ export default function WorkingMemory(props: any) {
                 </div>
             :   ShowData ?
                     <div className="h-full grid grid-flow-rows auto-rows-max mt-24 gap-y-12">
-                        <div className="h-12">
+                        <div className="h-12 grid grid-flow_rows place-items-center">
                             {CurrentMessage.length > 0 ? 
-        
-                                <span className="grid place-items-center">{CurrentMessage}</span>
-                                
+                                <div>
+                                    <div>{CurrentMessage}</div>
+                                    <div>Attempts in Round: {CurrentAttempts}</div>
+                                </div>
                             : null}
                         </div>
 
