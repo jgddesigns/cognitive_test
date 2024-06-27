@@ -239,7 +239,7 @@ export default function WorkingMemory(props: any) {
         </div>
         {!EndTest ?
             !TestStart ? 
-                <div className="h-[48rem] mt-24">              
+                <div className="h-[60rem] mt-24">              
                     <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={start_handler}>
                         Start   
                     </Button>  
