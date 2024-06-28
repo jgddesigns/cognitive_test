@@ -15,6 +15,8 @@ export default function WorkingMemory(props: any) {
     const [FoundCount, setFoundCount] = React.useState(0)
     const [RoundCount, setRoundCount] = React.useState(3)
     const [CurrentAttempts, setCurrentAttempts] = React.useState(0)
+    const [TotalAttempts, setTotalAttempts] = React.useState(0)
+    const [CurrentRound, setCurrentRound] = React.useState(1)
     const [DelayTime, setDelayTime] = React.useState(0)
     const [RoundAttempts, setRoundAttempts] = React.useState<any[]>([])
     const [TokenPlace, setTokenPlace] = React.useState<any[]>([])
@@ -32,6 +34,8 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
+        RoundCount > 10 ? setEndTest(true) : null
+
         FoundCount == BoxCount ? setNextRound(true) : null
 
         NextRound ? build_next_round() : null
@@ -46,6 +50,8 @@ export default function WorkingMemory(props: any) {
                     console.log("1")
                     setDelay(false)
                     setDelayTime(0)
+                    setTotalAttempts(TotalAttempts + CurrentAttempts)
+                    setCurrentRound(CurrentRound + 1)
                     setCurrentAttempts(0)
                 }
             }, 1000 )
@@ -188,8 +194,9 @@ export default function WorkingMemory(props: any) {
         var token_arr = TokenPlace
         var pattern_arr = TokenPattern
         var round_arr = RoundAttempts
-        setCurrentAttempts(CurrentAttempts + 1)
-        console.log(CurrentAttempts + 1)
+        
+        FoundCount == 0 ? setCurrentAttempts(CurrentAttempts + 1) : null
+
         if(!TokensFound){
             if(found){
                 console.log("\n\nToken found.")
@@ -208,10 +215,16 @@ export default function WorkingMemory(props: any) {
                     setCurrentMessage("All Tokens Found")
                     build_next_round()
                     setDelay(true)
+                    
+
+                    
                 }
+
+                // CurrentAttempts < 1 ? setCurrentAttempts(1) : null
             }else{
                 console.log("\n\nToken not found.")
                 setCurrentMessage("Incorrect Guess, Restart the Round")
+              
                 var i = 0
                 while(i < pattern_arr.length){
                     console.log(pattern_arr[i])
@@ -224,12 +237,19 @@ export default function WorkingMemory(props: any) {
 
                 console.log("\n\nfound count")
                 console.log(FoundCount)
+
+                // setCurrentAttempts(CurrentAttempts + 1)
+                console.log(CurrentAttempts + 1)
                 // reset_round()     
             }
             setBoxGrid(grid_arr)
         }
     }
 
+
+    function end_test(){
+
+    }
 
 
   return(
@@ -253,6 +273,7 @@ export default function WorkingMemory(props: any) {
                             {CurrentMessage.length > 0 ? 
                                 <div>
                                     <div>{CurrentMessage}</div>
+                                    <div>Current Round: {CurrentRound}</div>
                                     <div>Attempts in Round: {CurrentAttempts}</div>
                                 </div>
                             : null}
@@ -267,36 +288,36 @@ export default function WorkingMemory(props: any) {
                         </div> 
 
                         {!Delay ?
-                            <div className="h-[50rem] grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-blue-400"> 
-                                <div className="grid grid-cols-5 mt-12 ml-12">
+                            <div className="h-240 grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-blue-400"> 
+                                <div className="h-48 grid grid-cols-5 mt-12 ml-12">
                                     <div id="0" className={BoxGrid[0]} onClick={(event) => check_token(event)}/>
                                     <div id="1" className={BoxGrid[1]} onClick={(event) => check_token(event)}/>
                                     <div id="2" className={BoxGrid[2]} onClick={(event) => check_token(event)}/>
                                     <div id="3" className={BoxGrid[3]} onClick={(event) => check_token(event)}/>
                                     <div id="4" className={BoxGrid[4]} onClick={(event) => check_token(event)}/>
                                 </div>
-                                <div className="grid grid-cols-5 ml-12">
+                                <div className="h-48 grid grid-cols-5 ml-12">
                                     <div id="5" className={BoxGrid[5]} onClick={(event) => check_token(event)}/>
                                     <div id="6" className={BoxGrid[6]} onClick={(event) => check_token(event)}/>
                                     <div id="7" className={BoxGrid[7]} onClick={(event) => check_token(event)}/>
                                     <div id="8" className={BoxGrid[8]} onClick={(event) => check_token(event)}/>
                                     <div id="9" className={BoxGrid[9]} onClick={(event) => check_token(event)}/>
                                 </div>
-                                <div className="grid grid-cols-5 ml-12">
+                                <div className="h-48 grid grid-cols-5 ml-12">
                                     <div id="10" className={BoxGrid[10]} onClick={(event) => check_token(event)}/>
                                     <div id="11" className={BoxGrid[11]} onClick={(event) => check_token(event)}/>
                                     <div id="12" className={BoxGrid[12]} onClick={(event) => check_token(event)}/>
                                     <div id="13" className={BoxGrid[13]} onClick={(event) => check_token(event)}/>
                                     <div id="14" className={BoxGrid[14]} onClick={(event) => check_token(event)}/>
                                 </div>
-                                <div className="grid grid-cols-5 ml-12">
+                                <div className="h-48 grid grid-cols-5 ml-12">
                                     <div id="15" className={BoxGrid[15]} onClick={(event) => check_token(event)}/>
                                     <div id="16" className={BoxGrid[16]} onClick={(event) => check_token(event)}/>
                                     <div id="17" className={BoxGrid[17]} onClick={(event) => check_token(event)}/>
                                     <div id="18" className={BoxGrid[18]} onClick={(event) => check_token(event)}/>
                                     <div id="19" className={BoxGrid[19]} onClick={(event) => check_token(event)}/>
                                 </div>
-                                <div className="grid grid-cols-5 ml-12">
+                                <div className="h-48 grid grid-cols-5 ml-12">
                                     <div id="20" className={BoxGrid[20]} onClick={(event) => check_token(event)}/>
                                     <div id="21" className={BoxGrid[21]} onClick={(event) => check_token(event)}/>
                                     <div id="22" className={BoxGrid[22]} onClick={(event) => check_token(event)}/>
@@ -305,7 +326,7 @@ export default function WorkingMemory(props: any) {
                                 </div>
                             </div>
                         :   
-                            <div>
+                            <div className="grid place-items-center">
                                 <div>
                                     Next Round:
                                 </div>
