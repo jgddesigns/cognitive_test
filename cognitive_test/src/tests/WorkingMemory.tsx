@@ -11,9 +11,9 @@ export default function WorkingMemory(props: any) {
     const [NextRound, setNextRound] = React.useState(false)
     const [Delay, setDelay] = React.useState(false)
     const [TokensFound, setTokensFound] = React.useState(false)
-    const [Token, setToken] = React.useState(0)
+    const [TestTime, setTestTime] = React.useState(0)
     const [FoundCount, setFoundCount] = React.useState(0)
-    const [RoundCount, setRoundCount] = React.useState(3)
+    const [RoundCount, setRoundCount] = React.useState(3) //boxes in round (subtract 2 for round num)
     const [CurrentAttempts, setCurrentAttempts] = React.useState(0)
     const [TotalAttempts, setTotalAttempts] = React.useState(0)
     const [CurrentRound, setCurrentRound] = React.useState(1)
@@ -23,6 +23,7 @@ export default function WorkingMemory(props: any) {
     const [TokenPattern, setTokenPattern] = React.useState<any[]>([])
     const [BoxCount, setBoxCount] = React.useState(3)
     const [CurrentMessage, setCurrentMessage] = React.useState<any>("") 
+    const [ClockDisplay, setClockDisplay] = React.useState<any>("") 
 
     const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
@@ -34,12 +35,27 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
-        RoundCount > 10 ? setEndTest(true) : null
+        if(CurrentRound > 10){
+            setEndTest(true)
 
-        FoundCount == BoxCount ? setNextRound(true) : null
+            var num = 0
+            for(var i=0; i<RoundAttempts.length; i++){
+                num = num + RoundAttempts[i]
+            }
 
-        NextRound ? build_next_round() : null
+            setTotalAttempts(num)
+        }else{
+            FoundCount == BoxCount ? setNextRound(true) : null
+            NextRound ? build_next_round() : null
+        } 
 
+        // while(CurrentRound <= 10){
+        //     const timeoutId2 = setTimeout(() => {
+        //         console.log("1")
+        //     }, 1000 )
+
+        //     return () => clearTimeout(timeoutId2)
+        // }
 
         while(Delay && DelayTime <= 4){
             const timeoutId = setTimeout(() => {
@@ -47,7 +63,6 @@ export default function WorkingMemory(props: any) {
                 if(DelayTime <= 3){
                     setDelayTime(DelayTime + 1)
                 }else{
-                    console.log("1")
                     setDelay(false)
                     setDelayTime(0)
                     setTotalAttempts(TotalAttempts + CurrentAttempts)
@@ -59,20 +74,32 @@ export default function WorkingMemory(props: any) {
             return () => clearTimeout(timeoutId)
         }
 
-    }, [FoundCount, NextRound, Delay, DelayTime])
+    }, [FoundCount, NextRound, Delay, DelayTime, RoundCount, EndTest, CurrentRound])
 
 
 
-    // function create_box_map(temp_arr: any, type: any){
-    //     const box_map = temp_arr.map((index:any) => {
-    //         return {
-    //           box: temp_arr[index],
-    //           key: uuidv4()
-    //         }
-    //     })
 
-    //     type ? setBoxMap(box_map) : setBoxesFoundMap(box_map)
-    // }
+    useEffect(() => {
+        while(TestTime >= 0){
+            const timeoutId2 = setTimeout(() => {
+                if(CurrentRound<=10){
+                    console.log("\ntest time")
+                    console.log(TestTime + 1)
+                    set_clock(TestTime + 1)
+                    setTestTime(TestTime + 1)
+                }else{
+                    setTestTime(-1)
+                }
+
+            }, 1000 )
+    
+            return () => clearTimeout(timeoutId2)
+            
+        }
+
+        
+    }, [TestTime])
+
 
 
 
@@ -118,6 +145,16 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    function set_clock(time: any){
+        var minutes: any = Math.floor(time/60)
+        var seconds: any = Math.floor(time % 60)
+        seconds < 10 ? seconds = "0" + seconds : null
+
+        var display: any = minutes + ":" + seconds
+
+        setClockDisplay(display)
+    }
+
 
     function build_token(){
         var token_arr = []
@@ -158,17 +195,6 @@ export default function WorkingMemory(props: any) {
     }
 
 
-
-    // function reset_grid(){
-    //     var grid_arr = BoxGrid
-
-    //     for(var i=0; i<grid_arr.length; i++){
-    //         grid_arr[i] = ""
-    //     }
-    // }
-
-
-
     function start_handler(){
         randomize_layout()
         setTestStart(true)
@@ -179,11 +205,14 @@ export default function WorkingMemory(props: any) {
 
 
     function check_token(event: any){
-        console.log("\n\n\nbox id:")
-        console.log(event.target.id)
-        console.log("token pattern:")
-        console.log(TokenPattern)
-        event.target.id == TokenPattern[FoundCount] ? token_found(true, event) : token_found(false, event) 
+        var grid_arr = BoxGrid
+        if(grid_arr[event.target.id] == box_style[0]){
+            console.log("\n\n\nbox id:")
+            console.log(event.target.id)
+            console.log("token pattern:")
+            console.log(TokenPattern)
+            event.target.id == TokenPattern[FoundCount] ? token_found(true, event) : token_found(false, event) 
+        }
     }
 
 
@@ -215,6 +244,9 @@ export default function WorkingMemory(props: any) {
                     setCurrentMessage("All Tokens Found")
                     build_next_round()
                     setDelay(true)
+
+                    round_arr.push(FoundCount + 1)
+                    setRoundAttempts(round_arr)
                     
 
                     
@@ -269,7 +301,8 @@ export default function WorkingMemory(props: any) {
                 </div>
             :   ShowData ?
                     <div className="h-full grid grid-flow-rows auto-rows-max mt-24 gap-y-12">
-                        <div className="h-12 grid grid-flow_rows place-items-center">
+                        <div className="h-12 grid grid-flow_rows place-items-center grid-cols-2">
+                            <div>
                             {CurrentMessage.length > 0 ? 
                                 <div>
                                     <div>{CurrentMessage}</div>
@@ -277,6 +310,12 @@ export default function WorkingMemory(props: any) {
                                     <div>Attempts in Round: {CurrentAttempts}</div>
                                 </div>
                             : null}
+                            </div>
+                            <div>
+                                <div className="mt-8 ml-12">
+                                    Total Time: {ClockDisplay}
+                                </div>
+                            </div>
                         </div>
 
                         <div className="h-12">
@@ -344,15 +383,57 @@ export default function WorkingMemory(props: any) {
             : null
         :
             <div className="grid grid-rows-3 mt-24 place-items-center"> 
-                <span className="mt-4 text-xl">
-              
-                </span> 
-                <span className="mt-16">
-                    
-                </span>
-                <span className="mt-12">
-                   
-                </span>
+                <div className="mt-4 text-xl">
+                    The Test is Over
+                </div> 
+
+                <div className="mt-8 ml-12">
+                    Total Time: {ClockDisplay}
+                </div>
+
+                <div className="mt-8 ml-12">
+                    Total Attempts: {TotalAttempts}
+                </div>
+
+                <div className="mt-8 ml-12">
+                    Average Attempts Per Round: {TotalAttempts/10}
+                </div>
+
+                <div className="mt-16">
+                    <span className="text-underline">Round Attempts</span>
+                </div>
+                <div className="mt-8 ml-12">
+                    Round 1: {RoundAttempts[0]}
+                </div>
+                <div className="mt-8 ml-12">
+                    Round 2: {RoundAttempts[1]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 3: {RoundAttempts[2]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 4: {RoundAttempts[3]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 5: {RoundAttempts[4]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 6: {RoundAttempts[5]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 7: {RoundAttempts[6]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 8: {RoundAttempts[7]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 9: {RoundAttempts[8]}
+                </div>                
+                <div className="mt-8 ml-12">
+                    Round 10: {RoundAttempts[9]}
+                </div>       
+
+
             </div>
         }
     </div>
