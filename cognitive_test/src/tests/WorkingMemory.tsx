@@ -24,6 +24,7 @@ export default function WorkingMemory(props: any) {
     const [BoxCount, setBoxCount] = React.useState(3)
     const [CurrentMessage, setCurrentMessage] = React.useState<any>("") 
     const [ClockDisplay, setClockDisplay] = React.useState<any>("") 
+    const [AverageTime, setAverageTime] = React.useState(0)
 
     const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
@@ -35,27 +36,21 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
-        if(CurrentRound > 10){
-            setEndTest(true)
+        // if(CurrentRound > 10){
+        //     setEndTest(true)
 
-            var num = 0
-            for(var i=0; i<RoundAttempts.length; i++){
-                num = num + RoundAttempts[i]
-            }
+        //     var num = 0
+        //     for(var i=0; i<RoundAttempts.length; i++){
+        //         num = num + RoundAttempts[i]
+        //     }
 
-            setTotalAttempts(num)
-        }else{
+        //     setTotalAttempts(num)
+        //}else{
+        if(CurrentRound <= 10){
             FoundCount == BoxCount ? setNextRound(true) : null
             NextRound ? build_next_round() : null
         } 
 
-        // while(CurrentRound <= 10){
-        //     const timeoutId2 = setTimeout(() => {
-        //         console.log("1")
-        //     }, 1000 )
-
-        //     return () => clearTimeout(timeoutId2)
-        // }
 
         while(Delay && DelayTime <= 4){
             const timeoutId = setTimeout(() => {
@@ -74,13 +69,8 @@ export default function WorkingMemory(props: any) {
             return () => clearTimeout(timeoutId)
         }
 
-    }, [FoundCount, NextRound, Delay, DelayTime, RoundCount, EndTest, CurrentRound])
 
-
-
-
-    useEffect(() => {
-        while(TestTime >= 0){
+        while(TestTime >= 0 && TestStart && !EndTest){
             const timeoutId2 = setTimeout(() => {
                 if(CurrentRound<=10){
                     console.log("\ntest time")
@@ -88,6 +78,7 @@ export default function WorkingMemory(props: any) {
                     set_clock(TestTime + 1)
                     setTestTime(TestTime + 1)
                 }else{
+                    setAverageTime(TestTime)
                     setTestTime(-1)
                 }
 
@@ -96,9 +87,9 @@ export default function WorkingMemory(props: any) {
             return () => clearTimeout(timeoutId2)
             
         }
+    }, [FoundCount, NextRound, Delay, DelayTime, RoundCount, EndTest, CurrentRound, TestTime])
 
-        
-    }, [TestTime])
+
 
 
 
@@ -153,6 +144,18 @@ export default function WorkingMemory(props: any) {
         var display: any = minutes + ":" + seconds
 
         setClockDisplay(display)
+    }
+
+
+    function average_time(time: any){
+        time = time/10
+        var minutes: any = Math.floor(time/60)
+        var seconds: any = Math.floor(time % 60)
+        seconds < 10 ? seconds = "0" + seconds : null
+
+        var display: any = minutes + ":" + seconds
+
+        setAverageTime(display)
     }
 
 
@@ -239,17 +242,27 @@ export default function WorkingMemory(props: any) {
                 
                 //pulsing graphics
                 if(FoundCount + 1 == RoundCount){
+                    round_arr.push(CurrentAttempts + 1)
+                    setRoundAttempts(round_arr)
                     console.log("\n\nall tokens found")
                     setTokensFound(true)
                     setCurrentMessage("All Tokens Found")
+                    if(CurrentRound + 1 > 10){
+                              
+                        setEndTest(true)
+
+                        var num = 0
+                        for(var i=0; i<RoundAttempts.length; i++){
+                            num = num + RoundAttempts[i]
+                        }
+
+                        setTotalAttempts(num)
+
+                        return true
+                    }
+
                     build_next_round()
                     setDelay(true)
-
-                    round_arr.push(FoundCount + 1)
-                    setRoundAttempts(round_arr)
-                    
-
-                    
                 }
 
                 // CurrentAttempts < 1 ? setCurrentAttempts(1) : null
@@ -389,6 +402,10 @@ export default function WorkingMemory(props: any) {
 
                 <div className="mt-8 ml-12">
                     Total Time: {ClockDisplay}
+                </div>
+
+                <div className="mt-8 ml-12">
+                    Average Time Per Round: {AverageTime}
                 </div>
 
                 <div className="mt-8 ml-12">
