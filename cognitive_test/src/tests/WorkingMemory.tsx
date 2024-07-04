@@ -1,7 +1,6 @@
 'use client'
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
-import { v4 as uuidv4 } from 'uuid';
 
 
 export default function WorkingMemory(props: any) {
@@ -13,13 +12,12 @@ export default function WorkingMemory(props: any) {
     const [TokensFound, setTokensFound] = React.useState(false)
     const [TestTime, setTestTime] = React.useState(0)
     const [FoundCount, setFoundCount] = React.useState(0)
-    const [RoundCount, setRoundCount] = React.useState(3) //boxes in round (subtract 2 for round num)
+    const [RoundCount, setRoundCount] = React.useState(3) 
     const [CurrentAttempts, setCurrentAttempts] = React.useState(0)
     const [TotalAttempts, setTotalAttempts] = React.useState(0)
     const [CurrentRound, setCurrentRound] = React.useState(1)
     const [DelayTime, setDelayTime] = React.useState(0)
     const [RoundAttempts, setRoundAttempts] = React.useState<any[]>([])
-    const [TokenPlace, setTokenPlace] = React.useState<any[]>([])
     const [TokenPattern, setTokenPattern] = React.useState<any[]>([])
     const [BoxCount, setBoxCount] = React.useState(3)
     const [CurrentMessage, setCurrentMessage] = React.useState<any>("") 
@@ -28,24 +26,12 @@ export default function WorkingMemory(props: any) {
 
     const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
-    const [Boxes, setBoxes] = React.useState<any[]>([box_style[0], box_style[0], box_style[0]]) 
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
-    const [BoxesFound, setBoxesFound] = React.useState<any[]>([]) 
-    const [BoxesFoundMap, setBoxesFoundMap] = React.useState<any[]>([]) 
+
 
 
     useEffect(() => {
 
-        // if(CurrentRound > 10){
-        //     setEndTest(true)
-
-        //     var num = 0
-        //     for(var i=0; i<RoundAttempts.length; i++){
-        //         num = num + RoundAttempts[i]
-        //     }
-
-        //     setTotalAttempts(num)
-        //}else{
         if(CurrentRound <= 10){
             FoundCount == BoxCount ? setNextRound(true) : null
             NextRound ? build_next_round() : null
@@ -71,23 +57,22 @@ export default function WorkingMemory(props: any) {
 
 
         while(TestTime >= 0 && TestStart && !EndTest){
-            const timeoutId2 = setTimeout(() => {
-                if(CurrentRound<=10){
-                    console.log("\ntest time")
-                    console.log(TestTime + 1)
+            const timeoutId = setTimeout(() => {
+                if(CurrentRound <= 10){ 
                     set_clock(TestTime + 1)
                     setTestTime(TestTime + 1)
                 }else{
-                    setAverageTime(TestTime)
                     setTestTime(-1)
                 }
 
             }, 1000 )
     
-            return () => clearTimeout(timeoutId2)
-            
+            return () => clearTimeout(timeoutId)
+
         }
-    }, [FoundCount, NextRound, Delay, DelayTime, RoundCount, EndTest, CurrentRound, TestTime])
+
+
+    }, [CurrentRound, Delay, DelayTime, TestTime, TestStart, EndTest])
 
 
 
@@ -199,6 +184,7 @@ export default function WorkingMemory(props: any) {
 
 
     function start_handler(){
+        set_clock(0)
         randomize_layout()
         setTestStart(true)
         setShowData(true)
@@ -210,10 +196,6 @@ export default function WorkingMemory(props: any) {
     function check_token(event: any){
         var grid_arr = BoxGrid
         if(grid_arr[event.target.id] == box_style[0]){
-            console.log("\n\n\nbox id:")
-            console.log(event.target.id)
-            console.log("token pattern:")
-            console.log(TokenPattern)
             event.target.id == TokenPattern[FoundCount] ? token_found(true, event) : token_found(false, event) 
         }
     }
@@ -221,9 +203,7 @@ export default function WorkingMemory(props: any) {
 
 
     function token_found(found: any, event: any){
-        var found_arr = BoxesFound
         var grid_arr = BoxGrid
-        var token_arr = TokenPlace
         var pattern_arr = TokenPattern
         var round_arr = RoundAttempts
         
@@ -231,24 +211,24 @@ export default function WorkingMemory(props: any) {
 
         if(!TokensFound){
             if(found){
-                console.log("\n\nToken found.")
+                console.log("\n\nToken Found")
                 setCurrentMessage("Token Found")
                 grid_arr[event.target.id] = box_style[1]
                 setBoxGrid(grid_arr)
                 setFoundCount(FoundCount + 1)
 
-                console.log("\n\nround count")
+                console.log("\n\nRound Count")
                 console.log(RoundCount)
                 
-                //pulsing graphics
+                //pulsing graphics?
                 if(FoundCount + 1 == RoundCount){
-                    round_arr.push(CurrentAttempts + 1)
+                    round_arr.push(CurrentAttempts)
                     setRoundAttempts(round_arr)
-                    console.log("\n\nall tokens found")
+                    console.log("\n\nAll Tokens Found")
                     setTokensFound(true)
                     setCurrentMessage("All Tokens Found")
-                    if(CurrentRound + 1 > 10){
-                              
+                    if(CurrentRound + 1 > 10){ 
+                        average_time(TestTime)
                         setEndTest(true)
 
                         var num = 0
@@ -265,9 +245,8 @@ export default function WorkingMemory(props: any) {
                     setDelay(true)
                 }
 
-                // CurrentAttempts < 1 ? setCurrentAttempts(1) : null
             }else{
-                console.log("\n\nToken not found.")
+                console.log("\n\nToken Not Found")
                 setCurrentMessage("Incorrect Guess, Restart the Round")
               
                 var i = 0
@@ -277,24 +256,12 @@ export default function WorkingMemory(props: any) {
                     i++
                 }
 
-                setFoundCount(0)
-
-
-                console.log("\n\nfound count")
-                console.log(FoundCount)
-
-                // setCurrentAttempts(CurrentAttempts + 1)
-                console.log(CurrentAttempts + 1)
-                // reset_round()     
+                setFoundCount(0)  
             }
             setBoxGrid(grid_arr)
         }
     }
 
-
-    function end_test(){
-
-    }
 
 
   return(
@@ -316,6 +283,7 @@ export default function WorkingMemory(props: any) {
                     <div className="h-full grid grid-flow-rows auto-rows-max mt-24 gap-y-12">
                         <div className="h-12 grid grid-flow_rows place-items-center grid-cols-2">
                             <div>
+
                             {CurrentMessage.length > 0 ? 
                                 <div>
                                     <div>{CurrentMessage}</div>
@@ -331,14 +299,7 @@ export default function WorkingMemory(props: any) {
                             </div>
                         </div>
 
-                        <div className="h-12">
-                            {BoxesFound.length > 0 ? 
-                                //boxes found map
-                                <span className="grid place-items-center"></span>
-                                
-                            : null}
-                        </div> 
-
+                        {/* REPLACE WITH MAP? */}
                         {!Delay ?
                             <div className="h-240 grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-blue-400"> 
                                 <div className="h-48 grid grid-cols-5 mt-12 ml-12">
@@ -416,6 +377,7 @@ export default function WorkingMemory(props: any) {
                     Average Attempts Per Round: {TotalAttempts/10}
                 </div>
 
+                {/* REPLACE WITH MAP? */}
                 <div className="mt-16">
                     <span className="text-underline">Round Attempts</span>
                 </div>
@@ -449,8 +411,6 @@ export default function WorkingMemory(props: any) {
                 <div className="mt-8 ml-12">
                     Round 10: {RoundAttempts[9]}
                 </div>       
-
-
             </div>
         }
     </div>
