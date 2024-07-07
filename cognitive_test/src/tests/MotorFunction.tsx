@@ -64,7 +64,7 @@ export default function WorkingMemory(props: any) {
                     console.log("\n\npause")
                     console.log(Pause - 1)
                 }else{
-                    console.log("asdf")
+                    console.log("asdddf")
                     setDelayTime(3)
                     create_item()
                     setPause(-1)
