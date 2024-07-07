@@ -1,0 +1,28 @@
+.circle{
+    clip-path: circle(50% at center)
+}
+  
+
+.square{
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)
+}
+
+
+.triangle{
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%)
+}
+
+  
+.heart{
+    clip-path: path('M10,30 A20,20 0 0,1 50,30 A20,20 0 0,1 90,30 Q90,60 50,90 Q10,60 10,30 Z')
+}
+
+  
+.star{
+    clip-path: path('M12 2L14.1 8.5H21L15.2 12.8L17.3 19.3L12 15.8L6.7 19.3L8.8 12.8L3 8.5H9.9L12 2Z')
+}
+
+
+.moon{
+    clip-path: circle(50% at 50% 50%)
+}

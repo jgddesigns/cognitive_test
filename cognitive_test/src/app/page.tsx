@@ -11,6 +11,7 @@ import MemoryScanning from '@/tests/MemoryScanning'
 import PictureRecognition from '@/tests/PictureRecognition'
 import DigitVigilance from '@/tests/DigitVigilance'
 import WorkingMemory from '@/tests/WorkingMemory'
+import MotorFunction from '@/tests/MotorFunction'
 
 export default function Home() {
 
@@ -28,7 +29,8 @@ export default function Home() {
         {/* {<MemoryScanning/>} */}
         {/* {<PictureRecognition/>} */}
         {/* {<DigitVigilance/>} */}
-        {<WorkingMemory/>}
+        {/* {<WorkingMemory/>} */}
+        {<MotorFunction/>}
       </div>
     </main>
   )
