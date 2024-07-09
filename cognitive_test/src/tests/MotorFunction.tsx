@@ -55,16 +55,15 @@ export default function WorkingMemory(props: any) {
         //     FoundCount == BoxCount ? setNextRound(true) : null
         //     NextRound ? build_next_round() : null
         // } 
+        FoundTimes.length > 10 ? setEndTest(true) : null
 
         while(IsPaused && Pause > -1){
-            console.log("ffvafsfa")
             const timeoutId = setTimeout(() => {
                 if(Pause > 0){ 
                     setPause(Pause - 1)
                     console.log("\n\npause")
                     console.log(Pause - 1)
                 }else{
-                    console.log("asdddf")
                     setDelayTime(3)
                     create_item()
                     setPause(-1)
@@ -85,11 +84,14 @@ export default function WorkingMemory(props: any) {
 
                 if(DelayTime > 0){
                     setDelayTime(DelayTime - (1/10))
+                    console.log("delay time")
+                    console.log(DelayTime - (1/10))
                     // console.log(Pause)
                     //console.log(IsPaused)
                 }else{
                     var time_arr = FoundTimes
                     //setDelay(false)
+                    setDelayTime(0)
 
                     
                     // !Found ? time_arr.push(0) : null
@@ -128,7 +130,7 @@ export default function WorkingMemory(props: any) {
 
 
 
-    }, [CurrentRound, Delay, DelayTime, TestTime, TestStart, EndTest, Pause, IsPaused])
+    }, [CurrentRound, Delay, DelayTime, TestTime, TestStart, EndTest, Pause, IsPaused, FoundTimes])
 
 
 
@@ -136,7 +138,7 @@ export default function WorkingMemory(props: any) {
 
 
     function build_next_round(){
-        setTokensFound(false)
+        setTokensFound(false)``
         setFoundCount(0)
 
         setRoundCount(RoundCount + 1)
