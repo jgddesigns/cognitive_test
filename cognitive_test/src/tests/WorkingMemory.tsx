@@ -144,22 +144,6 @@ export default function WorkingMemory(props: any) {
     }
 
 
-    function build_token(){
-        var token_arr = []
-        var num = null
-
-        var i = 0
-        while(i < BoxCount){
-            num = Math.floor(Math.random() * BoxCount)
-            token_arr.push(num)
-            i++
-        }
-
-        setTokenPattern(token_arr)
-    }
-
-
-
     function randomize_layout(box_count: any = null){
         var token_arr: any = []
         var temp_arr = BoxGrid 
@@ -301,7 +285,7 @@ export default function WorkingMemory(props: any) {
 
                         {/* REPLACE WITH MAP? */}
                         {!Delay ?
-                            <div className="h-240 grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-blue-400"> 
+                            <div className="h-240 grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-blue-400 border-24"> 
                                 <div className="h-48 grid grid-cols-5 mt-12 ml-12">
                                     <div id="0" className={BoxGrid[0]} onClick={(event) => check_token(event)}/>
                                     <div id="1" className={BoxGrid[1]} onClick={(event) => check_token(event)}/>
@@ -357,7 +341,7 @@ export default function WorkingMemory(props: any) {
             : null
         :
             <div className="grid grid-rows-3 mt-24 place-items-center"> 
-                <div className="mt-4 text-xl">
+                <div className="mt-4 text-4xl">
                     The Test is Over
                 </div> 
 

@@ -235,7 +235,7 @@ export default function DigitVigilance(props: any) {
             : null
         :
             <div className="grid grid-rows-3 mt-24 place-items-center"> 
-                <span className="mt-4 text-xl">
+                <span className="mt-4 text-4xl">
                     The Test is Over
                 </span> 
                 <span className="mt-16">
