@@ -39,9 +39,9 @@ export default function PictureRecognition (props: any) {
 
             const timeoutId = setTimeout(() => {
 
-                Digits > 29 ? setShowMessage(true) : setShowMessage(false)
+                Digits > 21 ? setShowMessage(true) : setShowMessage(false)
 
-                if(Digits % 2 != 0 && Digits <= 28){
+                if(Digits % 2 != 0 && Digits <= 22 && Digits > 1){
                     current_picture(1)
                 }else{
                     setCurrentWord("")
@@ -53,7 +53,7 @@ export default function PictureRecognition (props: any) {
                     setShowCompare(true)
                     setCompareMessage(true)
                     setShowMessage(true)
-                    setCompareDigits(31)
+                    setCompareDigits(22)
                     setCurrentMessage("What words from the following set were in the first set?")
                 }
 
@@ -68,11 +68,11 @@ export default function PictureRecognition (props: any) {
 
                 if(CompareMessage){
 
-                    CompareDigits == 30 ? setShowPrompt(false) : null
+                    CompareDigits == 21 ? setShowPrompt(false) : null
                     
-                    CompareDigits == 29 ? setShowMessage(false) : null
+                    CompareDigits == 21 ? setShowMessage(false) : null
 
-                    if(CompareDigits % 2 != 0 && CompareDigits <= 28){
+                    if(CompareDigits % 2 != 0 && CompareDigits <= 22 && CompareDigits > 1){
                         setAnsweredString("Missed!")
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
@@ -104,7 +104,7 @@ export default function PictureRecognition (props: any) {
         var place = null
 
 
-        while(temp_arr.length<14){
+        while(temp_arr.length<10){
             place = Math.floor(Math.random()*500)
             temp_arr.push(words[place])
             shown_arr.push(words[place])
@@ -115,7 +115,19 @@ export default function PictureRecognition (props: any) {
         //console.log(temp_arr)
         setStaticArray(temp_arr)
         setShownArray(shown_arr)
-        setCompareArray(compare_arr)
+
+        
+        setCompareArray(build_compare(compare_arr))
+
+    }
+
+
+    function build_compare(temp_arr: any){
+        var in_set = Math.random() *  5 + 2
+
+        for(var i=0; i<in_set; i++){
+        Math.random() * (temp_arr.length - 1)
+        {
 
     }
 
@@ -171,7 +183,7 @@ export default function PictureRecognition (props: any) {
 
     function start_handler(){
         build_array()
-        setDigits(32)
+        setDigits(24)
         setShowMessage(true)
         setTestStart(true)
         setShowPrompt(true)
@@ -180,7 +192,7 @@ export default function PictureRecognition (props: any) {
 
 
     function calculate_ratio(){
-        return Math.round((AnswerCount/14)*100)
+        return Math.round((AnswerCount/10)*100)
     }
 
 
@@ -212,7 +224,7 @@ export default function PictureRecognition (props: any) {
             TEST #10: WORD RECOGNITION
         </div>
         <div className="row mt-12 text-sky-400">
-            Fifteen words are displayed, one every 1.5 seconds. The player is told to memorize each word. Afterward, fifteen more pictures are shown. This time the picture set only contains some of the items from the original display. The player is asked if each displayed picture from the second set was in the original set.
+            Fourteen words are displayed, one every 1.5 seconds. The player is told to memorize each word. Afterward, fifteen more pictures are shown. This time the picture set only contains some of the items from the original display. The player is asked if each displayed picture from the second set was in the original set.
         </div>
         {!EndTest ?
             !TestStart ? 
@@ -233,14 +245,14 @@ export default function PictureRecognition (props: any) {
                         }
                     </div>    
                 : ShowCompare ?
-                    <div className="h-[40%] mt-12 grid grid-rows-2 gap-4 place-items-center">
-                        <div className="h-[100%] mt-[20px]">
+                    <div className="h-[30%] mt-[50px] grid grid-auto-rows place-items-center">
+                        <div className="h-[40%] mt-[20px]">
                             {CompareDigits >= 0 && CurrentWord != "" ? 
-                                <span className="mt-[140px]">
+                                <span className="h-[15%] mt-[200px]">
                                     {CurrentWord}
                                 </span>
                             :
-                                <div className="h-[15%] mt-[200px] grid-cols-2 gap-x-[100px] place-items-center">
+                                <div className="h-[15%] mt-24 grid-cols-2 gap-x-[100px] place-items-center">
                                     <span className={AnsweredStyle}>
                                         {AnsweredString}
                                     </span>
@@ -253,7 +265,7 @@ export default function PictureRecognition (props: any) {
 
                         <div>
                             {ShowButtons ?
-                                <div className="h-[55%] mt-[200px] grid-cols-2 gap-x-[100px] place-items-center">
+                                <div className="h-[55%]  grid-cols-2 gap-x-[100px] place-items-center">
                                     <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
                                         Yes
                                     </Button>
@@ -273,7 +285,7 @@ export default function PictureRecognition (props: any) {
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
-                    {AnswerCount} answers correct out of 14. ({calculate_ratio()}%)
+                    {AnswerCount} answers correct out of 10. ({calculate_ratio()}%)
                 </span>
             </div>
         }
