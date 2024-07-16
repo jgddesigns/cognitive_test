@@ -28,9 +28,9 @@ export default function Home() {
         {/* {<ChoiceReaction/>} */}
         {/* {<MemoryScanning/>} */}
         {/* {<PictureRecognition/>} */}
-        {/* {<DigitVigilance/>} */}
+        {<DigitVigilance/>}
         {/* {<WorkingMemory/>} */}
-        {<MotorFunction/>}
+        {/* {<MotorFunction/>} */}
       </div>
     </main>
   )
