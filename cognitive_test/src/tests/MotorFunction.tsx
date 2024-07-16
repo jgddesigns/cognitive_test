@@ -28,6 +28,7 @@ export default function WorkingMemory(props: any) {
     const [CurrentMessage, setCurrentMessage] = React.useState<any>("") 
     const [ClockDisplay, setClockDisplay] = React.useState<any>("") 
     const [CurrentShape, setCurrentShape] = React.useState<any>("") 
+    const [CountMessage, setCountMessage] = React.useState<any>("") 
     const [CurrentPosition, setCurrentPosition] = React.useState(0)
     const [Pause, setPause] = React.useState(-1)
     const [AverageTime, setAverageTime] = React.useState(0)
@@ -36,8 +37,12 @@ export default function WorkingMemory(props: any) {
     const [NotAttempted, setNotAttempted] = React.useState(0)
     const [OriginalTime, setOriginalTime] = React.useState<any>(0)
 
+    const [CountDown, setCountDown] = React.useState(false)
+    const [CountTimer, setCountTimer] = React.useState<any>(-1)
+    
+
     const shapes = ["circle", "square", "triangle", "heart", "star", "moon", "hexagon", "diamond", "trapezoid"]
-    const colors = ["red", "yellow", "green", "blue", "pink"]
+    const colors = ["red", "yellow", "green", "blue"]
     const sizes = ["h-16 w-16", "h-24 w-24", "h-32 w-32", "h-48 w-48"]
       
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
@@ -111,6 +116,42 @@ export default function WorkingMemory(props: any) {
     }, [TestTime, TestStart, EndTest])
 
 
+    useEffect(() => {
+
+        while(CountTimer >= 0 && CountDown){
+            const timeoutId3 = setTimeout(() => {
+                if(CountTimer > 0){ 
+                    CountTimer == 1 ? setCountMessage("Go!") : null
+                    setCountTimer(CountTimer - 1)
+                }
+                else{
+                    
+                    create_item()
+                    //setTestStart(true)
+                    setDelay(true)
+                    setShowData(true)
+                    toggle_countdown(false)
+                }
+
+            }, 1000 )
+    
+            return () => clearTimeout(timeoutId3)
+
+        }
+
+    }, [CountDown, CountTimer])
+
+
+    function toggle_countdown(condition: any){
+        if(condition){
+            setCountDown(true)
+            setCountTimer(5)
+        }else{
+            setCountDown(false)
+            setCountTimer(-1)
+        }
+    }
+
     function end_test(){
         average_time()
         setDelay(false)
@@ -158,10 +199,11 @@ export default function WorkingMemory(props: any) {
 
     function start_handler(){
         set_clock(0)
-        create_item()
+        // create_item()
         setTestStart(true)
-        setDelay(true)
-        setShowData(true)
+        // setDelay(true)
+        // setShowData(true)
+        toggle_countdown(true)
         setCurrentMessage("Click Shapes as Quickly as Possible")
     }
 
@@ -215,15 +257,10 @@ export default function WorkingMemory(props: any) {
         }
 
         time = time.toString()
-
         time.toString()[0] == "0" ? time = time.slice(1, time.length) : null
-
         time = time.slice(0, 4)
-
         time[3] == 0 ? time = time.slice(0,3) : null
-
         time[0] != 1 && time[2] == 0 ? time = time.slice(0,2) : null
-
         setLastTime(time + " seconds")
 
         return parseFloat(time)
@@ -245,7 +282,8 @@ export default function WorkingMemory(props: any) {
         var box_arr = BoxGrid
         var position = Math.floor(Math.random() * BoxGrid.length)
         var style = random_style()
-        var delay_time = Math.floor(Math.random() * 3) + 1
+        //var delay_time = Math.floor(Math.random() * 3) + 1
+        var delay_time = 5
 
         box_arr[position] = style
 
@@ -266,8 +304,10 @@ export default function WorkingMemory(props: any) {
         var shape = Math.floor(Math.random() * shapes.length)
         var color = Math.floor(Math.random() * colors.length)
         var size = Math.floor(Math.random() * sizes.length)
+        var str = ""
 
-        var str = sizes[size] + " " + shapes[shape] + " " + "bg-" + colors[color] + "-400 " + "cursor-pointer" 
+        
+        shapes[shape] == "star" ? str = "bg-" + colors[color] + "-400 " + "cursor-pointer " + shapes[shape] : str = sizes[size] + " " + "bg-" + colors[color] + "-400 " + "cursor-pointer " + shapes[shape]
 
         console.log("\n\nSHAPE")
         console.log(str)
@@ -299,8 +339,12 @@ export default function WorkingMemory(props: any) {
 
                                 {CurrentMessage.length > 0 ? 
                                     <div>
-                                        <div>{CurrentMessage}</div>
-                                        <div>Current Round: {CurrentRound}</div>
+                                        <div>
+                                            {CurrentMessage}
+                                        </div>
+                                        <div>
+                                            Current Round: {CurrentRound}
+                                        </div>
                                     </div>
                                 : null}
                                 </div>
@@ -340,13 +384,13 @@ export default function WorkingMemory(props: any) {
                                     :   
                                         <div className="h-48 grid place-items-center text-[42px] text-white">
                                                 {Missed ? 
-                                                    <span>
+                                                    <div>
                                                         MISSED!
-                                                    </span>
+                                                    </div>
                                                 :
-                                                    <span>
+                                                    <div>
                                                         Found in: {LastTime}
-                                                    </span>                         
+                                                    </div>                         
                                                 }
                                         </div>
                                     }
@@ -366,7 +410,14 @@ export default function WorkingMemory(props: any) {
                                     </div>
                                 </div>
                         </div>
-                : null
+                :   CountTimer > 0 ? 
+                        <div className="mt-24 grid place-items-center text-4xl">
+                            {CountTimer}
+                        </div> 
+                    :   
+                        <div className="mt-24 grid place-items-center text-4xl">
+                            Go!
+                        </div>   
             :
                 <div className="grid grid-rows-3 mt-24 grid place-items-center"> 
                     <div className="mt-4 ml-12 text-4xl">

@@ -12,6 +12,7 @@ import PictureRecognition from '@/tests/PictureRecognition'
 import DigitVigilance from '@/tests/DigitVigilance'
 import WorkingMemory from '@/tests/WorkingMemory'
 import MotorFunction from '@/tests/MotorFunction'
+import WordRecognition from '@/tests/WordRecognition'
 
 export default function Home() {
 
@@ -28,9 +29,10 @@ export default function Home() {
         {/* {<ChoiceReaction/>} */}
         {/* {<MemoryScanning/>} */}
         {/* {<PictureRecognition/>} */}
-        {<DigitVigilance/>}
+        {/* {<DigitVigilance/>} */}
         {/* {<WorkingMemory/>} */}
         {/* {<MotorFunction/>} */}
+        {<WordRecognition/>}
       </div>
     </main>
   )
