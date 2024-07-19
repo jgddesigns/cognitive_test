@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import {words} from "../helpers/words"
 
-export default function PictureRecognition (props: any) {
+export default function WordRecognition (props: any) {
 
     const [EndTest, setEndTest] = React.useState(false)
     const [TestStart, setTestStart] = React.useState(false)
