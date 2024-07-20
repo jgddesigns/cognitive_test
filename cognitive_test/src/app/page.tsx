@@ -2,7 +2,7 @@ import React from 'react'
 import './globals.css'
 import Image from 'next/image'
 import {Button, ButtonGroup} from "@nextui-org/react"
-import Connect from "../database/Connect"
+import Connect from "../database/Dynamo"
 import VerbalLearning from "../tests/VerbalLearning"
 import ReactionTime from "../tests/ReactionTime"
 import NumberVigilance from '@/tests/NumberVigilance'
@@ -13,6 +13,7 @@ import DigitVigilance from '@/tests/DigitVigilance'
 import WorkingMemory from '@/tests/WorkingMemory'
 import MotorFunction from '@/tests/MotorFunction'
 import WordRecognition from '@/tests/WordRecognition'
+import MainPage from '@/screens/MainPage'
 
 export default function Home() {
 
@@ -32,7 +33,8 @@ export default function Home() {
         {/* {<DigitVigilance/>} */}
         {/* {<WorkingMemory/>} */}
         {/* {<MotorFunction/>} */}
-        {<WordRecognition/>}
+        {/* {<WordRecognition/>} */}
+        <MainPage/>
       </div>
     </main>
   )
