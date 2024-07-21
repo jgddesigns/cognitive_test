@@ -5,7 +5,9 @@ Built with:
  Typescript
  Tailwind
  AWS Dynamo DB
+ AWS Cognito
 
+========================================
 
 GETTING STARTED
 
@@ -17,9 +19,18 @@ GETTING STARTED
 3. to launch server 'npm run dev' (default url is localhost:3000)
 
 
+If there are any issues, it could be due to an incompatible React or node version. If you have node already installed and it's different than the dependency for this app, nvm can be used to switch between node versions.
+
+Node Version Manager (nvm) Setup Instructions:
+
+https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
+
+(or lookup on ChatGpt, Google, etc...)
+
 
 
 ================================================
+
 CODING DOCUMENTATION FORMAT
 
 Use the following convention for documenting each function in the code comments:
@@ -52,26 +63,22 @@ Example:
         setSortBy(type)
         renderResults(resultsMap)
     }
+
+
+
 ================================================
+
 MAIN PAGE LOCATION:
 cognitive_test/src/app/page.tsx
 
 TEST COMPONENETS LOCATION:
 cognitive_test/src/tests
 
+
+
 ================================================
+
 DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
 
 Related files located in 'src/database'
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Keys are hardcoded in app currently, to be seperated and access with backed after production launch
-=======
->>>>>>> d7ca61ac224dd8f2dc27ff51cd7ba7ffb599298f
-=======
-=======
-Keys are hardcoded in app currently, to be seperated and access with backed after production launch
->>>>>>> main
->>>>>>> 1f01123624b8f4580d71a432039f4e1e0defc92e
-================================================
