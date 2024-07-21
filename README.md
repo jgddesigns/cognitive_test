@@ -7,6 +7,14 @@ Afterward, various variables pertaining to the CrowdDoing platform are introduce
 A comparison is made with subsequent analysis, based on typically expected results and how the variables affect or have no influence on a particular test.
 
 
+Includes:
+Welcoming Page
+Test Info
+Signup/Login
+User Profile (Settings, Individual results and analysis)
+Macroscopic Results and Analysis
+
+
 Built with:
  React (Next framework)
  Typescript
