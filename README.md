@@ -1,5 +1,12 @@
 COGNITIVE TEST APP FOR CROWDDOING
 
+The purpose of this app is for users to take a set of 10-15 different cognitive tests. Initially the baseline is determined by taking a test under regular circumstances. 
+
+Afterward, various variables pertaining to the CrowdDoing platform are introduced such as use of herbal supplements or walks in nature. Previously attempted tests are to be taken again following the indtroduction of a specific variable. 
+
+A comparison is made with subsequent analysis, based on typically expected results and how the variables affect or have no influence on a particular test.
+
+
 Built with:
  React (Next framework)
  Typescript
