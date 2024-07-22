@@ -23,6 +23,10 @@ export default function DigitVigilance(props: any) {
         setPassword(text)
     }
 
+    function submit_handler(){
+        
+    }
+
     return(
     <div className="h-full">
         <div className="row">
@@ -30,7 +34,7 @@ export default function DigitVigilance(props: any) {
         </div>
 
 
-        <div className="mt-24 grid grid-rows-2 place-items-center gap-12">
+        <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
             <div className="grid grid-cols-2 gap-12">
                 <span>
                     Username/Email {Username}
@@ -42,6 +46,12 @@ export default function DigitVigilance(props: any) {
                     Password {Password}
                 </span>
                 <textarea onChange={e => password_handler(e.target.value)} className="w-[200px] h-[50px]"></textarea>
+            </div>
+            <div className="mt-12" onClick={e => submit_handler()}>
+                <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer">
+                    Submit
+                </Button> 
+         
             </div>
         </div>
     </div>

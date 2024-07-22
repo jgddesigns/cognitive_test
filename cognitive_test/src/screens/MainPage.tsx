@@ -3,6 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import { v4 as uuidv4 } from 'uuid';
 import Login from '@/components/Login';
+import Signup from '@/components/Signup';
 
 
 export default function DigitVigilance(props: any) {
@@ -66,7 +67,7 @@ export default function DigitVigilance(props: any) {
             :
                 <div className="grid place-items-center gap-8 grid-rows-2 mt-24">
                     <div>
-                        Signup Placeholder
+                        <Signup/>
                     </div>
                     <div className="mt-12 cursor-pointer text-blue-400 underline" onClick={e => reset_page()}>
                         Go Back
