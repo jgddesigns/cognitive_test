@@ -14,15 +14,22 @@ import WorkingMemory from '@/tests/WorkingMemory'
 import MotorFunction from '@/tests/MotorFunction'
 import WordRecognition from '@/tests/WordRecognition'
 import MainPage from '@/screens/MainPage'
+import Tests from '@/screens/Tests'
 
 export default function Home() {
+
+  const main_class = ["flex min-h-screen flex-col items-center justify-between p-24"
+, "h-[100%] w-[100%] bg-blue-400 relative"]
+  const [MainClass, setMainClass] = React.useState(main_class[0])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-lg lg:flex">
 
         {/* TEST AREA FOR DIFFERENT COMPONENTS (SHOWS ON MAIN PAGE) */}
-        
+        {/* CURRENTLY SET UP FOR TEST DEBUGGINH. THIS PAGE WILL ONLY HAVE MAIN PAGE COMPONENT IN FINAL VERSION. */}
+
+
         {/* <Connect/> */}
         {/* <VerbalLearning/> */}
         {/* <ReactionTime/> */}
@@ -34,7 +41,8 @@ export default function Home() {
         {/* {<WorkingMemory/>} */}
         {/* {<MotorFunction/>} */}
         {/* {<WordRecognition/>} */}
-        <MainPage/>
+        {/* <MainPage/> */}
+        <Tests setMainClass={setMainClass}/>
       </div>
     </main>
   )
