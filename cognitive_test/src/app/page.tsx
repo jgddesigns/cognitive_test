@@ -25,7 +25,7 @@ export default function Home() {
 
   const header_text = ["Test Info", "Home"]
   const [HeaderText, setHeaderText] = React.useState(header_text[0])
-  const link_class = ["text-blue-600", "text-gray-600 font-bold underline"]
+  const link_class = ["text-blue-600 cursor-pointer", "text-gray-600 font-bold underline cursor-pointer"]
   const [LinkClass, setLinkClass] = React.useState(link_class[0])
  
   const [ShowPopover, setShowPopover] = React.useState(false)
@@ -42,7 +42,7 @@ export default function Home() {
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
 
 
-  const [TestID, setTestID] = React.useState(-1)
+  const [TestID, setTestID] = React.useState(0)
   const [TestTitle, setTestTitle] = React.useState("")
   const [PopoverMessage, setPopoverMessage] = React.useState("")
 
@@ -55,9 +55,11 @@ export default function Home() {
 
   function toggle_tests(){
     clear_tests()
-    setShowTestInfo(!ShowTestInfo)
-    LinkClass == link_class[0] ? setLinkClass(link_class[1]) : setLinkClass(link_class[0])
-    HeaderText == header_text[0] ? setHeaderText(header_text[1]) : setHeaderText(header_text[0])
+    //setShowTestInfo(!ShowTestInfo)
+    //LinkClass == link_class[0] ? setLinkClass(link_class[1]) : setLinkClass(link_class[0])
+    ShowTestInfo || TestID > 0 ? setHeaderText(header_text[0]) : setHeaderText(header_text[1])
+    TestID > 0 || ShowTestInfo ? setShowTestInfo(false) : setShowTestInfo(true)
+    setTestID(0)
   }
 
   function clear_tests(){
@@ -74,9 +76,7 @@ export default function Home() {
     setLinkClass(link_class[0])
     setShowPopover(false)
     setShowTestInfo(false)
-
     clear_tests()
-
 
     switch (TestID){
       case 1:
@@ -174,7 +174,7 @@ export default function Home() {
 
       {ShowPopover ?
         <div className="h-[50%] w-[30%] z-99 absolute top-[20%] left-[35%] bg-blue-400 rounded-2xl text-white">
-          <div className="p-12 grid grid-auto-rows">
+          <div className="p-12 grid grid-auto-rows h-[110%]">
             <div className="text-3xl">
                 {TestTitle}
             </div>
@@ -184,7 +184,7 @@ export default function Home() {
             <div className="underline cursor-pointer mt-[10%]" onClick={take_test}>
               Take Test
             </div>
-            <div className="flex flex-col w-full mt-[30%] underline cursor-pointer" onClick={e => hide_popover()}>
+            <div className="flex flex-col w-full sticky bottom-0 underline cursor-pointer" onClick={e => hide_popover()}>
                 Close
             </div>
           </div>
