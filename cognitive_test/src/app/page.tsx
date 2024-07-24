@@ -41,8 +41,7 @@ export default function Home() {
   const [ShowWordRecognition, setShowWordRecognition] = React.useState(false)
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
 
-
-  const [TestID, setTestID] = React.useState(-1)
+  const [TestID, setTestID] = React.useState(0)
   const [TestTitle, setTestTitle] = React.useState("")
   const [PopoverMessage, setPopoverMessage] = React.useState("")
 
@@ -181,10 +180,10 @@ export default function Home() {
             <div className="mt-36 text-xl">
                 {PopoverMessage}
             </div>
-            <div className="underline cursor-pointer mt-[10%]" onClick={take_test}>
+            <div className="w-full absolute bottom-48 underline cursor-pointer" onClick={take_test}>
               Take Test
             </div>
-            <div className="flex flex-col w-full mt-[30%] underline cursor-pointer" onClick={e => hide_popover()}>
+            <div className="w-full absolute bottom-12 underline cursor-pointer" onClick={e => hide_popover()}>
                 Close
             </div>
           </div>
