@@ -1,8 +1,9 @@
 COGNITIVE TEST APP FOR CROWDDOING
+###
 <br>
 <br>
 <br>
-Introduction:
+INTRODUCTION:
 <br>
 <br>
 The purpose of this app is for users to take a set of 10-15 different cognitive tests. Initially the baseline is determined by taking a test under regular circumstances. 
@@ -16,7 +17,10 @@ A comparison is made with subsequent analysis, based on typically expected resul
 <br>
 <br>
 ========================================
-Includes:
+<br>
+<br>
+<br>
+INCLUDES:
 <br>
 <br>
 Welcoming Page
@@ -31,7 +35,7 @@ Macroscopic Results and Analysis
 <br>
 <br>
 <br>
-Built with:
+BUILT WITH:
 <br>
 <br>
 React (Next framework)
@@ -52,6 +56,10 @@ Coded in VS Code on Windows 10
 <br>
 <br>
 <br>
+========================================
+<br>
+<br>
+<br>
 GETTING STARTED
 <br>
 <br>
@@ -59,13 +67,10 @@ Install git ( https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 <br>
 Install Node (https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 <br>
-1. Use terminal within IDE to navigate to desired folder for project. Use git to clone the project (git clone https://https://github.com/jgddesigns/cognitive_test)
-<br>
-2. In cognitive_test directory, run 'npm install' in terminal command line
-<br>
-3. Next run 'npm run build' in terminal command line
-<br>
-4. Launch server 'npm run dev' in terminal command line (default local url in broswer is localhost:3000)
+<br>1. Use terminal within IDE to navigate to desired folder for project. Use git to clone the project (git clone https://github.com/jgddesigns/cognitive_test)
+<br>2. In cognitive_test directory, run 'npm install' in terminal command line
+<br>3. Next run 'npm run build' in terminal command line
+<br>4. Launch server 'npm run dev' in terminal command line (default local url in broswer is localhost:3000)
 <br>
 <br>
 <br>
@@ -81,7 +86,9 @@ https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
 (or lookup on ChatGpt, Google, etc...)
 <br>
 <br>
-================================================
+<br>
+========================================
+<br>
 <br>
 <br>
 CODING DOCUMENTATION FORMAT
@@ -118,20 +125,15 @@ Example:
     }
 <br>
 <br>
-================================================
-<br>
-<br>
-MAIN PAGE LOCATION:
-<br>
-cognitive_test/src/app/page.tsx
-<br>
-<br>
-TEST COMPONENETS LOCATION:
-<br>
-cognitive_test/src/tests
-<br>
 <br>
 ================================================
+<br>
+<br>
+<br>
+MAIN PAGE LOCATION: cognitive_test/src/app/page.tsx
+<br>
+<br>
+TEST COMPONENETS LOCATION: cognitive_test/src/tests
 <br>
 <br>
 DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
