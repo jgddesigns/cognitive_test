@@ -29,5 +29,8 @@ body {
 @layer base {
   textarea {
     @apply resize-none;
+    @apply p-[10px];
+    @apply h-[50px];
+    @apply w-[250px];
   }
 }
