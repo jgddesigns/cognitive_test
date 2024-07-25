@@ -8,7 +8,7 @@ A comparison is made with subsequent analysis, based on typically expected resul
 
 
 Includes:
-Welcoming Page
+Welcoming Page\n
 Test Info
 Signup/Login
 User Profile (Settings, Individual results and analysis)
