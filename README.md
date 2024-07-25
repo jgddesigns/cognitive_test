@@ -1,51 +1,89 @@
 COGNITIVE TEST APP FOR CROWDDOING
-
+<br>
+<br>
+<br>
+Introduction:
+<br>
+<br>
 The purpose of this app is for users to take a set of 10-15 different cognitive tests. Initially the baseline is determined by taking a test under regular circumstances. 
-
+<br>
+<br>
 Afterward, various variables pertaining to the CrowdDoing platform are introduced such as use of herbal supplements or walks in nature. Previously attempted tests are to be taken again following the indtroduction of a specific variable. 
-
+<br>
+<br>
 A comparison is made with subsequent analysis, based on typically expected results and how the variables affect or have no influence on a particular test.
-
-
-Includes:
-Welcoming Page\n
-Test Info
-Signup/Login
-User Profile (Settings, Individual results and analysis)
-Macroscopic Results and Analysis
-
-
-Built with:
- React (Next framework)
- Typescript
- Tailwind
- AWS Dynamo DB
- AWS Cognito
-
+<br>
+<br>
+<br>
 ========================================
-
+Includes:
+<br>
+<br>
+Welcoming Page
+<br>
+Test Info
+<br>
+Signup/Login
+<br>
+User Profile (Settings, Individual results and analysis)
+<br>
+Macroscopic Results and Analysis
+<br>
+<br>
+<br>
+Built with:
+<br>
+<br>
+React (Next framework)
+<br>
+Typescript
+<br>
+Tailwind
+<br>
+AWS Dynamo DB
+<br>
+AWS Cognito
+<br>
+Node.js & npm
+<br>
+Node Version Manager (nvm)
+<br>
+Coded in VS Code on Windows 10
+<br>
+<br>
+<br>
 GETTING STARTED
-
-
-1. in cognitive_test directory, run 'npm install' in command line
-
-2. next run 'npm run build'
-
-3. to launch server 'npm run dev' (default url is localhost:3000)
-
-
-If there are any issues, it could be due to an incompatible React or node version. If you have node already installed and it's different than the dependency for this app, nvm can be used to switch between node versions.
-
+<br>
+<br>
+Install git ( https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+<br>
+Install Node (https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
+<br>
+1. Use terminal within IDE to navigate to desired folder for project. Use git to clone the project (git clone https://https://github.com/jgddesigns/cognitive_test)
+<br>
+2. In cognitive_test directory, run 'npm install' in terminal command line
+<br>
+3. Next run 'npm run build' in terminal command line
+<br>
+4. Launch server 'npm run dev' in terminal command line (default local url in broswer is localhost:3000)
+<br>
+<br>
+<br>
+If there are any issues, it could be due to an incompatible React or Node version. If you have Node already installed and it's different than the dependency for this app, nvm can be used to switch between Node versions.
+<br>
+<br>
 Node Version Manager (nvm) Setup Instructions:
-
+<br>
+<br>
 https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
-
+<br>
+<br>
 (or lookup on ChatGpt, Google, etc...)
-
-
-
+<br>
+<br>
 ================================================
-
+<br>
+<br>
 CODING DOCUMENTATION FORMAT
 
 Use the following convention for documenting each function in the code comments:
@@ -78,22 +116,26 @@ Example:
         setSortBy(type)
         renderResults(resultsMap)
     }
-
-
-
+<br>
+<br>
 ================================================
-
+<br>
+<br>
 MAIN PAGE LOCATION:
+<br>
 cognitive_test/src/app/page.tsx
-
+<br>
+<br>
 TEST COMPONENETS LOCATION:
+<br>
 cognitive_test/src/tests
-
-
-
+<br>
+<br>
 ================================================
-
+<br>
+<br>
 DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
-
+<br>
+<br>
 Related files located in 'src/database'
 
