@@ -1,9 +1,6 @@
 'use client'
 import React from 'react'
 import './globals.css'
-import Image from 'next/image'
-import {Button, ButtonGroup} from "@nextui-org/react"
-import Connect from "../database/Dynamo"
 import VerbalLearning from "../tests/VerbalLearning"
 import ReactionTime from "../tests/ReactionTime"
 import NumberVigilance from '@/tests/NumberVigilance'
@@ -14,8 +11,10 @@ import DigitVigilance from '@/tests/DigitVigilance'
 import WorkingMemory from '@/tests/WorkingMemory'
 import MotorFunction from '@/tests/MotorFunction'
 import WordRecognition from '@/tests/WordRecognition'
-import MainPage from '@/screens/MainPage'
 import Tests from '@/screens/Tests'
+import Login from '@/login/Login'
+import Signup from '@/login/Signup'
+import MainPage from '@/screens/MainPage'
 
 export default function Home() {
 
@@ -23,13 +22,23 @@ export default function Home() {
 , "flex min-h-screen flex-col items-center justify-between p-24 h-[100%] w-[100%]  relative"]
   const [MainClass, setMainClass] = React.useState(main_class[0])
 
-  const header_text = ["Test Info", "Home"]
-  const [HeaderText, setHeaderText] = React.useState(header_text[0])
-  const link_class = ["text-blue-600", "text-gray-600 font-bold underline"]
-  const [LinkClass, setLinkClass] = React.useState(link_class[0])
- 
-  const [ShowPopover, setShowPopover] = React.useState(false)
+  const link_class = ["text-blue-600 cursor-pointer", "text-gray-600 font-bold underline cursor-pointer"]
+  const [HomeClass, setHomeClass] = React.useState(link_class[1])
+  const [TestClass, setTestClass] = React.useState(link_class[0])
+  const [SignupClass, setSignupClass] = React.useState(link_class[0])
+  const [LoginClass, setLoginClass] = React.useState(link_class[0])
+
+  const classes = [setHomeClass, setTestClass, setSignupClass, setLoginClass]
+
+  const [ShowHome, setShowHome] = React.useState(true)
   const [ShowTestInfo, setShowTestInfo] = React.useState(false)
+  const [ShowSignup, setShowSignup] = React.useState(false)
+  const [ShowLogin, setShowLogin] = React.useState(false)
+
+  const screens = [setShowHome, setShowTestInfo, setShowSignup, setShowLogin]
+
+  const [LoggedIn, setLoggedIn] = React.useState(false)
+  const [ShowPopover, setShowPopover] = React.useState(false)
   const [ShowChoiceReaction, setShowChoiceReaction] = React.useState(false)
   const [ShowDigitVigilance, setShowDigitVigilance] = React.useState(false)
   const [ShowMemoryScanning, setShowMemoryScanning] = React.useState(false)
@@ -40,10 +49,18 @@ export default function Home() {
   const [ShowVerbalLearning, setShowVerbalLearning] = React.useState(false)
   const [ShowWordRecognition, setShowWordRecognition] = React.useState(false)
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
-
   const [TestID, setTestID] = React.useState(0)
   const [TestTitle, setTestTitle] = React.useState("")
   const [PopoverMessage, setPopoverMessage] = React.useState("")
+
+
+
+  function link_handler(place: any){
+    clear_tests()
+    setTestID(0)
+    set_classes(place)
+    set_screens(place)
+  }
 
   function hide_popover(){
     setShowPopover(false)
@@ -52,11 +69,16 @@ export default function Home() {
     setTestTitle("")
   }
 
-  function toggle_tests(){
-    clear_tests()
-    setShowTestInfo(!ShowTestInfo)
-    LinkClass == link_class[0] ? setLinkClass(link_class[1]) : setLinkClass(link_class[0])
-    HeaderText == header_text[0] ? setHeaderText(header_text[1]) : setHeaderText(header_text[0])
+  function set_classes(link: any){
+    for(var i=0; i < classes.length; i++){
+      i != link ? classes[i](link_class[0]) : classes[i](link_class[1])
+    }
+  }
+
+  function set_screens(link: any){
+    for(var i=0; i < screens.length; i++){
+      i != link ? screens[i](false) : screens[i](true)
+    }
   }
 
   function clear_tests(){
@@ -70,12 +92,10 @@ export default function Home() {
   }
 
   function take_test(){
-    setLinkClass(link_class[0])
+    setHomeClass(link_class[0])
     setShowPopover(false)
     setShowTestInfo(false)
-
     clear_tests()
-
 
     switch (TestID){
       case 1:
@@ -114,11 +134,36 @@ export default function Home() {
   return (
     <main className={MainClass}>
       <div className="z-1 max-w-5xl w-full items-center font-mono text-lg grid grid-auto-rows">
-        <div>        
-          <span onClick={toggle_tests} className={LinkClass}>{HeaderText}</span>
+        <div className="grid grid-flow-col">        
+          <span onClick={e => link_handler(0)} className={HomeClass}>
+            Home
+          </span>
+
+          <span onClick={e => link_handler(1)} className={TestClass}>
+            Test Info
+          </span>
+
+          {!LoggedIn ? 
+            <span onClick={e => link_handler(2)} className={SignupClass}>
+              Signup
+            </span>
+          : null}
+
+          {!LoggedIn ? 
+            <span onClick={e => link_handler(3)} className={LoginClass}>
+              Login
+            </span>
+          : null}
         </div>
 
         <div className="mt-24">
+          {/* HOME */}
+          {ShowHome ? 
+            <MainPage/>  
+          : null}
+
+
+          {/* TEST INFO */}
           {ShowTestInfo ?
             <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID}/>
           : null}
@@ -162,6 +207,19 @@ export default function Home() {
           {ShowWorkingMemory ?
             <WorkingMemory/>        
           :null}
+
+
+          {/* SIGNUP */}
+          {ShowSignup ?
+            <Signup/>
+          : null}
+
+
+          {/* LOGIN */}
+          {ShowLogin ?
+            <Login/>
+          : null}
+
         </div>
       </div>
 
@@ -180,15 +238,19 @@ export default function Home() {
             <div className="mt-36 text-xl">
                 {PopoverMessage}
             </div>
-            <div className="w-full absolute bottom-48 underline cursor-pointer" onClick={take_test}>
+            <div className="w-full absolute bottom-48 underline cursor-pointer text-2xl" onClick={e => take_test()}>
               Take Test
             </div>
             <div className="w-full absolute bottom-12 underline cursor-pointer" onClick={e => hide_popover()}>
-                Close
+              Close
             </div>
           </div>
         </div>
       : null}
+
+
+      
+
 
     </main>
 
