@@ -5,7 +5,7 @@ import {
     CognitoUser,
     AuthenticationDetails
 } from 'amazon-cognito-identity-js'
-import {credentials} from '../credentials/Config'
+import {credentials} from '../credentials/Credentials'
 
 const userPool: any = new CognitoUserPool(credentials);
 
