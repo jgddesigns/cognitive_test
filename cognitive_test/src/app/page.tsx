@@ -15,6 +15,7 @@ import Tests from '@/screens/Tests'
 import Login from '@/login/Login'
 import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
+import Profile from '@/login/Profile'
 
 export default function Home() {
 
@@ -27,15 +28,17 @@ export default function Home() {
   const [TestClass, setTestClass] = React.useState(link_class[0])
   const [SignupClass, setSignupClass] = React.useState(link_class[0])
   const [LoginClass, setLoginClass] = React.useState(link_class[0])
+  const [ProfileClass, setProfileClass] = React.useState(link_class[0])
 
-  const classes = [setHomeClass, setTestClass, setSignupClass, setLoginClass]
+  const classes = [setHomeClass, setTestClass, setSignupClass, setLoginClass, setProfileClass]
 
   const [ShowHome, setShowHome] = React.useState(true)
   const [ShowTestInfo, setShowTestInfo] = React.useState(false)
   const [ShowSignup, setShowSignup] = React.useState(false)
   const [ShowLogin, setShowLogin] = React.useState(false)
+  const [ShowProfile, setShowProfile] = React.useState(false)
 
-  const screens = [setShowHome, setShowTestInfo, setShowSignup, setShowLogin]
+  const screens = [setShowHome, setShowTestInfo, setShowSignup, setShowLogin, setShowProfile]
 
   const [LoggedIn, setLoggedIn] = React.useState(false)
   const [ShowPopover, setShowPopover] = React.useState(false)
@@ -148,6 +151,10 @@ export default function Home() {
               Signup
             </span>
           : null}
+          <span onClick={e => link_handler(4)} className={ProfileClass}>
+            Profile
+          </span>
+          
 
           {!LoggedIn ? 
             <span onClick={e => link_handler(3)} className={LoginClass}>
@@ -214,10 +221,14 @@ export default function Home() {
             <Signup/>
           : null}
 
-
           {/* LOGIN */}
           {ShowLogin ?
             <Login/>
+          : null}
+
+          {/* PROFILE */}
+          {ShowProfile ?
+            <Profile/>
           : null}
 
         </div>
@@ -230,12 +241,12 @@ export default function Home() {
       : null}
 
       {ShowPopover ?
-        <div className="h-[50%] w-[30%] z-99 absolute top-[20%] left-[35%] bg-blue-400 rounded-2xl text-white">
+        <div className="h-[50%] w-[30%] z-99 absolute top-[10%] left-[35%] bg-blue-400 rounded-2xl text-white">
           <div className="p-12 grid grid-auto-rows">
             <div className="text-3xl">
                 {TestTitle}
             </div>
-            <div className="mt-36 text-xl">
+            <div className="mt-[15%] text-xl">
                 {PopoverMessage}
             </div>
             <div className="w-full absolute bottom-48 underline cursor-pointer text-2xl" onClick={e => take_test()}>
