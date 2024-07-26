@@ -3,8 +3,8 @@
 #database
 /src/database
 
-#aws cognito login
-/src/login
+#aws credentials
+/src/credentials
  
 # dependencies
 /node_modules
