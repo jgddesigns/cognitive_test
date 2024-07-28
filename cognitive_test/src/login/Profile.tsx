@@ -18,6 +18,22 @@ export default function Profile(props: any) {
     const [RepeatedAmount, setRepeatedAmount] = React.useState(get_repeated_amount())
     const [TestsRepeated, setTestsRepeated] = React.useState(get_repeated_tests())
 
+    const [ShowChoiceReaction, setShowChoiceReaction] = React.useState(false) 
+    const [ShowDigitVigilance, setShowDigitVigilance] = React.useState(false) 
+    const [ShowMemoryScanning, setShowMemoryScanning] = React.useState(false)  
+    const [ShowMotorFunction, setShowMotorFunction] = React.useState(false)
+    const [ShowNumberVigilance, setShowNumberVigilance] = React.useState(false)
+    const [ShowPictureRecognition, setShowPictureRecognition] = React.useState(false)
+    const [ShowReactionTime, setShowReactionTime] = React.useState(false)
+    const [ShowVerbalLearning, setShowVerbalLearning] = React.useState(false)
+    const [ShowWordRecogntion, setShowWordRecognition] = React.useState(false)
+    const [ShowWorkingMemory, setShowWorkingMemory] = React.useState(false)
+
+    const tests = [setShowChoiceReaction, setShowDigitVigilance, setShowMemoryScanning, setShowMotorFunction, setShowNumberVigilance, setShowPictureRecognition, setShowReactionTime, setShowVerbalLearning, setShowWordRecognition, setShowWorkingMemory]
+
+    //db retrieval data
+    const data = null
+
     useEffect(() => {
 
     }, [])
@@ -47,6 +63,11 @@ export default function Profile(props: any) {
 
     }
 
+    function test_results_handler(test: any){
+        for(var i=0; i<tests.length; i++){
+            i == test ? tests[test](true) : tests[i](false)
+        }
+    }
 
     function create_test_map(){
         const test_map = Tests.map((name:any, index:any) => {
@@ -89,6 +110,11 @@ export default function Profile(props: any) {
 
     function get_time(){
         return "34:29"
+    }
+
+    function get_best_score(test: any){
+        //return data["scores"][test]
+        return test
     }
 
     return(
@@ -159,83 +185,148 @@ export default function Profile(props: any) {
                             Tests: 
                         </div> 
                         <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(0)}>
+                                    Choice Reaction Time
+                                </div>
+                                {ShowChoiceReaction?
+                                    <div>
+                                    </div>
+                                : null}
                             </div>
                             <div>
-                                Score
-                            </div>
-                        </div>
-                        <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
-                            </div>
-                            <div>
-                                Score
+                                Best Score: {get_best_score(0)}
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(1)}>
+                                    Digit Vigilance
+                                </div>
+                                {ShowDigitVigilance?
+                                    <div>
+                                    </div>
+                                : null}
                             </div>
                             <div>
-                                Score
-                            </div>
-                        </div>
-                        <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
-                            </div>
-                            <div>
-                                Score
+                                Best Score: {get_best_score(1)}
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(2)}>
+                                    Memory Scanning
+                                </div>
+                                {ShowMemoryScanning?
+                                    <div>
+                                    </div>
+                                : null}
                             </div>
                             <div>
-                                Score
-                            </div>
-                        </div>
-                        <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
-                            </div>
-                            <div>
-                                Score
+                                Best Score: {get_best_score(2)}
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(3)}>
+                                    Motor Function
+                                </div>
+                                {ShowMotorFunction?
+                                    <div>
+                                    </div>
+                                : null}
                             </div>
                             <div>
-                                Score
-                            </div>
-                        </div>
-                        <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
-                            </div>
-                            <div>
-                                Score
+                                Best Score: {get_best_score(3)}
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(4)}>
+                                    Number Vigilance
+                                </div>
+                                {ShowNumberVigilance?
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        {/* <div className="ml-8 p-8"> */}
+                                            <span className="ml-12 p-[10px]">
+                                                Test data
+                                            </span>
+                                        {/* </div> */}
+                                    </div>
+                                : null}
                             </div>
                             <div>
-                                Score
+                                Best Score: {get_best_score(4)}
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div>
-                                Placeholder
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(5)}>
+                                    Picture Recognition
+                                </div>
+                                {ShowPictureRecognition?
+                                    <div>
+                                    </div>
+                                : null}
                             </div>
                             <div>
-                                Score
+                                Best Score: {get_best_score(5)}
+                            </div>
+                        </div>
+                        <div className="grid ml-12 mt-8 grid-cols-2">
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(6)}>
+                                    Visual Reaction Time
+                                </div>
+                                {ShowReactionTime?
+                                    <div>
+                                    </div>
+                                : null}
+                            </div>
+                            <div>
+                                Best Score: {get_best_score(6)}
+                            </div>
+                        </div>
+                        <div className="grid ml-12 mt-8 grid-cols-2">
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(7)}>
+                                    Verbal Learning
+                                </div>
+                                {ShowVerbalLearning?
+                                    <div>
+                                    </div>
+                                : null}
+                            </div>
+                            <div>
+                                Best Score: {get_best_score(7)}
+                            </div>
+                        </div>
+                        <div className="grid ml-12 mt-8 grid-cols-2">
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(8)}>
+                                    <span className="text-blue-600">Word Recognition</span>
+                                </div>
+                                {ShowWordRecogntion?
+                                    <div>
+                                    </div>
+                                : null}
+                            </div>
+                            <div>
+                                Best Score: {get_best_score(8)}
+                            </div>
+                        </div>
+                        <div className="grid ml-12 mt-8 grid-cols-2">
+                            <div className="grid grid-auto-rows">
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(9)}>
+                                    Working Memory
+                                </div>
+                                {ShowWorkingMemory?
+                                    <div>
+                                    </div>
+                                : null}
+                            </div>
+                            <div>
+                                Best Score: {get_best_score(9)}
                             </div>
                         </div>
                     </div>

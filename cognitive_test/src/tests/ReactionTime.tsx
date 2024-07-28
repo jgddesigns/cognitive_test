@@ -89,7 +89,7 @@ export default function ReactionTime (props: any) {
   return(
     <div>
         <div className="row">
-            TEST #2: REACTION TIME
+            TEST #2: VISUAL REACTION TIME
         </div>
         <div className="row mt-12 text-sky-400">
             A button appears at the center of the screen. The user is intended to press it as quickly as possible. There are twenty trials and the button appears randomly between .5 and 2.5 seconds.
