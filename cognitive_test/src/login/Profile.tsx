@@ -29,7 +29,7 @@ export default function Profile(props: any) {
     const [ShowWordRecogntion, setShowWordRecognition] = React.useState(false)
     const [ShowWorkingMemory, setShowWorkingMemory] = React.useState(false)
 
-    const tests = [setShowChoiceReaction, setShowDigitVigilance, setShowMemoryScanning, setShowMotorFunction, setShowNumberVigilance, setShowPictureRecognition, setShowReactionTime, setShowVerbalLearning, setShowWordRecognition, setShowWorkingMemory]
+    const tests: any = [[ShowChoiceReaction, setShowChoiceReaction], [ShowDigitVigilance, setShowDigitVigilance], [ShowMemoryScanning, setShowMemoryScanning],  [ShowMotorFunction, setShowMotorFunction], [ShowNumberVigilance, setShowNumberVigilance], [ShowPictureRecognition, setShowPictureRecognition], [ShowReactionTime, setShowReactionTime], [ShowVerbalLearning, setShowVerbalLearning], [ShowWordRecogntion, setShowWordRecognition], [ShowWorkingMemory, setShowWorkingMemory]]
 
     //db retrieval data
     const data = null
@@ -64,9 +64,7 @@ export default function Profile(props: any) {
     }
 
     function test_results_handler(test: any){
-        for(var i=0; i<tests.length; i++){
-            i == test ? tests[test](true) : tests[i](false)
-        }
+        tests[test][1](!tests[test][0])
     }
 
     function create_test_map(){
