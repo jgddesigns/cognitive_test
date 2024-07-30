@@ -2,7 +2,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import { v4 as uuidv4 } from 'uuid';
-import {signUp, signIn} from './Cognito'
+import Cognito from './Cognito'
 
 
 export default function DigitVigilance(props: any) {

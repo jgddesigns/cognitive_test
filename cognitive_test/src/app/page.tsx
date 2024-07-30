@@ -17,6 +17,7 @@ import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
 
+
 export default function Home() {
 
   const main_class = ["flex min-h-screen flex-col items-center justify-between p-24"

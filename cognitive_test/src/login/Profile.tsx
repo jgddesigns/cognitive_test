@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 
-export default function Profile(props: any) {
+export default function Profile(this: any, props: any) {
     const classes = ["cursor-not-allowed"]
     const [Username, setUsername] = React.useState(get_username())
     const [UsernameClass, setUsernameClass] = React.useState(classes[0])
@@ -40,15 +40,15 @@ export default function Profile(props: any) {
 
 
     function username_handler(value: any){
-
+        setUsername(value)
     }
 
     function email_handler(value: any){
-
+        setEmail(value)
     }
 
     function password_handler(value: any){
-
+        setPassword(value)
     }
 
     function change_username(){
@@ -115,6 +115,17 @@ export default function Profile(props: any) {
         return test
     }
 
+    function get_test_data(test: any){
+        var data: any = "Test Data"
+
+        //test purposes
+        test % 2 == 0 ? data = null : null
+        //
+
+        return data
+    }
+
+
     return(
         <div className="h-full">
             <div className="row">
@@ -178,7 +189,7 @@ export default function Profile(props: any) {
                             {get_time()}
                         </div>
                     </div>
-                    <div className="grid grid-auto-rows">
+                    <div className="grid grid-auto-rows"  id="parent">
                         <div>
                             Tests: 
                         </div> 
@@ -188,12 +199,23 @@ export default function Profile(props: any) {
                                     Choice Reaction Time
                                 </div>
                                 {ShowChoiceReaction?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(0)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(0)}
+                                {get_test_data(0) ? 
+                                    <div>
+                                        Best Score: {get_best_score(0)}
+                                    </div>
+                                : 
+                                    <div className="italic">
+                                        Not Attempted
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -202,12 +224,23 @@ export default function Profile(props: any) {
                                     Digit Vigilance
                                 </div>
                                 {ShowDigitVigilance?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(1)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(1)}
+                                {get_test_data(1) ? 
+                                        <div>
+                                            Best Score: {get_best_score(1)}
+                                        </div>
+                                    : 
+                                        <div className="italic">
+                                            Not Attempted
+                                        </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -216,12 +249,23 @@ export default function Profile(props: any) {
                                     Memory Scanning
                                 </div>
                                 {ShowMemoryScanning?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(2)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(2)}
+                                {get_test_data(2) ? 
+                                        <div>
+                                            Best Score: {get_best_score(2)}
+                                        </div>
+                                    : 
+                                        <div className="italic">
+                                            Not Attempted
+                                        </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -230,12 +274,23 @@ export default function Profile(props: any) {
                                     Motor Function
                                 </div>
                                 {ShowMotorFunction?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(3)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(3)}
+                                {get_test_data(3) ? 
+                                        <div>
+                                            Best Score: {get_best_score(3)}
+                                        </div>
+                                    : 
+                                        <div className="italic">
+                                            Not Attempted
+                                        </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -245,16 +300,22 @@ export default function Profile(props: any) {
                                 </div>
                                 {ShowNumberVigilance?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
-                                        {/* <div className="ml-8 p-8"> */}
-                                            <span className="ml-12 p-[10px]">
-                                                Test data
-                                            </span>
-                                        {/* </div> */}
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(4)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(4)}
+                                {get_test_data(4) ? 
+                                    <div>
+                                        Best Score: {get_best_score(4)}
+                                    </div>
+                                : 
+                                    <div className="italic">
+                                        Not Attempted
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -263,12 +324,23 @@ export default function Profile(props: any) {
                                     Picture Recognition
                                 </div>
                                 {ShowPictureRecognition?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(5)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(5)}
+                                {get_test_data(5) ? 
+                                    <div>
+                                        Best Score: {get_best_score(5)}
+                                    </div>
+                                : 
+                                    <div className="italic">
+                                        Not Attempted
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -277,12 +349,23 @@ export default function Profile(props: any) {
                                     Visual Reaction Time
                                 </div>
                                 {ShowReactionTime?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(6)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(6)}
+                                {get_test_data(6) ? 
+                                    <div>
+                                        Best Score: {get_best_score(6)}
+                                    </div>
+                                : 
+                                    <div className="italic">
+                                        Not Attempted
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -291,12 +374,23 @@ export default function Profile(props: any) {
                                     Verbal Learning
                                 </div>
                                 {ShowVerbalLearning?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(7)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(7)}
+                                {get_test_data(7) ? 
+                                    <div>
+                                        Best Score: {get_best_score(7)}
+                                    </div>
+                                : 
+                                    <div className="italic">
+                                        Not Attempted
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -305,12 +399,23 @@ export default function Profile(props: any) {
                                     <span className="text-blue-600">Word Recognition</span>
                                 </div>
                                 {ShowWordRecogntion?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(8)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(8)}
+                                {get_test_data(8) ? 
+                                    <div>
+                                        Best Score: {get_best_score(8)}
+                                    </div>
+                                : 
+                                    <div className="italic">
+                                        Not Attempted
+                                    </div>
+                                }
                             </div>
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
@@ -319,12 +424,23 @@ export default function Profile(props: any) {
                                     Working Memory
                                 </div>
                                 {ShowWorkingMemory?
-                                    <div>
+                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                                        <span className="ml-12 p-[10px]">
+                                            {get_test_data(9)}
+                                        </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                Best Score: {get_best_score(9)}
+                                {get_test_data(9) ? 
+                                    <div>
+                                        Best Score: {get_best_score(9)}
+                                    </div>
+                                : 
+                                    <div className="italic">
+                                        Not Attempted
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
