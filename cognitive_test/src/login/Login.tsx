@@ -33,8 +33,6 @@ export default function DigitVigilance(props: any) {
         <div className="row">
             LOGIN
         </div>
-
-
         <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
             <div className="grid grid-cols-2 gap-12">
                 <span>
@@ -52,7 +50,6 @@ export default function DigitVigilance(props: any) {
                 <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer">
                     Submit
                 </Button> 
-         
             </div>
         </div>
     </div>
