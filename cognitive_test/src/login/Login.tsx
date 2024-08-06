@@ -8,7 +8,7 @@ import Cognito from './Cognito'
 export default function Login(props: any) {
     const [Username, setUsername] = React.useState("")
     const [Password, setPassword] = React.useState("")
-    const [Login, setLogin] = React.useState(false)
+    const [LoginAttempt, setLoginAttempt] = React.useState(false)
     const [HandleLogin, setHandleLogin] = React.useState(false)
 
 
@@ -28,8 +28,8 @@ export default function Login(props: any) {
 
     function submit_handler(){
         console.log("aaaa")
-        setLogin(true)
-        props.setLoggedIn(true)
+        setLoginAttempt(true)
+        
     }
 
     // function handle_login(){
@@ -62,7 +62,7 @@ export default function Login(props: any) {
             </div>
         </div>
 
-        <Cognito setLogin={setLogin} setHandleLogin={setHandleLogin} Login={Login} Username={Username} Password={Password}/>
+        <Cognito setLoggedIn={props.setLoggedIn} setLoginAttempt={setLoginAttempt} setHandleLogin={setHandleLogin} LoginAttempt={LoginAttempt} Username={Username} Password={Password}/>
     </div>
     )
 

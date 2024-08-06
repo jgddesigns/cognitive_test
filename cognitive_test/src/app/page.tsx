@@ -55,10 +55,10 @@ export default function Home() {
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
   const [ProfileDisabled, setProfileDisabled] = React.useState(true)
   const [LoginDisabled, setLoginDisabled] = React.useState(true)
-  const [Username, setUsername] = React.useState(true)
+  const [Username, setUsername] = React.useState("")
 
   //placeholder only. will improve security.
-  const [Password, setPassword] = React.useState(true)
+  const [Password, setPassword] = React.useState("")
   const [TestID, setTestID] = React.useState(0)
   const [TestTitle, setTestTitle] = React.useState("")
   const [PopoverMessage, setPopoverMessage] = React.useState("")
@@ -71,19 +71,11 @@ export default function Home() {
   }, [LoggedIn])
 
   function toggle_login(condition: any){
-    console.log("toggle login")
-    if(condition){
-      setProfileDisabled(false) 
-      setLoginDisabled(true)
-      // setProfileClass(link_class[0])
-      // setLoginClass(link_class[2])
-    }else{
-      setProfileDisabled(false) 
-      setLoginDisabled(true)
-      // setProfileClass(link_class[2])
-      // setLoginClass(link_class[0])
-    }
-
+    setLoggedIn(condition)
+    if(!condition){
+      setUsername("")
+      setPassword("")
+    } 
   }
 
   function link_handler(place: any){
@@ -170,9 +162,11 @@ export default function Home() {
             Home
           </span>
 
-          <span onClick={e => link_handler(1)} className={TestClass}>
-            Test Info
-          </span>
+          {LoggedIn ?
+            <span onClick={e => link_handler(1)} className={TestClass}>
+              Tests
+            </span>
+          : null}
 
           {!LoggedIn ? 
             <span onClick={e => link_handler(2)} className={SignupClass}>
@@ -190,8 +184,13 @@ export default function Home() {
               <div onClick={e => link_handler(4)} className={ProfileClass}>
                 Profile
               </div>
-              <div className="text-sm text-black">
-                Logged in as: {Username}
+              <div className="text-sm text-black grid grid-rows-2 relative">
+                <span>
+                  Username: {Username}
+                </span>
+                <span className="absolute top-4 right-0 text-xs text-blue-600 underline cursor-pointer" onClick={e=> toggle_login(false)}>
+                  Log Out
+                </span>           
               </div>
             </div>
           }

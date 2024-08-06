@@ -16,8 +16,8 @@ export default function Cognito(props: any) {
 
     useEffect(() => {
         props.Submit == true ? sign_up() : null
-        props.Login == true ? login(props.Username, props.Password) :  null
-    }, [props.Submit, props.Login])
+        props.LoginAttempt == true ? login(props.Username, props.Password) :  props.setLoginAttempt(false)
+    }, [props.Submit, props.LoginAttempt])
 
 
     async function sign_up(){
@@ -86,6 +86,7 @@ export default function Cognito(props: any) {
 
     
     async function login(Username: any, Password: any) {
+        console.log("login attempt")
         const secretHash = get_hash()
       
         const params = {
@@ -101,8 +102,8 @@ export default function Cognito(props: any) {
         try {
           const command = new InitiateAuthCommand(params);
           const response = await client.send(command);
-          console.log(response.$metadata.httpStatusCode); // Handle the authentication response
-          response.$metadata.httpStatusCode == 200 ? props.setHandleLogin(true ): null
+          console.log(response); // Handle the authentication response
+          response ? props.setLoggedIn(true) : console.log("login error")
         } catch (error) {
           console.error(error); // Handle errors
         }
