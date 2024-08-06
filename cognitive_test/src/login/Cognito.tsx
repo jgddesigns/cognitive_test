@@ -16,7 +16,7 @@ export default function Cognito(props: any) {
 
     useEffect(() => {
         props.Submit == true ? sign_up() : null
-        props.LoginAttempt == true ? login(props.Username, props.Password) :  props.setLoginAttempt(false)
+        props.LoginAttempt == true ? login(props.Username, props.Password) :  null
     }, [props.Submit, props.LoginAttempt])
 
 
