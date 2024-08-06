@@ -5,28 +5,37 @@ import { v4 as uuidv4 } from 'uuid';
 import Cognito from './Cognito'
 
 
-export default function DigitVigilance(props: any) {
+export default function Login(props: any) {
+    const [Username, setUsername] = React.useState("")
+    const [Password, setPassword] = React.useState("")
+    const [Login, setLogin] = React.useState(false)
+    const [HandleLogin, setHandleLogin] = React.useState(false)
 
 
     useEffect(() => {
-
-    }, [])
-
-    const [Username, setUsername] = React.useState("")
-    const [Password, setPassword] = React.useState("")
-
+        // HandleLogin ? handle_login() : null
+    }, [HandleLogin])
 
     function username_handler(text: any){
         setUsername(text)
+        props.setUsername(text)
     }
 
     function password_handler(text: any){
         setPassword(text)
+        props.setPassword(text)
     }
 
     function submit_handler(){
-        
+        console.log("aaaa")
+        setLogin(true)
+        props.setLoggedIn(true)
     }
+
+    // function handle_login(){
+    //     props.toggle_login(true)
+    //     console.log("handle login")
+    // }
 
     return(
     <div className="h-full">
@@ -46,12 +55,14 @@ export default function DigitVigilance(props: any) {
                 </span>
                 <textarea onChange={e => password_handler(e.target.value)}/>
             </div>
-            <div className="mt-12" onClick={e => submit_handler()}>
-                <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer">
+            <div className="mt-12">
+                <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_handler()}>
                     Submit
                 </Button> 
             </div>
         </div>
+
+        <Cognito setLogin={setLogin} setHandleLogin={setHandleLogin} Login={Login} Username={Username} Password={Password}/>
     </div>
     )
 

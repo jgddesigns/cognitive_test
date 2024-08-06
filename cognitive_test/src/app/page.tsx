@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, {useEffect} from 'react'
 import './globals.css'
 import VerbalLearning from "../tests/VerbalLearning"
 import ReactionTime from "../tests/ReactionTime"
@@ -24,7 +24,7 @@ export default function Home() {
 , "flex min-h-screen flex-col items-center justify-between p-24 h-[100%] w-[100%]  relative"]
   const [MainClass, setMainClass] = React.useState(main_class[0])
 
-  const link_class = ["text-blue-600 cursor-pointer", "text-gray-600 font-bold underline cursor-pointer"]
+  const link_class = ["text-blue-600 cursor-pointer", "text-gray-600 font-bold underline cursor-pointer", "text-gray-400"]
   const [HomeClass, setHomeClass] = React.useState(link_class[1])
   const [TestClass, setTestClass] = React.useState(link_class[0])
   const [SignupClass, setSignupClass] = React.useState(link_class[0])
@@ -53,11 +53,38 @@ export default function Home() {
   const [ShowVerbalLearning, setShowVerbalLearning] = React.useState(false)
   const [ShowWordRecognition, setShowWordRecognition] = React.useState(false)
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
+  const [ProfileDisabled, setProfileDisabled] = React.useState(true)
+  const [LoginDisabled, setLoginDisabled] = React.useState(true)
+  const [Username, setUsername] = React.useState(true)
+
+  //placeholder only. will improve security.
+  const [Password, setPassword] = React.useState(true)
   const [TestID, setTestID] = React.useState(0)
   const [TestTitle, setTestTitle] = React.useState("")
   const [PopoverMessage, setPopoverMessage] = React.useState("")
 
 
+  useEffect(() => {
+
+    LoggedIn ? link_handler(4) : link_handler(0)
+
+  }, [LoggedIn])
+
+  function toggle_login(condition: any){
+    console.log("toggle login")
+    if(condition){
+      setProfileDisabled(false) 
+      setLoginDisabled(true)
+      // setProfileClass(link_class[0])
+      // setLoginClass(link_class[2])
+    }else{
+      setProfileDisabled(false) 
+      setLoginDisabled(true)
+      // setProfileClass(link_class[2])
+      // setLoginClass(link_class[0])
+    }
+
+  }
 
   function link_handler(place: any){
     clear_tests()
@@ -137,8 +164,8 @@ export default function Home() {
 
   return (
     <main className={MainClass}>
-      <div className="z-1 max-w-5xl w-full items-center font-mono text-lg grid grid-auto-rows">
-        <div className="grid grid-flow-col">        
+      <div className="z-1 max-w-5xl w-full font-mono text-lg grid grid-auto-rows place-items-center">
+        <div className="grid grid-flow-col gap-48">        
           <span onClick={e => link_handler(0)} className={HomeClass}>
             Home
           </span>
@@ -152,16 +179,22 @@ export default function Home() {
               Signup
             </span>
           : null}
-          <span onClick={e => link_handler(4)} className={ProfileClass}>
-            Profile
-          </span>
+
           
 
           {!LoggedIn ? 
             <span onClick={e => link_handler(3)} className={LoginClass}>
               Login
             </span>
-          : null}
+          : <div className="grid grid-rows-2 gap-12 place-items-center">
+              <div onClick={e => link_handler(4)} className={ProfileClass}>
+                Profile
+              </div>
+              <div className="text-sm text-black">
+                Logged in as: {Username}
+              </div>
+            </div>
+          }
         </div>
 
         <div className="mt-24">
@@ -169,7 +202,6 @@ export default function Home() {
           {ShowHome ? 
             <MainPage/>  
           : null}
-
 
           {/* TEST INFO */}
           {ShowTestInfo ?
@@ -224,12 +256,12 @@ export default function Home() {
 
           {/* LOGIN */}
           {ShowLogin ?
-            <Login/>
+            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
           : null}
 
           {/* PROFILE */}
           {ShowProfile ?
-            <Profile/>
+            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password}/>
           : null}
 
         </div>

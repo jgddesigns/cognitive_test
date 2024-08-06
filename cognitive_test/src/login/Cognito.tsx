@@ -1,17 +1,23 @@
 import { useEffect } from 'react'
 import {credentials} from '../credentials/Credentials'
-import { CognitoIdentityProviderClient, SignUpCommand} from '@aws-sdk/client-cognito-identity-provider';
-
+import { CognitoIdentityProviderClient, SignUpCommand, InitiateAuthCommand, AuthFlowType} from '@aws-sdk/client-cognito-identity-provider'
+import {CognitoUserPool, CognitoUser, AuthenticationDetails} from 'amazon-cognito-identity-js'
 
 
 //MOSTLY FROM CHAT GPT
 const client = new CognitoIdentityProviderClient({ region: credentials.region });
 
+const userPool = new CognitoUserPool({
+    UserPoolId: credentials.user_pool_id,
+    ClientId: credentials.client_id
+});
+
 export default function Cognito(props: any) {
 
     useEffect(() => {
         props.Submit == true ? sign_up() : null
-    }, [props.Submit])
+        props.Login == true ? login(props.Username, props.Password) :  null
+    }, [props.Submit, props.Login])
 
 
     async function sign_up(){
@@ -51,12 +57,60 @@ export default function Cognito(props: any) {
         }
     }
 
+
+    // async function login(Username: any, Password: any){
+    //     console.log("called")
+    //     return new Promise((resolve, reject) => {
+    //       const authenticationDetails = new AuthenticationDetails({
+    //         Username,
+    //         Password
+    //       });
+      
+    //       const cognitoUser = new CognitoUser({
+    //         Username,
+    //         Pool: userPool
+    //       });
+      
+    //       cognitoUser.authenticateUser(authenticationDetails, {
+    //         onSuccess: (result) => {
+    //             console.log("sign in success")
+    //             resolve(result)
+    //         },
+    //         onFailure: (err) => {
+    //             console.log("sign in fail")
+    //             reject(err)
+    //         }
+    //       })
+    //     })
+    // }
+
+    
+    async function login(Username: any, Password: any) {
+        const secretHash = get_hash()
+      
+        const params = {
+          AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
+          ClientId: credentials.client_id,
+          AuthParameters: {
+            USERNAME: Username,
+            PASSWORD: Password,
+            SECRET_HASH: secretHash
+          }
+        };
+      
+        try {
+          const command = new InitiateAuthCommand(params);
+          const response = await client.send(command);
+          console.log(response.$metadata.httpStatusCode); // Handle the authentication response
+          response.$metadata.httpStatusCode == 200 ? props.setHandleLogin(true ): null
+        } catch (error) {
+          console.error(error); // Handle errors
+        }
+      }
     
     function get_hash(){
         const crypto = require('crypto')
         const message = `${props.Username}${credentials["client_id"]}`
-        // test values
-        // const message = `${"jdunn7008@gmail.com"}${credentials["client_id"]}`;
         const str = crypto.createHmac('sha256', credentials["client_secret"])
         str.update(message)
         const secret_hash = str.digest('base64')
@@ -65,25 +119,7 @@ export default function Cognito(props: any) {
     }
 
 
-    // function sign_in(email: any, password: any){
-    //     const user = new CognitoUser({ Username: email, Pool: user_pool });
-    //     const auth_details = new AuthenticationDetails({ Username: email, Password: password });
-
-    //     return new Promise((resolve, reject) => {
-    //         user.authenticateUser(auth_details, {
-    //             onSuccess: (result) => {
-    //                 resolve(result)
-    //             },
-    //             onFailure: (err) => {
-    //                 reject(err)
-    //             }
-    //         });
-    //     });
-    // };
-
     return (
         null
     )
-
-
 }

@@ -5,13 +5,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function Profile(this: any, props: any) {
     const classes = ["cursor-not-allowed"]
-    const [Username, setUsername] = React.useState(get_username())
+    const [Username, setUsername] = React.useState("")
     const [UsernameClass, setUsernameClass] = React.useState(classes[0])
     const [Email, setEmail] = React.useState(get_email())
     const [EmailClass, setEmailClass] = React.useState(classes[0])
-    const [Password, setPassword] = React.useState(get_password())
+    const [Password, setPassword] = React.useState("")
+    const [PasswordShow, setPasswordShow] = React.useState(false)
+    const [PasswordLink, setPasswordLink] = React.useState("Show")
     const [PasswordClass, setPasswordClass] = React.useState("w-[250px] h-[50px] p-4 rounded")
-    const [PasswordType, setPasswordType] = React.useState("password")
+    const password_type = ["password", ""]
+    const [PasswordType, setPasswordType] = React.useState(password_type[1])
     const [Tests, setTests] = React.useState<any>(null)
     const [TestMap, setTestMap] = React.useState<any>(null)
     const [TestsTaken, setTestsTaken] = React.useState(get_tests_taken())
@@ -35,8 +38,19 @@ export default function Profile(this: any, props: any) {
     const data = null
 
     useEffect(() => {
-
-    }, [])
+        // if(props.LoggedIn){
+        //     username_handler()
+        // }
+        if(PasswordShow){
+            setPasswordType(password_type[1])
+            setPasswordShow(true)
+            setPasswordLink("Hide")
+        }else{
+            setPasswordType(password_type[0])
+            setPasswordShow(false)
+            setPasswordLink("Show")
+        }
+    }, [PasswordShow])
 
 
     function username_handler(value: any){
@@ -65,6 +79,11 @@ export default function Profile(this: any, props: any) {
 
     function test_results_handler(test: any){
         tests[test][1](!tests[test][0])
+    }
+
+
+    function toggle_password(){
+        setPasswordShow(!PasswordShow)
     }
 
     function create_test_map(){
@@ -132,28 +151,33 @@ export default function Profile(this: any, props: any) {
                 USER PROFILE
             </div>
 
-            <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
+            <div className="mt-24 grid grid-auto-rows grid-auto-cols place-items-center gap-12">
                 
                 <div className="grid grid-cols-2">
                     <div>
                         Username
                     </div>
-                    <textarea onChange={e => username_handler(e.target.value)} value={Username} className="disabled:cursor-not-allowed" disabled/>
+                    <textarea onChange={e => username_handler(e.target.value)} value={props.Username} className="disabled:cursor-not-allowed" disabled/>
                 </div>
 
                 <div className="grid grid-cols-2">
                     <div>
                         Email 
                     </div>
-                    <textarea onChange={e => email_handler(e.target.value)} value={Email} className={EmailClass} disabled/>
+                    <textarea onChange={e => email_handler(e.target.value)} value={props.Username} className={EmailClass} disabled/>
                 </div>
 
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 w-[110%]">
                     <div>
                         Password 
                     </div>
+                     <div className="grid grid-auto-cols">  
                         {/* adjust to input with type 'password' (style error exists)*/}
-                    <input type="password" className={PasswordClass} value={Password} onChange={e => password_handler(e.target.value)} disabled/>
+                        <input type={PasswordType} className={PasswordClass} value={props.Password} onChange={e => password_handler(e.target.value)}/>
+                        <div onClick={toggle_password} className="text-blue-600 underline text-sm cursor-pointer absolute ml-48 mt-4">
+                            {PasswordLink}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="mt-24 grid grid-auto-rows gap-12 w-[50%]">
