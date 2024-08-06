@@ -12,6 +12,10 @@ const userPool = new CognitoUserPool({
     ClientId: credentials.client_id
 });
 
+const login_message = ["User login successful!", "Invalid login credentials. Try again.", "Error authenticating user. Please contact support."]
+
+const login_class = ["text-green-400 text-base mt-12 ml-24 grid place-items-center", "text-red-400 text-base mt-24 ml-24 grid place-items-center"]
+
 export default function Cognito(props: any) {
 
     useEffect(() => {
@@ -100,12 +104,23 @@ export default function Cognito(props: any) {
         };
       
         try {
-          const command = new InitiateAuthCommand(params);
-          const response = await client.send(command);
-          console.log(response); // Handle the authentication response
-          response ? props.setLoggedIn(true) : console.log("login error")
+          const command = new InitiateAuthCommand(params)
+          try{
+            const response = await client.send(command)
+            console.log(login_message[0])
+            props.setLoginSuccess(true)
+            props.setLoginMessage(login_message[0])
+            props.setLoginClass(login_class[0])
+          }catch{
+            console.log(login_message[1])
+            props.setLoginAttempt(false)
+            props.setLoginMessage(login_message[1])
+            props.setLoginClass(login_class[1])
+          }
         } catch (error) {
-          console.error(error); // Handle errors
+            props.setLoginMessage(login_message[2])
+            props.setLoginClass(login_class[1])
+            console.error(error)
         }
       }
     
