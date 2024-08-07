@@ -19,14 +19,14 @@ export default function Home() {
 
         {/* TEST AREA FOR DIFFERENT COMPONENTS (SHOWS ON MAIN PAGE) */}
         
-        {/* <Connect/> */}
+        { <Connect/> }
         {/* <VerbalLearning/> */}
         {/* <ReactionTime/> */}
         {/* <NumberVigilance/> */}
         {/* {<ChoiceReaction/>} */}
         {/* {<MemoryScanning/>} */}
         {/* {<PictureRecognition/>} */}
-        {<DigitVigilance/>}
+        {/*<DigitVigilance/>*/}
       </div>
     </main>
   )
