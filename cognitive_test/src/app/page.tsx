@@ -16,7 +16,7 @@ import Login from '@/login/Login'
 import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
-
+import Connect from '@/database/Connect'
 
 export default function Home() {
 
@@ -219,51 +219,14 @@ export default function Home() {
             <MemoryScanning/>
           : null}
         
-          {ShowMotorFunction ?
-            <MotorFunction/>
-          : null}
-
-          {ShowNumberVigilance ?
-            <NumberVigilance/>        
-          :null}
-
-          {ShowPictureRecognition ?
-            <PictureRecognition/>        
-          :null}
-
-          {ShowReactionTime ?
-            <ReactionTime/>        
-          :null}
-
-          {ShowVerbalLearning ?
-            <VerbalLearning/>        
-          :null}
-
-          {ShowWordRecognition ?
-            <WordRecognition/>        
-          :null}
-
-          {ShowWorkingMemory ?
-            <WorkingMemory/>        
-          :null}
-
-
-          {/* SIGNUP */}
-          {ShowSignup ?
-            <Signup/>
-          : null}
-
-          {/* LOGIN */}
-          {ShowLogin ?
-            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
-          : null}
-
-          {/* PROFILE */}
-          {ShowProfile ?
-            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password}/>
-          : null}
-
-        </div>
+        { <Connect/> }
+        {/* <VerbalLearning/> */}
+        {/* <ReactionTime/> */}
+        {/* <NumberVigilance/> */}
+        {/* {<ChoiceReaction/>} */}
+        {/* {<MemoryScanning/>} */}
+        {/* {<PictureRecognition/>} */}
+        {/*<DigitVigilance/>*/}
       </div>
 
 
