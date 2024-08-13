@@ -192,12 +192,12 @@ export default function Connect() {
   const handleInsertUser = () => {
     const newUserProfile = {
       profile_data: 'user123', // Partition key
-      id: 1, // Sort key
+      id: '1', // Sort key
       username: 'user123',
       email_address: 'user123@example.com',
       name: 'User One Two Three',
-      tests_completed: 5,
-      total_test_time: 3600,
+      tests_completed: '5',
+      total_test_time: '3600',
       variables_used: 'none',
       mind_type: 'default'
     };
@@ -208,12 +208,12 @@ export default function Connect() {
   const handleInsertTestResult = () => {
     const newTestResult = {
       test_profile: 'user123', // Partition key
-      test_id: 1, // Sort key
-      test_type: 0,
-      attempt_number: 1,
-      time_completed: 120,
-      score: 95,
-      variable: 0
+      id: '1', // Sort key
+      test_type: '0',
+      attempt_number: '1',
+      time_completed: '120',
+      score: '95',
+      variable: '0'
     };
     insertTestResult(newTestResult);
   };
