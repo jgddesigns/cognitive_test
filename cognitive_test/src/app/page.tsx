@@ -16,6 +16,7 @@ import Login from '@/login/Login'
 import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
+import Connect from '@/database/Connect'
 
 
 export default function Home() {
@@ -194,6 +195,10 @@ export default function Home() {
               </div>
             </div>
           }
+        </div>
+
+        <div>
+          <Connect/>
         </div>
 
         <div className="mt-24">
