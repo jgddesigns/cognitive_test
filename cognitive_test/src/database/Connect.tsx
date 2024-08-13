@@ -10,15 +10,16 @@ export default function Connect() {
   const [TestDB, setTestDB] = React.useState(false);
 
   // Fetch AWS credentials and region from environment variables
-  const AWS_KEY = process.env.AWS_ACCESS_KEY_ID;
-  const AWS_SECRET = process.env.AWS_SECRET_ACCESS_KEY;
-  const AWS_REGION = process.env.AWS_REGION;
+  const AWS_KEY = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
+  const AWS_SECRET = process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
+  const AWS_REGION = process.env.REACT_APP_AWS_REGION;
 
+  console.log(process.env.REACT_APP_AWS_ACCESS_KEY_ID)
   console.log('AWS Key:', AWS_KEY);
   console.log('AWS Secret:', AWS_SECRET);
   console.log('AWS Region:', AWS_REGION);
 
-  // Check if credentials are defined
+  //Check if credentials are defined
   if (!AWS_KEY || !AWS_SECRET || !AWS_REGION) {
     console.error('AWS credentials or region are not defined.');
     return null;
