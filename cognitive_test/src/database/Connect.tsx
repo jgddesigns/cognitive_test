@@ -190,8 +190,7 @@ export default function Connect() {
 
 
   async function handleInsertUser(){
-    const id = await createID()
-    console.log(id)
+    const id = await createID(userTable)
     const newUserProfile = {
       profile_data: 'user123', // Partition key
       id: id.toString(), // Sort key
@@ -207,10 +206,11 @@ export default function Connect() {
   };
 
 
-  const handleInsertTestResult = () => {
+  async function handleInsertTestResult(){
+    const id = await createID(testResultsTable)
     const newTestResult = {
       test_profile: 'user123', // Partition key
-      id: '1', // Sort key
+      id: id.toString(), // Sort key
       test_type: '0',
       attempt_number: '1',
       time_completed: '120',
@@ -251,20 +251,16 @@ export default function Connect() {
   };
 
 
-  async function createID(){
-    var new_id: any = await retrieveOne("id")
-    new_id = (parseInt(new_id["S"]) + 1)
+  async function createID(table: any){
+    var new_id: any = await retrieveOne("id", table)
     console.log("id created " + new_id)
-
     return new_id
   }
 
 
-  async function retrieveOne(column: any){
-    var item: any = null
-
+  async function retrieveOne(column: any, table: any){
     const params: any = {
-      TableName: userTable,
+      TableName: table,
     };
     
     return new Promise((resolve) => {
@@ -272,27 +268,11 @@ export default function Connect() {
         if (err) {
           console.error("Error querying DynamoDB", err)
         } else {
-          var place: any = data.Items.length - 1
-          //rows aren't retrieved in id order... sort needed
-          console.log("Query column succeeded", data.Items[place][column])
-          resolve(data.Items[data.Items.length-1][column])
+          console.log("Query column succeeded", data.Items)
+          column == "id" ? resolve((data.Items.length + 1)) : resolve(data.Items[data.Items.length-1][column])
         }
       })
     });
-
-    return (item+1)
-    // dynamoDB.scan(params, (err, data: any) => {
-    //   if (err) {
-    //     console.error("Error querying DynamoDB", err);
-    //   } else {
-    //     item = parseInt(data.Items[data.Items.length-1][column]["S"])
-    //     console.log("Query succeeded", (item + 1));
-
-    //   }
-    // })
-
-
-    
   }
 
 
