@@ -189,10 +189,12 @@ export default function Connect() {
   };
 
 
-  const handleInsertUser = () => {
+  async function handleInsertUser(){
+    const id = await createID()
+    console.log(id)
     const newUserProfile = {
       profile_data: 'user123', // Partition key
-      id: '1', // Sort key
+      id: id.toString(), // Sort key
       username: 'user123',
       email_address: 'user123@example.com',
       name: 'User One Two Three',
@@ -249,6 +251,51 @@ export default function Connect() {
   };
 
 
+  async function createID(){
+    var new_id: any = await retrieveOne("id")
+    new_id = (parseInt(new_id["S"]) + 1)
+    console.log("id created " + new_id)
+
+    return new_id
+  }
+
+
+  async function retrieveOne(column: any){
+    var item: any = null
+
+    const params: any = {
+      TableName: userTable,
+    };
+    
+    return new Promise((resolve) => {
+      dynamoDB.scan(params, (err, data: any) => {
+        if (err) {
+          console.error("Error querying DynamoDB", err)
+        } else {
+          var place: any = data.Items.length - 1
+          //rows aren't retrieved in id order... sort needed
+          console.log("Query column succeeded", data.Items[place][column])
+          resolve(data.Items[data.Items.length-1][column])
+        }
+      })
+    });
+
+    return (item+1)
+    // dynamoDB.scan(params, (err, data: any) => {
+    //   if (err) {
+    //     console.error("Error querying DynamoDB", err);
+    //   } else {
+    //     item = parseInt(data.Items[data.Items.length-1][column]["S"])
+    //     console.log("Query succeeded", (item + 1));
+
+    //   }
+    // })
+
+
+    
+  }
+
+
   return (
     <div>
       <div className="row">
@@ -262,6 +309,9 @@ export default function Connect() {
       <div className="row">
         <Button color="primary" onClick={handleUpdateUserProfile}>Update User Profile</Button>
         <Button color="primary" onClick={handleUpdateTestResult}>Update Test Result</Button>
+      </div>
+      <div className="row">
+        <Button color="primary" onClick={createID}>Update User Profile</Button>
       </div>
     </div>
   );
