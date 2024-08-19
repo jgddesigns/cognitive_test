@@ -53,6 +53,11 @@ export default function Cognito(props: any) {
             const response = await client.send(attempt)
             console.log("Sign up success")
             props.setSubmit(false)
+            props.handleInsertUser(props.Username, props.Email)
+            //insert to user table
+            //
+            //
+            //
             return response
         }catch(err){
             props.setSubmit(false)

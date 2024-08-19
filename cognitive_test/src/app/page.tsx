@@ -17,6 +17,7 @@ import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
 import Connect from '@/database/Connect'
+// import Connect from '@/database/Connect'
 
 
 export default function Home() {

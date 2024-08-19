@@ -1,16 +1,22 @@
 'use client';
 import AWS from 'aws-sdk';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { Button } from "@nextui-org/react";
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 import {test_credentials} from '../credentials/Credentials'
+import Cognito from '@/login/Cognito';
+import { propagateServerField } from 'next/dist/server/lib/render-server';
 
 
-dotenv.config(); // Load environment variables from .env file
+//dotenv.config(); // Load environment variables from .env file
 
 
-export default function Connect() {
-  const [TestDB, setTestDB] = React.useState(false);
+export default function Connect(props: any) {
+  const [Submit, setSubmit] = React.useState(false);
+
+  useEffect(() => {
+    Submit ? props.insertUserHandler(props.Username, props.Name, props.Email) : null
+  }, [])
 
 
   // Fetch AWS credentials and region from environment variables
@@ -189,18 +195,18 @@ export default function Connect() {
   };
 
 
-  async function handleInsertUser(){
+  async function handleInsertUser(username: any, email: any){
     const id = await createID(userTable)
     const newUserProfile = {
       profile_data: 'user123', // Partition key
       id: id.toString(), // Sort key
-      username: 'user123',
-      email_address: 'user123@example.com',
-      name: 'User One Two Three',
-      tests_completed: '5',
-      total_test_time: '3600',
-      variables_used: 'none',
-      mind_type: 'default'
+      username: username,
+      email_address: email,
+      name: username,
+      tests_completed: '0',
+      total_test_time: '0',
+      variables_used:  null,
+      mind_type: null
     };
     insertUserProfile(newUserProfile);
   };
@@ -276,23 +282,28 @@ export default function Connect() {
   }
 
 
-  return (
-    <div>
-      <div className="row">
-        <Button color="primary" onClick={handleInsertUser}>Insert User</Button>
-        <Button color="primary" onClick={handleInsertTestResult}>Insert Test Result</Button>
-      </div>
-      <div className="row">
-        <Button color="primary" onClick={handleFetchUserProfile}>Fetch User Profile</Button>
-        <Button color="primary" onClick={handleFetchTestResults}>Fetch Test Results</Button>
-      </div>
-      <div className="row">
-        <Button color="primary" onClick={handleUpdateUserProfile}>Update User Profile</Button>
-        <Button color="primary" onClick={handleUpdateTestResult}>Update Test Result</Button>
-      </div>
-      <div className="row">
-        <Button color="primary" onClick={createID}>Update User Profile</Button>
-      </div>
-    </div>
+//   return (
+//     <div>
+//       <div className="row">
+//         <Button color="primary" onClick={handleInsertUser}>Insert User</Button>
+//         <Button color="primary" onClick={handleInsertTestResult}>Insert Test Result</Button>
+//       </div>
+//       <div className="row">
+//         <Button color="primary" onClick={handleFetchUserProfile}>Fetch User Profile</Button>
+//         <Button color="primary" onClick={handleFetchTestResults}>Fetch Test Results</Button>
+//       </div>
+//       <div className="row">
+//         <Button color="primary" onClick={handleUpdateUserProfile}>Update User Profile</Button>
+//         <Button color="primary" onClick={handleUpdateTestResult}>Update Test Result</Button>
+//       </div>
+//       <div className="row">
+//         <Button color="primary" onClick={createID}>Update User Profile</Button>
+//       </div>
+//     </div>
+//  );
+
+
+return (
+    <Cognito handleInsertUser={handleInsertUser}/> 
   );
 }

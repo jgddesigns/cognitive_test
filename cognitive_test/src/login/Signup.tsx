@@ -2,15 +2,16 @@
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import Cognito from './Cognito'
+import Connect from '../database/Connect'
 
-export default function DigitVigilance(props: any) {
 
-
+export default function Signup(props: any) {
     useEffect(() => {
 
     }, [])
 
     const [Username, setUsername] = React.useState("")
+    const [Name, setName] = React.useState("")
     const [Password, setPassword] = React.useState("")
     const [PasswordMatch, setPasswordMatch] = React.useState("")
     const [Email, setEmail] = React.useState("")
@@ -25,6 +26,9 @@ export default function DigitVigilance(props: any) {
 
     const [UsernameMessage, setUsernameMessage] = React.useState("")
     const [UsernameClass, setUsernameClass] = React.useState(classes[0])
+
+    const [NameMessage, setNameMessage] = React.useState("")
+    const [NameClass, setNameClass] = React.useState(classes[0])
 
     const [EmailMessage, setEmailMessage] = React.useState("")
     const [EmailClass, setEmailClass] = React.useState(classes[0])
@@ -46,6 +50,21 @@ export default function DigitVigilance(props: any) {
         }
 
         console.log("USERNAME")
+        console.log(text)
+    }
+
+    function name_handler(text: any){
+        setName(text)
+
+        if(text.length < 0){
+            setNameMessage("Name must have at least 1 digits.")
+            setNameClass(classes[2])
+        }else{
+            setNameMessage("")
+            setNameClass(classes[3])
+        }
+
+        console.log("NAME")
         console.log(text)
     }
 
@@ -147,7 +166,11 @@ export default function DigitVigilance(props: any) {
     //call props.sign_up and get return to determine success message
     function submit_handler(){
         console.log("SUBMIT")
-        Username != "" && Email != "" && Password != "" && UsernameMessage.length < 1 && EmailMessage.length < 1 && PasswordMessage.length < 1 ? setSubmit(true) : setSubmit(false)
+        Username != "" && Name != "" && Email != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && EmailMessage.length < 1 && PasswordMessage.length < 1 ? setSubmit(true) : setSubmit(false)
+    }
+
+    function insert_handler(){
+
     }
     
     return(
@@ -161,6 +184,12 @@ export default function DigitVigilance(props: any) {
                     Username 
                 </span>
                 <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
+            </div>
+            <div className="grid grid-cols-2 gap-12">
+                <span>
+                    Name 
+                </span>
+                <textarea className={NameClass} onChange={e => name_handler(e.target.value)}/>
             </div>
             <div className="resize-none grid grid-cols-2 gap-12">
                 <span>
@@ -190,6 +219,11 @@ export default function DigitVigilance(props: any) {
                     {UsernameMessage}
                 </div>
             : null}
+            {NameMessage.length > 0 ?
+                <div className="text-red-400">
+                    {NameMessage}
+                </div>
+            : null}
             {EmailMessage.length > 0 ?
                 <div className="text-red-400">
                     {EmailMessage}
@@ -201,7 +235,8 @@ export default function DigitVigilance(props: any) {
                 </div>
             : null}
         </div>
-        <Cognito setSubmit={setSubmit} Submit={Submit} Username={Username} Email={Email} Password={Password}/>
+        {/* //<Cognito setSubmit={setSubmit} Submit={Submit} Username={Username} Name={Name} Email={Email} Password={Password}/> */}
+        <Connect setSubmit={setSubmit} Submit={Submit} Username={Username} Name={Name} Email={Email} Password={Password}/>
     </div>
     )
 
