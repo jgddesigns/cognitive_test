@@ -59,8 +59,7 @@ export default function Signup(props: any) {
                 if(SignupTimer <= 0){
                     setConfirmSuccess(false)
                     //needs to actually login
-                    props.toggle_login(true)
-                    props.link_handler(4)
+                    props.setLoggedIn(true)
                 } 
             }, 1000 )
 
@@ -71,6 +70,7 @@ export default function Signup(props: any) {
 
     //cognito needs it to be an email. change?
     function username_handler(text: any){
+        props.setUsername(text)
         setUsername(text)
 
         if(text.length < 4){
@@ -128,6 +128,7 @@ export default function Signup(props: any) {
         var message: any = ""
         var num = false
         var letter = false
+        props.setPassword(text)
         setPassword(text)
 
         for(var i=0; i<text.length; i++){
@@ -143,7 +144,7 @@ export default function Signup(props: any) {
         if(!num){
             setPasswordClass(classes[2])
             setMatchDisable(true)
-            message = message + pw_messages[1]
+            message = message + "\n" + pw_messages[1]
         } 
         
         if(!letter){
@@ -221,157 +222,158 @@ export default function Signup(props: any) {
 
     
     return(
-    <div className="h-full">
-        <div className="row">
+    <div className="h-full grid grid-auto-rows">
+        <div className="row left-0">
             SIGN UP
         </div>
-        {!SignupSuccess ? 
-            <div className="mt-24 grid grid-rows-2 place-items-center gap-12">
-                <div className="grid grid-cols-2 gap-12">
-                    <span>
-                        Username 
-                    </span>
-                    <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
-                </div>
-                <div className="grid grid-cols-2 gap-12">
-                    <span>
-                        Name 
-                    </span>
-                    <textarea className={NameClass} onChange={e => name_handler(e.target.value)}/>
-                </div>
-                <div className="resize-none grid grid-cols-2 gap-12">
-                    <span>
-                        Email 
-                    </span>
-                    <textarea className={EmailClass} onChange={e => email_handler(e.target.value)}/>
-                </div>
-                <div className="grid grid-cols-2 gap-12">
-                    <span>
-                        Password 
-                    </span>
-                    <textarea className={PasswordClass} onChange={e => password_handler(e.target.value)}/>
-                </div>
-                <div className="grid grid-cols-2 gap-12">
-                    <span>
-                        Re-Enter Password 
-                    </span>
-                    <textarea className={MatchClass}  onChange={e => password_match(e.target.value)} disabled={MatchDisable}/>
-                </div>
-                <div className="mt-12">
-                    <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_handler()}>
-                        Submit
-                    </Button>     
-                </div>
-                {UsernameMessage.length > 0 ?
-                    <div className="text-red-400">
-                        {UsernameMessage}
+        <div className="row">
+            {!SignupSuccess ? 
+                <div className="mt-24 grid grid-rows-2 place-items-center gap-12">
+                    <div className="grid grid-cols-2 gap-12">
+                        <span>
+                            Username 
+                        </span>
+                        <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
                     </div>
-                : null}
-                {NameMessage.length > 0 ?
-                    <div className="text-red-400">
-                        {NameMessage}
+                    <div className="grid grid-cols-2 gap-12">
+                        <span>
+                            Name 
+                        </span>
+                        <textarea className={NameClass} onChange={e => name_handler(e.target.value)}/>
                     </div>
-                : null}
-                {EmailMessage.length > 0 ?
-                    <div className="text-red-400">
-                        {EmailMessage}
+                    <div className="resize-none grid grid-cols-2 gap-12">
+                        <span>
+                            Email 
+                        </span>
+                        <textarea className={EmailClass} onChange={e => email_handler(e.target.value)}/>
                     </div>
-                : null}
-                {PasswordMessage.length > 0 ?
-                    <div className="text-red-400">
-                        {PasswordMessage}
+                    <div className="grid grid-cols-2 gap-12">
+                        <span>
+                            Password 
+                        </span>
+                        <textarea className={PasswordClass} onChange={e => password_handler(e.target.value)}/>
                     </div>
-                : null}
-            </div>
-        :
-            <div>
-                {!ShowConfirm ? 
-                    <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
-                        <div className="mt-48">
-                            Awaiting Confirmation...
+                    <div className="grid grid-cols-2 gap-12">
+                        <span>
+                            Re-Enter Password 
+                        </span>
+                        <textarea className={MatchClass}  onChange={e => password_match(e.target.value)} disabled={MatchDisable}/>
+                    </div>
+                    <div className="mt-12">
+                        <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_handler()}>
+                            Submit
+                        </Button>     
+                    </div>
+                    {UsernameMessage.length > 0 ?
+                        <div className="text-red-400">
+                            {UsernameMessage}
                         </div>
-                        <div>
-                            {SignupTimer > 0 ? 
-                                <div>
-                                    {SignupTimer} 
-                                </div>
-                            : 
-                                <div>
-                                    Go!
-                                </div>
-                            }
+                    : null}
+                    {NameMessage.length > 0 ?
+                        <div className="text-red-400">
+                            {NameMessage}
                         </div>
-                    </div>
-                :   <div>
-                        {!ConfirmSuccess ? 
-                            <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
-                                <div className="grid grid-cols-2 gap-12">
-                                    <span>
-                                        Confirmation Code
-                                    </span>
-                                    <textarea className={ConfirmClass} onChange={e => confirm_handler(e.target.value)}/>
-                                </div>
-                                <div className="italic text-sm mt-12">
-                                    <span>
-                                        Check your inbox for the verification credentials
-                                    </span>
-                                </div>
-                                <div className="mt-12">
-                                    <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_confirm()}>
-                                        Confirm
-                                    </Button>     
-                                </div>
-                                {ConfirmMessage.length > 0 ?
-                                    <div className="text-red-400">
-                                        {ConfirmMessage}
+                    : null}
+                    {EmailMessage.length > 0 ?
+                        <div className="text-red-400">
+                            {EmailMessage}
+                        </div>
+                    : null}
+                    {PasswordMessage.length > 0 ?
+                        <div className="text-red-400" style={{ whiteSpace: 'pre-wrap' }}>
+                            {PasswordMessage}
+                        </div>
+                    : null}
+                </div>
+            :
+                <div>
+                    {!ShowConfirm ? 
+                        <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
+                            <div className="mt-48">
+                                Awaiting Confirmation...
+                            </div>
+                            <div>
+                                {SignupTimer > 0 ? 
+                                    <div>
+                                        {SignupTimer} 
                                     </div>
-                                : null}
+                                : 
+                                    <div>
+                                        Go!
+                                    </div>
+                                }
                             </div>
-                        : 
-                            <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
-                                <div className="mt-48">
-                                    Confirmation Success!
-                                </div>
-                                <div>
-                                    {SignupTimer > 0 ? 
-                                        <div>
-                                            {SignupTimer} 
-                                        </div>
-                                    : 
-                                        <div>
-                                            Go!
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-
-                {/* {ConfirmSuccess ? 
-                    <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
-                        <div className="mt-48">
-                            Awaiting Confirmation...
                         </div>
-                        <div>
-                            {SignupTimer > 0 ? 
-                                <div>
-                                    {SignupTimer} 
+                    :   <div>
+                            {!ConfirmSuccess ? 
+                                <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
+                                    <div className="grid grid-cols-2 gap-12">
+                                        <span>
+                                            Confirmation Code
+                                        </span>
+                                        <textarea className={ConfirmClass} onChange={e => confirm_handler(e.target.value)}/>
+                                    </div>
+                                    <div className="italic text-sm mt-12">
+                                        <span>
+                                            Check your inbox for the verification credentials
+                                        </span>
+                                    </div>
+                                    <div className="mt-12">
+                                        <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_confirm()}>
+                                            Confirm
+                                        </Button>     
+                                    </div>
+                                    {ConfirmMessage.length > 0 ?
+                                        <div className="text-red-400">
+                                            {ConfirmMessage}
+                                        </div>
+                                    : null}
                                 </div>
                             : 
-                                <div>
-                                    Go!
+                                <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
+                                    <div className="mt-48">
+                                        Confirmation Success! Logging in...
+                                    </div>
+                                    <div>
+                                        {SignupTimer > 0 ? 
+                                            <div>
+                                                {SignupTimer} 
+                                            </div>
+                                        : 
+                                            <div>
+                                                Go!
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             }
                         </div>
-                    </div>
-                : null} */}
+                    }
 
-            </div>
+                    {/* {ConfirmSuccess ? 
+                        <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
+                            <div className="mt-48">
+                                Awaiting Confirmation...
+                            </div>
+                            <div>
+                                {SignupTimer > 0 ? 
+                                    <div>
+                                        {SignupTimer} 
+                                    </div>
+                                : 
+                                    <div>
+                                        Go!
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    : null} */}
 
-        }
+                </div>
 
-        <Connect setSubmit={setSubmit} Submit={Submit} setSignupSuccess={setSignupSuccess} setConfirmSuccess={setConfirmSuccess} ConfirmSuccess={ConfirmSuccess} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} Username={Username} Name={Name} Email={Email} Password={Password}/>
+            }
+        </div>
+        <Connect setSubmit={setSubmit} Submit={Submit} setLoggedIn={props.setLoggedIn} setSignupSuccess={setSignupSuccess} setConfirmSuccess={setConfirmSuccess} ConfirmSuccess={ConfirmSuccess} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} Username={Username} Name={Name} Email={Email} Password={Password}/>
     </div>
     )
 

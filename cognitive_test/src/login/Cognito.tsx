@@ -23,7 +23,7 @@ export default function Cognito(props: any) {
     useEffect(() => {
         props.UserInserted ? sign_up() : null
         props.LoginAttempt ? login(props.Username, props.Password) :  null
-    }, [props.UserInserted, props.LoginAttempt])
+    }, [props.UserInserted, props.LoginAttempt, props.ConfirmSuccess])
 
 
     useEffect(() => {
@@ -87,7 +87,7 @@ export default function Cognito(props: any) {
         const user_data = {
             Username: props.Username, // Replace with your User Pool ID
             Pool: user_pool, // Replace with your App Client ID
-            SecretHash: get_hash()
+            // SecretHash: get_hash()
         }
 
         const cognito_user = new CognitoUser(user_data);
@@ -96,9 +96,11 @@ export default function Cognito(props: any) {
         cognito_user.confirmRegistration(props.ConfirmCode, true, (err, result) => {
             if (err) {
                 console.log(`Error confirming user: ${err.message}`);
+                
                 return;
             }
             console.log('User confirmed successfully!');
+            first_login(props.Username, props.Password)
             props.setConfirmSuccess(true)
         });
     }
@@ -106,7 +108,7 @@ export default function Cognito(props: any) {
     
     async function login(Username: any, Password: any) {
         console.log("login attempt")
-        const secretHash = get_hash()
+        // const secretHash = get_hash()
       
         const params = {
           AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
@@ -114,7 +116,7 @@ export default function Cognito(props: any) {
           AuthParameters: {
             USERNAME: Username,
             PASSWORD: Password,
-            SECRET_HASH: secretHash
+            // SECRET_HASH: secretHash
           }
         };
       
@@ -137,12 +139,50 @@ export default function Cognito(props: any) {
             props.setLoginClass(login_class[1])
             console.error(error)
         }
-      }
+    }
+
+
+    async function first_login(Username: any, Password: any) {
+        console.log("login attempt")
+        // const secretHash = get_hash()
+      
+        const params = {
+          AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
+          ClientId: credentials.client_id,
+          AuthParameters: {
+            USERNAME: Username,
+            PASSWORD: Password,
+            // SECRET_HASH: secretHash
+          }
+        };
+      
+        try {
+          const command = new InitiateAuthCommand(params)
+          try{
+            const response = await client.send(command)
+            console.log(login_message[0])
+            props.setConfirmSuccess(true)
+            // props.setLoginMessage(login_message[0])
+            // props.setLoginClass(login_class[0])
+          }catch{
+            console.log(Username)
+            console.log(Password)
+            console.log(login_message[1])
+            // props.setLoginAttempt(false)
+            // props.setLoginMessage(login_message[1])
+            // props.setLoginClass(login_class[1])
+          }
+        } catch (error) {
+            // props.setLoginMessage(login_message[2])
+            // props.setLoginClass(login_class[1])
+            console.error(error)
+        }
+    }
     
     function get_hash(){
         const crypto = require('crypto')
         const message = `${props.Username}${credentials["client_id"]}`
-        const str = crypto.createHmac('sha256', credentials["client_secret"])
+        const str = crypto.createHmac('sha256')
         str.update(message)
         const secret_hash = str.digest('base64')
 

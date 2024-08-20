@@ -81,6 +81,8 @@ export default function Home() {
   }
 
   function link_handler(place: any){
+    console.log("link handler")
+    console.log(LoggedIn)
     clear_tests()
     setTestID(0)
     set_classes(place)
@@ -256,7 +258,7 @@ export default function Home() {
 
           {/* SIGNUP */}
           {ShowSignup ?
-            <Signup link_handler={link_handler} toggle_login={toggle_login}/>
+            <Signup link_handler={link_handler} toggle_login={toggle_login} setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
           : null}
 
           {/* LOGIN */}

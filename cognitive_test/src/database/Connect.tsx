@@ -29,9 +29,9 @@ export default function Connect(props: any) {
 
 
   //console.log(process.env)
-  console.log('AWS Key:', AWS_KEY);
-  console.log('AWS Secret:', AWS_SECRET);
-  console.log('AWS Region:', AWS_REGION);
+  // console.log('AWS Key:', AWS_KEY);
+  // console.log('AWS Secret:', AWS_SECRET);
+  // console.log('AWS Region:', AWS_REGION);
 
 
   //Check if credentials are defined
@@ -311,6 +311,6 @@ export default function Connect(props: any) {
 
 
 return (
-    <Cognito handleInsertUser={handleInsertUser} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setConfirmSuccess={props.setConfirmSuccess}/> 
+    <Cognito handleInsertUser={handleInsertUser} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} setCheckConfirm={props.setCheckConfirm} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setLoggedIn={props.setLoggedIn} setConfirmSuccess={props.setConfirmSuccess}/> 
   );
 }
