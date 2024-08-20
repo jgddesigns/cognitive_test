@@ -57,7 +57,6 @@ export default function Signup(props: any) {
             const timeoutId = setTimeout(() => {
                 setSignupTimer(SignupTimer - 1)
                 if(SignupTimer <= 0){
-                    console.log("asdf")
                     setConfirmSuccess(false)
                     //needs to actually login
                     props.toggle_login(true)
