@@ -1,3 +1,6 @@
+//MAIN CODE - ROBERT JOASILUS (github: RobJiggs, slack: @Robert Joasilus)
+//MODIFICATIONS - JASON DUNN (github: jgddesigns, slack: @Jay Dunn)
+
 'use client';
 import AWS from 'aws-sdk';
 import React, {useEffect, useRef} from 'react';
@@ -12,11 +15,11 @@ import { propagateServerField } from 'next/dist/server/lib/render-server';
 
 
 export default function Connect(props: any) {
-  const [Submit, setSubmit] = React.useState(false);
+  const [UserInserted, setUserInserted] = React.useState(false);
 
   useEffect(() => {
-    Submit ? props.insertUserHandler(props.Username, props.Name, props.Email) : null
-  }, [])
+    props.Submit ? handleInsertUser(props.Username, props.Name, props.Email) : null
+  }, [props.Submit, props.CheckConfirm])
 
 
   // Fetch AWS credentials and region from environment variables
@@ -25,7 +28,7 @@ export default function Connect(props: any) {
   const AWS_REGION = test_credentials.AWS_REGION;
 
 
-  console.log(process.env)
+  //console.log(process.env)
   console.log('AWS Key:', AWS_KEY);
   console.log('AWS Secret:', AWS_SECRET);
   console.log('AWS Region:', AWS_REGION);
@@ -83,8 +86,11 @@ export default function Connect(props: any) {
     try {
       await docClient.put(params).promise();
       console.log('User profile inserted successfully.');
+      setUserInserted(true)
+      props.setSubmit(false)
     } catch (err) {
       console.error('Error inserting user profile:', err);
+      props.setSubmit(false)
     }
   };
 
@@ -195,18 +201,19 @@ export default function Connect(props: any) {
   };
 
 
-  async function handleInsertUser(username: any, email: any){
+  async function handleInsertUser(username: any, name: any, email: any){
     const id = await createID(userTable)
     const newUserProfile = {
-      profile_data: 'user123', // Partition key
+      profile_data: username, // Partition key
       id: id.toString(), // Sort key
       username: username,
       email_address: email,
-      name: username,
+      name: name,
       tests_completed: '0',
       total_test_time: '0',
       variables_used:  null,
-      mind_type: null
+      mind_type: null,
+      timestamp: ""
     };
     insertUserProfile(newUserProfile);
   };
@@ -304,6 +311,6 @@ export default function Connect(props: any) {
 
 
 return (
-    <Cognito handleInsertUser={handleInsertUser}/> 
+    <Cognito handleInsertUser={handleInsertUser} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setConfirmSuccess={props.setConfirmSuccess}/> 
   );
 }

@@ -256,7 +256,7 @@ export default function Home() {
 
           {/* SIGNUP */}
           {ShowSignup ?
-            <Signup/>
+            <Signup link_handler={link_handler} toggle_login={toggle_login}/>
           : null}
 
           {/* LOGIN */}
