@@ -57,7 +57,9 @@ export default function Home() {
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
   const [ProfileDisabled, setProfileDisabled] = React.useState(true)
   const [LoginDisabled, setLoginDisabled] = React.useState(true)
+  const [Logout, setLogout] = React.useState(false)
   const [Username, setUsername] = React.useState("")
+  const [LogoutTimer, setLogoutTimer] = React.useState<any>(5)
 
   //placeholder only. will improve security.
   const [Password, setPassword] = React.useState("")
@@ -72,11 +74,24 @@ export default function Home() {
 
   }, [LoggedIn])
 
+  useEffect(() => {
+    while(Logout && LogoutTimer >= 0){
+        const timeoutId = setTimeout(() => {
+            setLogoutTimer(LogoutTimer - 1)
+            LogoutTimer <= 0 ? setLogout(false) : null
+        }, 1000 )
+
+        return () => clearTimeout(timeoutId)
+    }
+  }, [Logout, LogoutTimer])
+
   function toggle_login(condition: any){
     setLoggedIn(condition)
     if(!condition){
       setUsername("")
       setPassword("")
+      setLogoutTimer(5)
+      setLogout(true) 
     } 
   }
 
@@ -206,7 +221,7 @@ export default function Home() {
 
         <div className="mt-24">
           {/* HOME */}
-          {ShowHome ? 
+          {ShowHome && !Logout ? 
             <MainPage/>  
           : null}
 
@@ -269,6 +284,25 @@ export default function Home() {
           {/* PROFILE */}
           {ShowProfile ?
             <Profile LoggedIn={LoggedIn} Username={Username} Password={Password}/>
+          : null}
+
+          {Logout ?
+            <div className="grid grid-rows-2 gap-12 place-items-center">
+              <div className="mt-48">
+                  Logging Out... 
+              </div>
+              <div>
+                  {LogoutTimer > 0 ? 
+                      <div>
+                          {LogoutTimer} 
+                      </div>
+                  : 
+                      <div>
+                          Go!
+                      </div>
+                  }
+              </div>
+            </div>
           : null}
 
         </div>

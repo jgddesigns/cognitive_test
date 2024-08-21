@@ -76,13 +76,21 @@ export default function Login(props: any) {
                 </div>
             </div>
         : 
-            <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
+            <div className="grid grid-rows-2 gap-12 place-items-center">
                 <div className="mt-48">
                     Logging in...
                 </div>
                 <div>
-                    {LoginTimer}
-                </div>
+                  {LoginTimer > 0 ? 
+                      <div>
+                          {LoginTimer} 
+                      </div>
+                  : 
+                      <div>
+                          Go!
+                      </div>
+                  }
+              </div>
             </div>
         }
         <div className={LoginClass}>

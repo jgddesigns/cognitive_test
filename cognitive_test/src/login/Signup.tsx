@@ -332,7 +332,7 @@ export default function Signup(props: any) {
                             : 
                                 <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
                                     <div className="mt-48">
-                                        Confirmation Success! Logging in...
+                                        Confirmation Success! 
                                     </div>
                                     <div>
                                         {SignupTimer > 0 ? 
@@ -344,6 +344,9 @@ export default function Signup(props: any) {
                                                 Go!
                                             </div>
                                         }
+                                    </div>
+                                    <div className="text-green-400 text-base">
+                                        Logging in...
                                     </div>
                                 </div>
                             }
