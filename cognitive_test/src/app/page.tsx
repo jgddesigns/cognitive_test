@@ -319,8 +319,6 @@ export default function Home() {
             <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout}/>
           : null}
 
-          <Cognito Logout={Logout} />
-
           {Logout ?
             <div className="grid grid-rows-2 gap-12 place-items-center">
               <div className="mt-48">
@@ -370,7 +368,7 @@ export default function Home() {
 
 
       
-      
+      <Cognito Logout={Logout} />
 
     </main>
 
