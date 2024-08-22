@@ -14,12 +14,17 @@ export default function Login(props: any) {
     const [LoginTimer, setLoginTimer] = React.useState<any>(null)
     const [LoginAttempt, setLoginAttempt] = React.useState(false)
     const [LoginSuccess, setLoginSuccess] = React.useState(false)
+    const [DisabledStatus, setDisabledStatus] = React.useState(true)
 
-    const classes = ["", "bg-gray-400 cursor-none", "bg-red-400", "bg-green-400"]
+    const classes = ["", "bg-gray-400 cursor-none", "bg-red-400", "bg-green-400", "bg-gray-400 rounded px-10 h-12 text-white cursor-none", "bg-blue-400 rounded px-10 h-12 text-white cursor-pointer"]
 
     const [UsernameMessage, setUsernameMessage] = React.useState("")
     const [UsernameClass, setUsernameClass] = React.useState(classes[0])
     const [PasswordClass, setPasswordClass] = React.useState(classes[0])
+
+    const [MatchClass, setMatchClass] = React.useState(classes[4])
+
+    
 
     const pw_messages = ["", "Password must contain at least 1 number.", "Password must contain at least 1 letter.", "Password must have at least 8 digits.", "Passwords don't match.", "Confirmation code must be 6 digits."]
 
@@ -43,6 +48,15 @@ export default function Login(props: any) {
         
     }, [LoginTimer])
 
+
+    useEffect(() => {
+        if(Username != "" && Password != "" && UsernameMessage.length < 1 && PasswordMessage.length < 1){
+            setDisabledStatus(false)
+            setMatchClass(classes[5])
+        }  
+    }, [Username, Password, UsernameMessage, PasswordMessage])
+
+    
     function username_handler(text: any){
         props.setUsername(text)
         setUsername(text)
@@ -92,7 +106,8 @@ export default function Login(props: any) {
     }
 
     function submit_handler(){
-        Username != "" && Password != "" && UsernameMessage.length < 1 && PasswordMessage.length < 1 ? setLoginAttempt(true) : setLoginAttempt(false)
+        console.log("submit handler")
+        setLoginAttempt(true) 
     }
 
 
@@ -110,16 +125,16 @@ export default function Login(props: any) {
                         <span>
                             Username/Email 
                         </span>
-                        <textarea onChange={e => username_handler(e.target.value)}/>
+                        <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
                     </div>
                     <div className="grid grid-cols-2 gap-12">
                         <span>
                             Password 
                         </span>
-                        <textarea onChange={e => password_handler(e.target.value)}/>
+                        <textarea className={PasswordClass} onChange={e => password_handler(e.target.value)}/>
                     </div>
                     <div className="mt-12">
-                        <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_handler()}>
+                        <Button className={MatchClass} onClick={e => submit_handler()} disabled={DisabledStatus}>
                             Submit
                         </Button> 
                     </div>

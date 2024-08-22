@@ -19,12 +19,16 @@ export default function Signup(props: any) {
     const [ConfirmSuccess, setConfirmSuccess] = React.useState(false)
     const [SignupTimer, setSignupTimer] = React.useState<any>(5)
 
-    const classes = ["", "bg-gray-400 cursor-none", "bg-red-400", "bg-green-400"]
+    const classes = ["", "bg-gray-400 cursor-none", "bg-red-400", "bg-green-400", "bg-gray-400 rounded px-10 h-12 text-white cursor-none", "bg-blue-400 rounded px-10 h-12 text-white cursor-pointer"]
 
     const [PasswordClass, setPasswordClass] = React.useState(classes[0])
     const [MatchDisable, setMatchDisable] = React.useState(true)
 
     const [MatchClass, setMatchClass] = React.useState(classes[0])
+    const [SubmitClass, setSubmitClass] = React.useState(classes[4])
+    const [SubmitDisable, setSubmitDisable] = React.useState(true)
+    const [SubmitConfirmClass, setSubmitConfirmClass] = React.useState(classes[4])
+    const [ConfirmDisable, setConfirmDisable] = React.useState(true)
 
     const [UsernameMessage, setUsernameMessage] = React.useState("")
     const [UsernameClass, setUsernameClass] = React.useState(classes[0])
@@ -68,6 +72,30 @@ export default function Signup(props: any) {
         }
         
     }, [SignupSuccess, SignupTimer, ConfirmSuccess])
+
+
+    useEffect(() => {
+        if(Username != "" && Name != "" && Email != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && EmailMessage.length < 1 && PasswordMessage.length < 1){
+            setSubmitClass(classes[5])
+            setSubmitDisable(false)
+        }else{
+            setSubmitClass(classes[4])
+            setSubmitDisable(true)
+        }
+    }, [Username, Name, Email, Password, UsernameMessage, NameMessage, EmailMessage, PasswordMessage])
+
+
+    useEffect(() => {
+        if(ConfirmCode.length < 6){
+            setConfirmClass(classes[2])
+            setSubmitConfirmClass(classes[4])
+            setConfirmDisable(true)
+        }else{
+            setConfirmClass(classes[3])
+            setSubmitConfirmClass(classes[5])
+            setConfirmDisable(false)
+        }
+    }, [ConfirmCode])
 
 
     //cognito needs it to be an email. change?
@@ -195,14 +223,14 @@ export default function Signup(props: any) {
 
     function submit_handler(){
         console.log("SUBMIT")
-        Username != "" && Name != "" && Email != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && EmailMessage.length < 1 && PasswordMessage.length < 1 ? setSubmit(true) : setSubmit(false)
+        setSubmit(true) 
     }
 
 
     function submit_confirm(){
         console.log("CONFIRM")
-        ConfirmCode != "" && ConfirmMessage.length < 1 ? setCheckConfirm(true) : null
-        ConfirmCode != "" && ConfirmMessage.length < 1 ? setSignupTimer(5) : null
+        setCheckConfirm(true) 
+        setSignupTimer(5) 
     }
 
     
@@ -242,10 +270,10 @@ export default function Signup(props: any) {
                             <span>
                                 Re-Enter Password 
                             </span>
-                            <textarea className={MatchClass}  onChange={e => password_match(e.target.value)} disabled={MatchDisable}/>
+                            <textarea className={MatchClass} onChange={e => password_match(e.target.value)} disabled={MatchDisable}/>
                         </div>
                         <div className="mt-12">
-                            <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_handler()}>
+                            <Button className={SubmitClass} disabled={SubmitDisable} onClick={e => submit_handler()}>
                                 Submit
                             </Button>     
                         </div>
@@ -304,7 +332,7 @@ export default function Signup(props: any) {
                                             </span>
                                         </div>
                                         <div className="mt-12">
-                                            <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_confirm()}>
+                                            <Button className={SubmitConfirmClass} disabled={ConfirmDisable} onClick={e => submit_confirm()}>
                                                 Confirm
                                             </Button>     
                                         </div>

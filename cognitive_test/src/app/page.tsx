@@ -17,7 +17,6 @@ import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
 import Connect from '@/database/Connect'
-import { toggle } from '@nextui-org/react'
 import Cognito from '@/login/Cognito'
 // import Connect from '@/database/Connect'
 
@@ -341,14 +340,13 @@ export default function Home() {
         </div>
       </div>
 
-
       {ShowPopover ?
-        <div className="w-full h-full flex justify-center items-center static top-0 z-2 bg-black opacity-65">
+        <div className="w-full h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65">
         </div>
       : null}
 
       {ShowPopover ?
-        <div className="h-[50%] w-[30%] z-99 absolute top-[10%] left-[35%] bg-blue-400 rounded-2xl text-white">
+        <div className="h-flex w-[30%] z-99 fixed top-flex left-[35%] bg-blue-400 rounded-2xl text-white">
           <div className="p-12 grid grid-auto-rows">
             <div className="text-3xl">
                 {TestTitle}
@@ -356,10 +354,10 @@ export default function Home() {
             <div className="mt-[15%] text-xl">
                 {PopoverMessage}
             </div>
-            <div className="w-full absolute bottom-48 underline cursor-pointer text-2xl" onClick={e => take_test()}>
+            <div className="mt-[15%] w-full static underline cursor-pointer text-2xl" onClick={e => take_test()}>
               Take Test
             </div>
-            <div className="w-full absolute bottom-12 underline cursor-pointer" onClick={e => hide_popover()}>
+            <div className="mt-[15%] w-full static underline cursor-pointer" onClick={e => hide_popover()}>
               Close
             </div>
           </div>
