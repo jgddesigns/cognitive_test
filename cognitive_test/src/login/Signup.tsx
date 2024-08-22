@@ -376,7 +376,7 @@ export default function Signup(props: any) {
 
             }
         </div>
-        <Connect setSubmit={setSubmit} Submit={Submit} setLoggedIn={props.setLoggedIn} setSignupSuccess={setSignupSuccess} setConfirmSuccess={setConfirmSuccess} ConfirmSuccess={ConfirmSuccess} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} Username={Username} Name={Name} Email={Email} Password={Password}/>
+        <Connect setSubmit={setSubmit} Submit={Submit} setLoggedIn={props.setLoggedIn} setSignupSuccess={setSignupSuccess} setConfirmSuccess={setConfirmSuccess} ConfirmSuccess={ConfirmSuccess} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} Username={Username} Name={Name} Email={Email} Password={Password} CookiesChecked={props.CookiesChecked}/>
     </div>
     )
 

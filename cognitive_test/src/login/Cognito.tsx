@@ -30,7 +30,11 @@ export default function Cognito(props: any) {
         props.CheckConfirm ? confirm_user() : null
     }, [props.CheckConfirm])
 
+    useEffect(() => {
+        props.Logout ? cookie_handler(false) : null
+    }, [props.Logout])
 
+    
     async function sign_up(){
         console.log("INITIATE SIGN UP")
         console.log("Username: " + props.Username)
@@ -108,15 +112,13 @@ export default function Cognito(props: any) {
     
     async function login(Username: any, Password: any) {
         console.log("login attempt")
-        // const secretHash = get_hash()
-      
+  
         const params = {
           AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
           ClientId: credentials.client_id,
           AuthParameters: {
             USERNAME: Username,
             PASSWORD: Password,
-            // SECRET_HASH: secretHash
           }
         };
       
@@ -128,6 +130,7 @@ export default function Cognito(props: any) {
             props.setLoginSuccess(true)
             props.setLoginMessage(login_message[0])
             props.setLoginClass(login_class[0])
+            cookie_handler(true)
           }catch{
             console.log(login_message[1])
             props.setLoginAttempt(false)
@@ -144,7 +147,6 @@ export default function Cognito(props: any) {
 
     async function first_login(Username: any, Password: any) {
         console.log("login attempt")
-        // const secretHash = get_hash()
       
         const params = {
           AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
@@ -152,7 +154,6 @@ export default function Cognito(props: any) {
           AuthParameters: {
             USERNAME: Username,
             PASSWORD: Password,
-            // SECRET_HASH: secretHash
           }
         };
       
@@ -162,19 +163,13 @@ export default function Cognito(props: any) {
             const response = await client.send(command)
             console.log(login_message[0])
             props.setConfirmSuccess(true)
-            // props.setLoginMessage(login_message[0])
-            // props.setLoginClass(login_class[0])
+            cookie_handler(true)
           }catch{
             console.log(Username)
             console.log(Password)
             console.log(login_message[1])
-            // props.setLoginAttempt(false)
-            // props.setLoginMessage(login_message[1])
-            // props.setLoginClass(login_class[1])
           }
         } catch (error) {
-            // props.setLoginMessage(login_message[2])
-            // props.setLoginClass(login_class[1])
             console.error(error)
         }
     }
@@ -189,6 +184,32 @@ export default function Cognito(props: any) {
         return secret_hash
     }
 
+    function get_test_data(){
+        var data = [""]
+        return data
+    }
+
+    function cookie_handler(condition: any){
+        console.log("cookie handler")
+        const date = new Date()
+        if(condition){
+            date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000))
+            var utc = date.toUTCString()
+            document.cookie = "Username=" + props.Username + "; expires=" + utc + "; path=/"
+            document.cookie = "Email=" + props.Username + "; expires=" + utc + "; path=/"
+
+            //security concern? pull directly from cognito?
+            document.cookie = "Password=" + props.Password + "; expires=" + utc + "; path=/"
+            document.cookie = "TestData=" + get_test_data() + "; expires=" + utc + "; path=/"
+        }else{
+            date.setTime(date.getTime() - (24 * 60 * 60 * 1000))
+            var utc = date.toUTCString()
+            document.cookie = "Username=; expires=" + utc + "; path=/"
+            document.cookie = "Email=; expires=" + utc + "; path=/"
+            document.cookie = "Password=; expires=" + utc + "; path=/"
+            document.cookie = "TestData=; expires=" + utc + "; path=/"
+        }
+    }
 
     return (
         null

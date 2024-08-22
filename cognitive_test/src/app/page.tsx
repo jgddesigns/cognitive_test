@@ -17,6 +17,8 @@ import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
 import Connect from '@/database/Connect'
+import { toggle } from '@nextui-org/react'
+import Cognito from '@/login/Cognito'
 // import Connect from '@/database/Connect'
 
 
@@ -57,8 +59,11 @@ export default function Home() {
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
   const [ProfileDisabled, setProfileDisabled] = React.useState(true)
   const [LoginDisabled, setLoginDisabled] = React.useState(true)
+  const [CookiesChecked, setCookiesChecked] = React.useState(false)
+  const [Cookies, setCookies] = React.useState(true)
   const [Logout, setLogout] = React.useState(false)
   const [Username, setUsername] = React.useState("")
+  const [Email, setEmail] = React.useState("")
   const [LogoutTimer, setLogoutTimer] = React.useState<any>(5)
 
   //placeholder only. will improve security.
@@ -69,9 +74,15 @@ export default function Home() {
 
 
   useEffect(() => {
+    !CookiesChecked ? check_cookies() : null
+  }, [CookiesChecked])
 
+  useEffect(() => {
+    Cookies && Username && Password  ? toggle_login(true) : null
+  }, [Cookies, Username, Password])
+
+  useEffect(() => {
     LoggedIn ? link_handler(4) : link_handler(0)
-
   }, [LoggedIn])
 
   useEffect(() => {
@@ -84,6 +95,28 @@ export default function Home() {
         return () => clearTimeout(timeoutId)
     }
   }, [Logout, LogoutTimer])
+
+  function check_cookies(){
+    console.log("cookies")
+    console.log(document.cookie)
+    var cookies = document.cookie.split(";")
+    var cookie_arr = []
+    console.log(cookies)
+    for(var i = 0; i<cookies.length; i++){
+      cookie_arr.push(cookies[i].split("="))
+    }
+    console.log(cookie_arr)
+    if(cookie_arr[0][1]){
+      setUsername(cookie_arr[0][1])
+      setEmail(cookie_arr[1][1])
+      setPassword(cookie_arr[2][1])
+      setCookies(true)
+      return true
+    }
+    setCookies(false)
+    setCookiesChecked(true)
+    return false
+  }
 
   function toggle_login(condition: any){
     setLoggedIn(condition)
@@ -278,13 +311,15 @@ export default function Home() {
 
           {/* LOGIN */}
           {ShowLogin ?
-            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
+            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout}/>
           : null}
 
           {/* PROFILE */}
           {ShowProfile ?
-            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password}/>
+            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout}/>
           : null}
+
+          <Cognito Logout={Logout} />
 
           {Logout ?
             <div className="grid grid-rows-2 gap-12 place-items-center">
@@ -335,7 +370,7 @@ export default function Home() {
 
 
       
-
+      
 
     </main>
 
