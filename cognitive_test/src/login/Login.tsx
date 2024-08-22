@@ -30,6 +30,7 @@ export default function Login(props: any) {
         LoginSuccess ? setLoginTimer(5) : setLoginTimer(null)
     }, [LoginSuccess])
 
+
     useEffect(() => {
         while(LoginSuccess && LoginTimer >= 0 ){
             const timeoutId = setTimeout(() => {
@@ -96,69 +97,59 @@ export default function Login(props: any) {
 
 
     return(
-    <div className="h-full grid grid-auto-rows">
-        {!LoginSuccess ?
-            <div className="row">
-                LOGIN
-            </div>
-        : null}
+        <div className="h-full grid grid-auto-rows">
+            {!LoginSuccess ?
+                <div className="row">
+                    LOGIN
+                </div>
+            : null}
 
-        {!LoginSuccess ? 
-            <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
-                <div className="grid grid-cols-2 gap-12">
-                    <span>
-                        Username/Email 
-                    </span>
-                    <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
-                </div>
-                <div className="grid grid-cols-2 gap-12">
-                    <span>
-                        Password 
-                    </span>
-                    <textarea className={PasswordClass} onChange={e => password_handler(e.target.value)}/>
-                </div>
-                <div className="mt-12">
-                    <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_handler()}>
-                        Submit
-                    </Button> 
-                </div>
-                {UsernameMessage.length > 0 ?
-                    <div className="text-red-400">
-                        {UsernameMessage}
+            {!LoginSuccess ? 
+                <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
+                    <div className="grid grid-cols-2 gap-12">
+                        <span>
+                            Username/Email 
+                        </span>
+                        <textarea onChange={e => username_handler(e.target.value)}/>
                     </div>
-                : null}
-                {PasswordMessage.length > 0 ?
-                    <div className="text-red-400" style={{ whiteSpace: 'pre-wrap' }}>
-                        {PasswordMessage}
+                    <div className="grid grid-cols-2 gap-12">
+                        <span>
+                            Password 
+                        </span>
+                        <textarea onChange={e => password_handler(e.target.value)}/>
                     </div>
-                : null}
-            </div>
-        : 
-            <div className="grid grid-rows-2 gap-12 place-items-center">
-                <div className="mt-12">
-                    Logging in...
+                    <div className="mt-12">
+                        <Button className="bg-blue-400 rounded px-10 h-12 text-white cursor-pointer" onClick={e => submit_handler()}>
+                            Submit
+                        </Button> 
+                    </div>
                 </div>
+            : 
+                <div className="grid grid-rows-2 gap-12 place-items-center">
+                    <div className="mt-12">
+                        Logging in...
+                    </div>
+                    <div>
+                    {LoginTimer > 0 ? 
+                        <div>
+                            {LoginTimer} 
+                        </div>
+                    : 
+                        <div>
+                            Go!
+                        </div>
+                    }
+                </div>
+                </div>
+            }
+            <div className={LoginClass}>
                 <div>
-                  {LoginTimer > 0 ? 
-                      <div>
-                          {LoginTimer} 
-                      </div>
-                  : 
-                      <div>
-                          Go!
-                      </div>
-                  }
-              </div>
+                    {LoginMessage}
+                </div>
             </div>
-        }
-        <div className={LoginClass}>
-            <div>
-                {LoginMessage}
-            </div>
-        </div>
 
-        <Cognito setLoginSuccess={setLoginSuccess} setLoginMessage={setLoginMessage} setLoginClass={setLoginClass} setLoginAttempt={setLoginAttempt} LoginAttempt={LoginAttempt} Username={Username} Password={Password}/>
-    </div>
+            <Cognito setLoginSuccess={setLoginSuccess} setLoginMessage={setLoginMessage} setLoginClass={setLoginClass} setLoginAttempt={setLoginAttempt} LoggedIn={props.LoggedIn} LoginAttempt={LoginAttempt} Username={Username} Password={Password} CookiesChecked={props.CookiesChecked}/>
+        </div>
     )
 
 }
