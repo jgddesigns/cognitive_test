@@ -129,11 +129,11 @@ export default function Tests(props: any) {
                     Reaction Time
                 </div>
             </div>
-            <div>
+            {/* <div>
                 <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(8)}>
                     Verbal Learning
                 </div>
-            </div>
+            </div> */}
             <div>
                 <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(9)}>
                     Word Recognition
