@@ -65,6 +65,7 @@ export default function Cognito(props: any) {
             console.log("Sign up success")
             props.setUserInserted(false)
             props.setSignupSuccess(true)
+            //props.handleInsertUser(props.Username, props.Name, props.Password)
             return response
         }catch(err){
             props.setUserInserted(false)
@@ -104,6 +105,7 @@ export default function Cognito(props: any) {
                 return;
             }
             console.log('User confirmed successfully!');
+            props.handleInsertUser(props.Username, props.Name, props.Password)
             first_login(props.Username, props.Password)
             props.setConfirmSuccess(true)
         });

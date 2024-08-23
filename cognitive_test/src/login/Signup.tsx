@@ -86,14 +86,16 @@ export default function Signup(props: any) {
 
 
     useEffect(() => {
-        if(ConfirmCode.length < 6){
-            setConfirmClass(classes[2])
-            setSubmitConfirmClass(classes[4])
-            setConfirmDisable(true)
-        }else{
-            setConfirmClass(classes[3])
-            setSubmitConfirmClass(classes[5])
-            setConfirmDisable(false)
+        if(ConfirmCode.length > 0){
+            if(ConfirmCode.length < 6){
+                setConfirmClass(classes[2])
+                setSubmitConfirmClass(classes[4])
+                setConfirmDisable(true)
+            }else{
+                setConfirmClass(classes[3])
+                setSubmitConfirmClass(classes[5])
+                setConfirmDisable(false)
+            }
         }
     }, [ConfirmCode])
 

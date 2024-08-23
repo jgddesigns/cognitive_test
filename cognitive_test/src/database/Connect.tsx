@@ -213,7 +213,7 @@ export default function Connect(props: any) {
       total_test_time: '0',
       variables_used:  null,
       mind_type: null,
-      timestamp: ""
+      timestamp: getTimestamp()
     };
     insertUserProfile(newUserProfile);
   };
@@ -228,7 +228,8 @@ export default function Connect(props: any) {
       attempt_number: '1',
       time_completed: '120',
       score: '95',
-      variable: '0'
+      variable: '0',
+      timestamp: getTimestamp()
     };
     insertTestResult(newTestResult);
   };
@@ -289,25 +290,10 @@ export default function Connect(props: any) {
   }
 
 
-//   return (
-//     <div>
-//       <div className="row">
-//         <Button color="primary" onClick={handleInsertUser}>Insert User</Button>
-//         <Button color="primary" onClick={handleInsertTestResult}>Insert Test Result</Button>
-//       </div>
-//       <div className="row">
-//         <Button color="primary" onClick={handleFetchUserProfile}>Fetch User Profile</Button>
-//         <Button color="primary" onClick={handleFetchTestResults}>Fetch Test Results</Button>
-//       </div>
-//       <div className="row">
-//         <Button color="primary" onClick={handleUpdateUserProfile}>Update User Profile</Button>
-//         <Button color="primary" onClick={handleUpdateTestResult}>Update Test Result</Button>
-//       </div>
-//       <div className="row">
-//         <Button color="primary" onClick={createID}>Update User Profile</Button>
-//       </div>
-//     </div>
-//  );
+  function getTimestamp(){
+    const date = new Date(Date.now())
+    return date.toString()
+  }
 
 
 return (
