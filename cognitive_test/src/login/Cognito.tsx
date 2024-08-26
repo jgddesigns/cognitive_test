@@ -38,7 +38,7 @@ export default function Cognito(props: any) {
     async function sign_up(){
         console.log("INITIATE SIGN UP")
         console.log("Username: " + props.Username)
-        console.log("Email: " + props.Email)
+        //console.log("Email: " + props.Email)
         console.log("Password: " + props.Password)
         const data = {
             ClientId: credentials.client_id,
@@ -55,7 +55,7 @@ export default function Cognito(props: any) {
                 },
                 {
                     Name: "nickname",
-                    Value: props.Username
+                    Value: props.Name
                 }
             ],
         }
@@ -111,6 +111,36 @@ export default function Cognito(props: any) {
         });
     }
 
+    function retrieve_user(){
+        const pool_data = {
+            UserPoolId: credentials.user_pool_id, 
+            ClientId: credentials.client_id, 
+            ClientSecret: credentials.client_secret,
+        }
+
+        const user_pool = new CognitoUserPool(pool_data)
+
+        const cognito_user = user_pool.getCurrentUser()
+
+        if(cognito_user){
+            cognito_user.getUserAttributes((err, attributes) => {
+                if (err) {
+                  console.error('Error getting user attributes:', err)
+                  return;
+                }
+          
+                if (attributes) {
+                  attributes.forEach((attribute) => {
+                    console.log(`${attribute.getName()} : ${attribute.getValue()}`);
+                  });
+                }
+            });
+        }
+
+    }
+
+
+
     
     async function login(Username: any, Password: any) {
         console.log("login attempt")
@@ -128,11 +158,14 @@ export default function Cognito(props: any) {
           const command = new InitiateAuthCommand(params)
           try{
             const response = await client.send(command)
+            console.log("response")
+            console.log(response)
             console.log(login_message[0])
             props.setLoginSuccess(true)
             props.setLoginMessage(login_message[0])
             props.setLoginClass(login_class[0])
             cookie_handler(true)
+            retrieve_user()
           }catch{
             console.log(login_message[1])
             props.setLoginAttempt(false)
@@ -166,6 +199,7 @@ export default function Cognito(props: any) {
             console.log(login_message[0])
             props.setConfirmSuccess(true)
             cookie_handler(true)
+            retrieve_user()
           }catch{
             console.log(Username)
             console.log(Password)

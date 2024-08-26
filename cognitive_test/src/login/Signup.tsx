@@ -75,14 +75,15 @@ export default function Signup(props: any) {
 
 
     useEffect(() => {
-        if(Username != "" && Name != "" && Email != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && EmailMessage.length < 1 && PasswordMessage.length < 1){
+        // if(Username != "" && Name != "" && Email != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && EmailMessage.length < 1 && PasswordMessage.length < 1){
+            if(Username != "" && Name != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && PasswordMessage.length < 1){
             setSubmitClass(classes[5])
             setSubmitDisable(false)
         }else{
             setSubmitClass(classes[4])
             setSubmitDisable(true)
         }
-    }, [Username, Name, Email, Password, UsernameMessage, NameMessage, EmailMessage, PasswordMessage])
+    }, [Username, Name, Password, UsernameMessage, NameMessage, EmailMessage, PasswordMessage])
 
 
     useEffect(() => {
@@ -246,7 +247,7 @@ export default function Signup(props: any) {
                     <div className="mt-24 grid grid-rows-2 place-items-center gap-12">
                         <div className="grid grid-cols-2 gap-12">
                             <span>
-                                Username 
+                                Email 
                             </span>
                             <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
                         </div>
@@ -256,12 +257,12 @@ export default function Signup(props: any) {
                             </span>
                             <textarea className={NameClass} onChange={e => name_handler(e.target.value)}/>
                         </div>
-                        <div className="resize-none grid grid-cols-2 gap-12">
+                        {/* <div className="resize-none grid grid-cols-2 gap-12">
                             <span>
                                 Email 
                             </span>
                             <textarea className={EmailClass} onChange={e => email_handler(e.target.value)}/>
-                        </div>
+                        </div> */}
                         <div className="grid grid-cols-2 gap-12">
                             <span>
                                 Password 
@@ -289,11 +290,11 @@ export default function Signup(props: any) {
                                 {NameMessage}
                             </div>
                         : null}
-                        {EmailMessage.length > 0 ?
+                        {/* {EmailMessage.length > 0 ?
                             <div className="text-red-400">
                                 {EmailMessage}
                             </div>
-                        : null}
+                        : null} */}
                         {PasswordMessage.length > 0 ?
                             <div className="text-red-400" style={{ whiteSpace: 'pre-wrap' }}>
                                 {PasswordMessage}

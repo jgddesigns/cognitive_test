@@ -77,7 +77,7 @@ export default function Home() {
   }, [CookiesChecked])
 
   useEffect(() => {
-    Cookies && Username && Password  ? toggle_login(true) : null
+    LoggedIn && Cookies && Username && Password  ? toggle_login(true) : null
   }, [Cookies, Username, Password])
 
   useEffect(() => {

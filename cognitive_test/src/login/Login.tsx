@@ -61,7 +61,7 @@ export default function Login(props: any) {
         props.setUsername(text)
         setUsername(text)
 
-        if(!validate["username"](text)){
+        if(!validate["email"](text)){
             setUsernameMessage("Username must have at least 4 digits.")
             setUsernameClass(classes[2])
         }else{
@@ -123,7 +123,7 @@ export default function Login(props: any) {
                 <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
                     <div className="grid grid-cols-2 gap-12">
                         <span>
-                            Username/Email 
+                            Email 
                         </span>
                         <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
                     </div>
