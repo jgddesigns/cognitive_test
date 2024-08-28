@@ -4,6 +4,7 @@ import {Button} from "@nextui-org/react"
 import { v4 as uuidv4 } from 'uuid';
 import Cognito from './Cognito'
 import {validate} from '../helpers/Validation'
+import {analysis} from '../helpers/Analysis'
 
 
 export default function Login(props: any) {
@@ -107,6 +108,12 @@ export default function Login(props: any) {
 
     function submit_handler(){
         console.log("submit handler")
+        console.log("attention test")
+        console.log(analysis["attention"]("minutes", [4, 5, 7, 10, 0, 4, 6], 7, 105))
+        console.log("decisiveness test")
+        console.log(analysis["decisiveness"]([4, 5, 7, 10, 0, 4, 6], 54))
+        console.log("speed test")
+        console.log(analysis["speed"]([.4, .5, .7, 1.3, .3, .6, .7], .7, .25))
         setLoginAttempt(true) 
     }
 

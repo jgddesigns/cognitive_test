@@ -109,6 +109,7 @@ export default function Home() {
       setUsername(cookie_arr[0][1])
       setEmail(cookie_arr[1][1])
       setPassword(cookie_arr[2][1])
+      toggle_login(true)
       setCookies(true)
       return true
     }
