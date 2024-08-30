@@ -2,6 +2,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import "../helpers/shapes.css"
+import { analysis } from '@/helpers/Analysis';
 
 
 export default function WorkingMemory(props: any) {
@@ -45,7 +46,16 @@ export default function WorkingMemory(props: any) {
     const colors = ["red", "yellow", "green", "blue"]
     const sizes = ["h-16 w-16", "h-24 w-24", "h-32 w-32", "h-48 w-48"]
       
-    const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
+    const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]) 
+    
+    //proficient overall score
+    const proficiency = 7
+
+    const interval = "time"
+
+    //section interval, every 3 digits, 6 sections total
+    const time = 10
+    
 
 
     useEffect(() => {
@@ -195,9 +205,17 @@ export default function WorkingMemory(props: any) {
         setAverageTime(total)
     }
 
-
+    function convert_time(answers: any){
+        var time_arr: any = []
+        for(let i=0; i<answers.length; i++){
+            answers[i] > .5 ? time_arr.push(1) : time_arr.push(0)
+        }
+        return time_arr
+    }
 
     function start_handler(){
+        // console.log(analysis["attention"](interval, convert_time([.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4]), time, proficiency))
+        console.log(analysis["attention"](interval, [.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4], time, proficiency, false))
         set_clock(0)
         // create_item()
         setTestStart(true)

@@ -204,7 +204,7 @@ export default function DigitVigilance(props: any) {
 
 
     function start_handler(){
-        // console.log(analysis["attention"](interval, [[1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1], [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]], time, proficiency))
+        console.log(analysis["attention"](interval, [[1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1], [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]], time, proficiency))
         setTestStart(true)
         setShowData(true)
         create_list()

@@ -54,7 +54,7 @@ export default function ChoiceReaction (props: any) {
     const interval = "sections"
 
     //section interval, every 4 questions.. 5 sections total
-    const time = 4
+    const time = 5
 
 
     useEffect(() => {
@@ -106,7 +106,7 @@ export default function ChoiceReaction (props: any) {
         setTestStart(true)
         setShowPrompt(true)
 
-        // console.log(analysis["speed"]([1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
+        console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
         get_prompt()
     }
 
