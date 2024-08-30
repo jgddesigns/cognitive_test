@@ -2,6 +2,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import { v4 as uuidv4 } from 'uuid';
+import { analysis } from '@/helpers/Analysis';
 
 
 export default function DigitVigilance(props: any) {
@@ -21,6 +22,17 @@ export default function DigitVigilance(props: any) {
     const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     const number_style = ["ml-[10px] cursor-pointer", "ml-[10px] text-green-400", "ml-[10px] text-red-400"]
 
+    const [TotalFound, setTotalFound] = React.useState<any[]>() 
+    const [FoundArray, setFoundArray] = React.useState<any[]>([]) 
+    
+    //proficient overall score
+    const proficiency = 75
+
+    const interval = "minutes"
+
+    //section interval, every 36 seconds, 5 sections total
+    const time = 5
+
 
 
     useEffect(() => {
@@ -29,7 +41,16 @@ export default function DigitVigilance(props: any) {
 
         while(TestStart && TotalTime <= 180){
             const timeoutId = setTimeout(() => {
+                var temp_arr: any = []
                 setTotalTime(TotalTime + 1)
+
+                if(TotalTime % 36 == 0 && TotalTime > 0){
+                    console.log(TotalFound)
+                    TotalFound && TotalFound.length > 0 ? temp_arr = TotalFound : null
+                    temp_arr.push(FoundArray)
+                    setTotalFound(temp_arr)
+                    setFoundArray([])
+                }
 
                 if(TotalTime < 180){
                     set_clock(TotalTime + 1)
@@ -47,7 +68,11 @@ export default function DigitVigilance(props: any) {
                 setEndDelay(EndDelay - 1)
                 console.log(EndDelay)
                 console.log(EndTest)
-                EndDelay == 0 ? setEndTest(true) : null
+                if(EndDelay == 0){
+                    setEndTest(true)
+                    console.log(analysis["attention"](interval, TotalFound, time, proficiency))
+                    // console.log(analysis["decisiveness"](TotalFound))
+                }
 
             }, 1000 )
 
@@ -72,31 +97,33 @@ export default function DigitVigilance(props: any) {
 
 
     function create_number_map(){
-
         const number_map = Numbers.map((name:any, index:any) => {
             return {
               row: Numbers[index],
               key: uuidv4()
             }
         })
-
         setNumberMap(number_map)
     }
 
 
 
     function check_number(value: any){
+        var temp_arr: any = FoundArray
         if(value.target.className == number_style[0]){
             if(SearchNumbers.includes(value.target.id)){
                 value.target.className = number_style[1]
                 setCorrectMarks(CorrectMarks + 1)
                 setFound(Found + 1)
+                temp_arr.push(1)
             }else{
                 value.target.className = number_style[2]
                 setIncorrectMarks(IncorrectMarks + 1)
                 setFound(Found - 1)
+                temp_arr.push(0)
             }
         }
+        setFoundArray(temp_arr)
     }
 
 
@@ -177,6 +204,7 @@ export default function DigitVigilance(props: any) {
 
 
     function start_handler(){
+        // console.log(analysis["attention"](interval, [[1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1], [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]], time, proficiency))
         setTestStart(true)
         setShowData(true)
         create_list()

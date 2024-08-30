@@ -1,7 +1,7 @@
 'use client'
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
-
+import {analysis} from "../helpers/Analysis"
 
 export default function ChoiceReaction (props: any) {
 
@@ -13,6 +13,7 @@ export default function ChoiceReaction (props: any) {
     const [NoCount, setNoCount] = React.useState(0)
     const [AnswerCount, setAnswerCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
+    const [Answers, setAnswers] = React.useState<any>([])
     const [ShowPrompt, setShowPrompt] = React.useState(false)
 
     // const number_class = ["text-2xl bold", "text-2xl bold text-green-400"]
@@ -46,6 +47,16 @@ export default function ChoiceReaction (props: any) {
 
     const [PromptList, setPromptList] = React.useState(prompt_list)
 
+
+    //proficient overall score
+    const proficiency = 14
+
+    const interval = "sections"
+
+    //section interval, every 4 questions.. 5 sections total
+    const time = 4
+
+
     useEffect(() => {
         var count = 1
         while(IntervalTime > 0){
@@ -66,7 +77,14 @@ export default function ChoiceReaction (props: any) {
 
 
     function get_prompt(){
-        PromptList.length < 1 ? setEndTest(true) : null
+        if(PromptList.length < 1){
+            setEndTest(true)
+            // console.log("answers")
+            // console.log(Answers)
+            // console.log(analysis["attention"]("sections", Answers, time, proficiency))
+            console.log(analysis["attention"](interval, Answers, time, proficiency))
+            console.log(analysis["decisiveness"](Answers))
+        } 
         var temp_arr = PromptList
         console.log(PromptList)
         var pos = Math.floor(Math.random() * temp_arr.length)   
@@ -87,6 +105,8 @@ export default function ChoiceReaction (props: any) {
     function start_handler(){
         setTestStart(true)
         setShowPrompt(true)
+
+        // console.log(analysis["speed"]([1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
         get_prompt()
     }
 
@@ -103,8 +123,14 @@ export default function ChoiceReaction (props: any) {
     }
 
     function answer_handler(answer: any){
-        answer == Answer ? console.log("correct") : null
-        answer == Answer ? setAnswerCount(AnswerCount + 1) : null
+        var temp_arr = Answers
+        if(answer == Answer){
+            temp_arr.push(1)
+            setAnswerCount(AnswerCount + 1)
+        }else{
+            temp_arr.push(0)
+        }
+        setAnswers(temp_arr)
         setShowPrompt(false)
         set_interval()
     }

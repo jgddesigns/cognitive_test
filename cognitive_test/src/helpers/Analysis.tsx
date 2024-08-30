@@ -3,10 +3,10 @@ var stats = {time_interval: "", interval_answers: [], interval_average: ""}
 
 
 function calculate_attention(interval: any, answers: any, time: any, proficiency: any){
-  var periods: any = time
+  var periods: any = answers.length/time
   var interval_avg: any = null
   var total: any = null
-  var deviation: any = null
+  var deviation_floor: any = null
   var bonus_range: any = null
   var bonus = false
   var penalty_range: any = null
@@ -16,23 +16,56 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
   var average: any = 0
   var poor: any = 0
   var rating: any = null
+  var interval_arr: any = []
+  var temp_answers = answers
 
   if(interval == "seconds"){
     periods = time * 60
   }
 
-  for(let i=0; i<answers.length; i++){
-    total = total + answers[i]
+  if(interval == "sections" || interval == "minutes"){
+    periods = time
   }
 
-  interval_avg = Math.round(total/periods)
+  if(answers[0].length < 2){
+    for(let i=0; i<answers.length; i++){
+      total = total + answers[i]
+    }
+  }else{
+    for(let i=0; i<answers.length; i++){
+      for(let j=0; j<answers[i].length; j++){
+        total = total + answers[i][j]
+      }
+    }    
+  }
 
-  deviation = interval_avg - Math.round(interval_avg * .2)
+  interval_avg = Math.round((total/periods) * 100) / 100 
+
+  deviation_floor = interval_avg - (interval_avg * .2)
   bonus_range = Math.round(proficiency * 1.2)
   penalty_range = Math.round(proficiency * .5)
 
-  for(let j=0; j<answers.length; j++){
-    answers[j] >= deviation ? score++ : null
+  if(answers[0].length < 2){
+    for(let j=0; j<periods; j++){
+      let temp_arr = []
+      for(let k=0; k<time; k++){
+        temp_arr.push(answers[k])
+        temp_answers.push(answers[k])
+      }
+      answers.splice(0, time)
+      interval_arr.push(temp_arr)
+    }
+  }else{
+    interval_arr = answers
+  }
+
+  for(let j=0; j<interval_arr.length; j++){
+    let sum = 0
+    for(let k=0; k<interval_arr[j].length; k++){
+      console.log(interval_arr[j][k])
+      sum = sum + interval_arr[j][k]
+    }
+    sum >= deviation_floor ? score++ : null
   }
 
   if(total >= bonus_range){
@@ -62,22 +95,22 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
   }
 
 
-  return {"interval": interval, "answers": answers, "time": time, "periods": periods, "interval_avg": interval_avg, "total": total, "deviation": deviation, "bonus_range": bonus_range, "bonus": bonus, "penalty_range": penalty_range, "penalty": penalty, "score": score, "rating": rating, "attributes": {"strong": strong, "average": average, "poor": poor}, "proficiency": proficiency}
+  return {"interval": interval, "answers": temp_answers, "sections": interval_arr, "time": time, "periods": periods, "interval_avg": interval_avg, "total": total, "deviation_floor": deviation_floor, "bonus_range": bonus_range, "bonus": bonus, "penalty_range": penalty_range, "penalty": penalty, "score": score, "rating": rating, "attributes": {"strong": strong, "average": average, "poor": poor}, "proficiency": proficiency}
 }
 
 
-function calculate_decisiveness(answers: any, proficiency: any){
+function calculate_decisiveness(answers: any){
   var high = .9
   var low = .7
-  var score = 0 
+  var total = 0 
   var percentage = 0
   var rating = "poor"
 
   for(let i=0; i<answers.length; i++){
-    score = score + answers[i]
+    total = total + answers[i]
   }
 
-  percentage = Math.round((score/proficiency) * 100) / 100 
+  percentage = Math.round((total/answers.length) * 100) / 100 
 
   if(percentage >= high){
     rating = "strong"
@@ -87,7 +120,7 @@ function calculate_decisiveness(answers: any, proficiency: any){
     rating = "average"
   } 
   
-  return {"answers": answers, "score": score, "percentage": percentage, "rating": rating, "proficiency": proficiency}
+  return {"answers": answers, "total": total, "percentage": percentage, "rating": rating}
 }
 
 

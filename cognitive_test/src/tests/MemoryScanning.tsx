@@ -1,6 +1,7 @@
 'use client'
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
+import { analysis } from '@/helpers/Analysis';
 
 
 export default function MemoryScanning (props: any) {
@@ -27,6 +28,17 @@ export default function MemoryScanning (props: any) {
     const answered_style = ["text-red-400", "text-green-400"]
 
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
+
+    //proficient overall score
+    const proficiency = 12
+
+    const interval = "sections"
+
+    //change to 4 digits, 5 sections, 20 total answers
+    //section interval, every 3 digits, 6 sections total
+    const time = 6
+
+
     useEffect(() => {
         var temp_arr: any = DigitList
         var compare_arr: any = CompareList
@@ -219,6 +231,7 @@ export default function MemoryScanning (props: any) {
 
 
     function start_handler(){
+        console.log(analysis["attention"](interval, [[1,1,1], [1,1,1], [1,1,1], [1,1,1], [1,0,0], [0,0,0]], time, proficiency))
         create_list()
         setDigits(4)
         setTestStart(true)
