@@ -2,6 +2,7 @@
 'use client'
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
+import { analysis } from '@/helpers/Analysis';
 
 
 export default function NumberVigilance (props: any) {
@@ -23,9 +24,19 @@ export default function NumberVigilance (props: any) {
     const [TestNumber, setTestNumber] = React.useState(0)
     const [CorrectCount, setCorrectCount] = React.useState(0)
     const [IncorrectCount, setIncorrectCount] = React.useState(0)
+    const [SectionAnswers, setSectionAnswers] = React.useState<any>([])
+    const [AnswerArray, setAnswerArray] = React.useState<any>([])
 
     const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white", "bg-green-400 rounded px-10 h-12 text-white", "bg-red-400 rounded px-10 h-12 text-white"]
     const [CorrectClass, setCorrectClass] = React.useState(correct_class[0])
+
+    //proficient overall score
+    const proficiency = 84
+
+    const interval = "sections"
+
+    //section interval, every 3 digits, 6 sections total
+    const time = 5
 
     useEffect(() => {
         if(ClickedButton){
@@ -61,6 +72,14 @@ export default function NumberVigilance (props: any) {
     }, [IntervalTime])
 
     useEffect(() => {
+        var temp_arr = []
+        if(ShownCount % 24 == 0 && ShownCount > 1){
+            temp_arr = AnswerArray
+            temp_arr.push(SectionAnswers)
+            setAnswerArray(temp_arr)
+            setSectionAnswers([])
+        }
+              
         ShownCount > 120 ? setEndTest(true) : null
     }, [ShownCount])
 
@@ -69,6 +88,7 @@ export default function NumberVigilance (props: any) {
     }
 
     function clicked_button(){
+        console.log(analysis["attention"](interval, [[1,1,1,0,1,1,0,1,0,0,1,1,1,0,1,1,0,1,0,0,1,1,0,0], [0,0,1,1,1,1,0,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,0,1], [0,1,1,1,0,0,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,1,0], [1,0,0,1,0,1,0,1,0,1,1,0,0,1,0,1,0,1,0,1,0,0,1,1], [1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,1,0,1,0,1,1,1,1,0]], time, proficiency, true))
         setTestNumber(Math.ceil(Math.random()*10))
         setShowNumber(true)
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
@@ -83,6 +103,9 @@ export default function NumberVigilance (props: any) {
     }
 
     function correct_press(){
+        var temp_arr = SectionAnswers
+        temp_arr.push(1)
+        setSectionAnswers(temp_arr)
         setCorrectClass(correct_class[1])
         setCorrectCount(CorrectCount + 1)
         console.log("=====================")
@@ -93,6 +116,9 @@ export default function NumberVigilance (props: any) {
 
 
     function incorrect_press(){
+        var temp_arr = SectionAnswers
+        temp_arr.push(0)
+        setSectionAnswers(temp_arr)
         setCorrectClass(correct_class[2])
         setIncorrectCount(CorrectCount + 1)
         console.log("=====================")

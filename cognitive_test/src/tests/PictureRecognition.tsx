@@ -1,6 +1,7 @@
 'use client'
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
+import { analysis } from '@/helpers/Analysis';
 
 export default function PictureRecognition (props: any) {
 
@@ -20,12 +21,28 @@ export default function PictureRecognition (props: any) {
     const [CompareArray, setCompareArray] = React.useState([])
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
-    const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 14 pictures.")
+    //change to 20 pictures
+    // const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 14 pictures.")
     const [ShowMessage, setShowMessage] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
 
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
+
+    const pictures_value = 20
+    const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of " + pictures_value + " pictures.")
+    const digits_value = pictures_value * 2
+    const message_value = digits_value + 1
+    const prompt_value = digits_value + 2
+
+
+    //proficient overall score
+    const proficiency = 14
+
+    const interval = "sections"
+
+    //section interval, every 3 digits, 6 sections total
+    const time = 5
 
 
     useEffect(() => {
@@ -35,9 +52,9 @@ export default function PictureRecognition (props: any) {
 
             const timeoutId = setTimeout(() => {
 
-                Digits > 29 ? setShowMessage(true) : setShowMessage(false)
+                Digits > message_value ? setShowMessage(true) : setShowMessage(false)
 
-                if(Digits % 2 != 0 && Digits <= 28){
+                if(Digits % 2 != 0 && Digits <= digits_value){
                     current_picture(1)
                 }else{
                     setCurrentPicture("")
@@ -49,7 +66,7 @@ export default function PictureRecognition (props: any) {
                     setShowCompare(true)
                     setCompareMessage(true)
                     setShowMessage(true)
-                    setCompareDigits(31)
+                    setCompareDigits(digits_value + 1)
                     setCurrentMessage("What images from the following set were in the first set?")
                 }
 
@@ -64,11 +81,11 @@ export default function PictureRecognition (props: any) {
 
                 if(CompareMessage){
 
-                    CompareDigits == 30 ? setShowPrompt(false) : null
+                    CompareDigits == prompt_value ? setShowPrompt(false) : null
                     
-                    CompareDigits == 29 ? setShowMessage(false) : null
+                    CompareDigits == message_value ? setShowMessage(false) : null
 
-                    if(CompareDigits % 2 != 0 && CompareDigits <= 28){
+                    if(CompareDigits % 2 != 0 && CompareDigits <= digits_value){
                         setAnsweredString("Missed!")
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
@@ -114,7 +131,7 @@ export default function PictureRecognition (props: any) {
         }
 
         temp_arr = shuffle_array(temp_arr, temp_arr.length)
-        shown_arr = temp_arr.splice(0,15)
+        shown_arr = temp_arr.splice(0, pictures_value + 1)
         setCurrentPicture(shown_arr[0])
         shown_arr.splice(0, 1)
         setShownArray(shown_arr)
@@ -175,7 +192,6 @@ export default function PictureRecognition (props: any) {
     }
 
 
-
     //event parameter
     //0 for initial display of pictures
     //1 for compare display
@@ -225,8 +241,9 @@ export default function PictureRecognition (props: any) {
 
 
     function start_handler(){
+        console.log(analysis["attention"](interval, [[1,1,1,0], [0,0,0,1], [0,1,1,1], [1,0,0,1], [1,0,0,1]], time, proficiency, true))
         build_array()
-        setDigits(32)
+        setDigits(digits_value + 2)
         setShowMessage(true)
         setTestStart(true)
         setShowPrompt(true)
@@ -235,14 +252,14 @@ export default function PictureRecognition (props: any) {
 
 
     function calculate_ratio(){
-        return Math.round((AnswerCount/14)*100)
+        return Math.round((AnswerCount/pictures_value)*100)
     }
 
 
 
     function check_answer(compare: any){
         console.log("\n\ncompare string")
-        console.log(compare)
+        // console.log(compare)
         var temp_arr: any = StaticArray
 
         if(temp_arr.includes(compare)){
@@ -325,7 +342,7 @@ export default function PictureRecognition (props: any) {
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
-                    {AnswerCount} answers correct out of 14. ({calculate_ratio()}%)
+                    {AnswerCount} answers correct out of {pictures_value}. ({calculate_ratio()}%)
                 </span>
             </div>
         }

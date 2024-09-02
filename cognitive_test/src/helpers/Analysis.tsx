@@ -1,7 +1,7 @@
 var ratings = {attention: "", decisiveness: "", speed: ""}
 var stats = {time_interval: "", interval_answers: [], interval_average: ""} 
 
-
+//add average proficiency... test 
 function calculate_attention(interval: any, answers: any, time: any, proficiency: any, greater=true){
   var periods: any = answers.length/time
   var interval_avg: any = null
@@ -63,7 +63,7 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
     for(let j=0; j<interval_arr.length; j++){
       let sum = 0
       for(let k=0; k<interval_arr[j].length; k++){
-        console.log(interval_arr[j][k])
+        //console.log(interval_arr[j][k])
         sum = sum + interval_arr[j][k]
       }
       greater ? sum >= deviation ? score++ : null : sum <= deviation ? score++ : null    
