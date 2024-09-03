@@ -25,8 +25,6 @@ export default function PictureRecognition (props: any) {
     const [CircleMap, setCircleMap] = React.useState<any>([])
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
-    //change to 20 pictures
-    // const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 14 pictures.")
     const [ShowMessage, setShowMessage] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
@@ -84,9 +82,7 @@ export default function PictureRecognition (props: any) {
             const timeoutId = setTimeout(() => {
 
                 if(CompareMessage){
-
-                    CompareDigits == prompt_value ? setShowPrompt(false) : null
-                    
+                    CompareDigits == prompt_value ? setShowPrompt(false) : null     
                     CompareDigits == message_value ? setShowMessage(false) : null
 
                     if(CompareDigits % 2 != 0 && CompareDigits <= digits_value){
@@ -94,12 +90,9 @@ export default function PictureRecognition (props: any) {
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
                         setAnswered(false)
-                        //setAnswered(false)
                         temp_arr = StaticArray
                         temp_arr.includes(current_picture(0)) ? setAnswer("Answer was: Yes, picture is in original set.") : setAnswer("Answer was: No, picture isn't in original set.")
                     }else{
-                        //setAnsweredString("")
-                        //!Answered ? show_circles(false) : null
                         check_answer(CurrentPicture)
                         setShowButtons(false)
                         setCurrentPicture("")
@@ -219,7 +212,6 @@ export default function PictureRecognition (props: any) {
 
 
     function yes_handler(){
-        //show_circles(true)
         setAnsweredString("You answered: Yes")
         setAnswered(true)
         answer_handler(true)
@@ -229,7 +221,6 @@ export default function PictureRecognition (props: any) {
 
 
     function no_handler(){
-        //show_circles(false)
         setAnsweredString("You answered: No")
         setAnswered(true)
         answer_handler(false)
@@ -240,7 +231,6 @@ export default function PictureRecognition (props: any) {
 
     function answer_handler(answer: any){
         setCurrentPicture("")
-        
         var temp_arr: any = StaticArray
         if (answer && temp_arr.includes(CurrentPicture) || (!answer && !temp_arr.includes(CurrentPicture))){
             setAnswerCount(AnswerCount + 1)
@@ -260,14 +250,18 @@ export default function PictureRecognition (props: any) {
         setShowMessage(true)
         setTestStart(true)
         setShowPrompt(true)
+        display_circles()
+    }
+    
 
-        //testing
+
+    function display_circles(){
         var i = 0
         while(i<20){
             show_circles(false, true)
             i++
         }
-        setCircleArray
+        setCircleArray    
     }
 
 
@@ -279,8 +273,6 @@ export default function PictureRecognition (props: any) {
 
 
     function check_answer(compare: any){
-        console.log("\n\ncompare string")
-        // console.log(compare)
         var temp_arr: any = StaticArray
 
         if(temp_arr.includes(compare)){
@@ -297,7 +289,6 @@ export default function PictureRecognition (props: any) {
         }
 
         AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? show_circles(false) : null
-        
     }
 
 
@@ -371,7 +362,6 @@ export default function PictureRecognition (props: any) {
                                 </div>  
                             }
                         </div>
-
                         <div className="h-[55%] mt-[200px]">
                             {ShowButtons ?
                                 <div className="grid-cols-2 gap-x-[100px] place-items-center">
@@ -384,20 +374,10 @@ export default function PictureRecognition (props: any) {
                                 </div>
                             : null}
                         </div>
-
-                        
-
-
-        </div>
-
-
-                    
-
-
-
-            : null
+                    </div>
+                : null
         :
-            <div className="grid grid-rows-3 mt-[200px] place-items-center"> 
+            <div className="grid h-[40%] mt-12 grid-rows-3 gap-12 place-items-center"> 
                 <span className="mt-12">
                     The Test is Over.
                 </span> 
@@ -406,7 +386,6 @@ export default function PictureRecognition (props: any) {
                 </span>
             </div>
         }
-
         {ShowCompare ? 
             <div className="mt-[200px] sticky grid justify-center" style={{ gridTemplateColumns: 'repeat(20, 30px)' }}>
                 {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
@@ -419,10 +398,8 @@ export default function PictureRecognition (props: any) {
                 }
             </div> 
         : null} 
-
     </div>
   )
-
 }
 
 
