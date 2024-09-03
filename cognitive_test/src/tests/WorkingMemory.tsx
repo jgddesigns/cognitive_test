@@ -245,7 +245,34 @@ export default function WorkingMemory(props: any) {
             setBoxGrid(grid_arr)
         }
     }
+    function resetAll(){
+    setEndTest(false)
+    setTestStart(false)
+    setShowData(false)
+    setNextRound(false)
+    setDelay(false)
+    setTokensFound(false)
+    setTestTime(0)
+    setFoundCount(0)
+    setRoundCount(3) 
+    setCurrentAttempts(0)
+    setTotalAttempts(0)
+    setCurrentRound(1)
+    setDelayTime(0)
+    setRoundAttempts([])
+    setTokenPattern([])
+    setBoxCount(3)
+    setCurrentMessage("") 
+    setClockDisplay("") 
+    setAverageTime(0)
 
+
+
+    setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
+
+
+
+    }
 
 
   return(
@@ -395,6 +422,9 @@ export default function WorkingMemory(props: any) {
                 <div className="mt-8 ml-12">
                     Round 10: {RoundAttempts[9]}
                 </div>       
+                <Button className="bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>
             </div>
         }
     </div>

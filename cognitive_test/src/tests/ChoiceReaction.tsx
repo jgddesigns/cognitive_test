@@ -117,6 +117,18 @@ export default function ChoiceReaction (props: any) {
         setIntervalTime(Math.random() * 2.5)
     }
 
+    function resetAll(){
+        setEndTest(false);
+        setCurrentPrompt("");
+        setTestStart(false);
+        setAnswer(false);
+        setYesCount(0);
+        setNoCount(0);
+        setAnswerCount(0);
+        setIntervalTime(0);
+        setShowPrompt(false);
+    };
+
   return(
     <div>
         <div className="row">
@@ -155,6 +167,10 @@ export default function ChoiceReaction (props: any) {
                 <span className="mt-12">
                     {AnswerCount} answers correct out of 20. ({calculate_ratio()}%)
                 </span>
+                <Button className="bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>
+
             </div>
         }
     </div>
