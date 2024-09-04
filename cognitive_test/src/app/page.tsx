@@ -18,7 +18,7 @@ import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
 import Connect from '@/database/Connect'
 import Cognito from '@/login/Cognito'
-// import Connect from '@/database/Connect'
+
 
 
 export default function Home() {

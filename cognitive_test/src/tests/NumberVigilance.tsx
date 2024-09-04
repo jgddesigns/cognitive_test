@@ -142,6 +142,30 @@ export default function NumberVigilance (props: any) {
 
         setTimerDisplay(display)
     }
+    function resetAll(){
+    setShowNumber(false)
+    setResponsePressed(false) 
+    setResponsesArray([])
+    setClickedButton(false)
+    setCorrect(false)
+    setCurrentNumber(0)
+    setTimerDisplay("0:00")
+    setEndTest(false)
+    setResponseTime(100)
+    setPressedCount(0)
+    setIntervalTime(1)
+    setAvgTime(0)
+    setShownCount(0)
+    setShownTimer(0)
+    setTestNumber(0)
+    setCorrectCount(0)
+    setIncorrectCount(0)
+
+   
+    setCorrectClass(correct_class[0])
+
+
+    }
 
   return(
     <div>
@@ -202,6 +226,9 @@ export default function NumberVigilance (props: any) {
                 <div className="mt-12 text-red-400">
                     Incorrect Responses: {IncorrectCount}
                 </div> 
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>
             </div>
         }
 

@@ -332,7 +332,46 @@ export default function WorkingMemory(props: any) {
 
         return str 
     }
+    function resetAll(){
+        setEndTest(false);
+    setTestStart(false);
+    setShowData(false);
+    setNextRound(false);
+    setDelay(false);
+    setTokensFound(false);
+    setIsPaused(false);
+    setFound(false);
+    setMissed(false);
+    setTestTime(0);
+    setFoundCount(0);
+    setRoundCount(3);
+    setCurrentAttempts(0);
+    setTotalAttempts(0);
+    setCurrentRound(1);
+    setDelayTime(0);
+    setFoundTimes([]);
+    setTokenPattern([]);
+    setBoxCount(3);
+    setCurrentMessage("");
+    setClockDisplay("");
+    setCurrentShape("");
+    setCountMessage("");
+    setCurrentPosition(0);
+    setPause(-1);
+    setAverageTime(0);
+    setLastTime("");
+    setMissedClicks(0);
+    setNotAttempted(0);
+    setOriginalTime(0);
+    setCountDown(false);
+    setCountTimer(-1);
+    setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
 
+
+
+
+
+    }
 
 
     return(
@@ -486,7 +525,10 @@ export default function WorkingMemory(props: any) {
                     </div>                
                     <div className="mt-8 ml-12">
                         Round 10: {FoundTimes[9]}
-                    </div>       
+                    </div> 
+                    <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>      
                 </div>
             }
         </div>

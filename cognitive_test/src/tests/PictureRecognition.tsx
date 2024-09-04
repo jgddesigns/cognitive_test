@@ -318,7 +318,30 @@ export default function PictureRecognition (props: any) {
         setCircleArray(shown_arr)
         setCircleMap(circle_map)
     }
+function resetAll(){
+    setEndTest(false)
+    setTestStart(false)
+    setAnswerCount(0)
+    setShowPrompt(false)
+    setShowCompare(false)
+    setCompareMessage(false)
+    setShowButtons(false)
+    setAnswered(true) 
+    setAnsweredString("")  
+    setCompareDigits(-1)
+    setShownArray([])
+    setStaticArray([""])
+    setCurrentPicture("")
+    setCompareArray([])
+    setAnswer("")
+    setDigits(-1)
+    setCurrentMessage("Try to memorize the next set of 14 pictures.")
+    setShowMessage(false)
+    setAnsweredStyle(answered_style[0])
 
+
+
+}
 
 
   return(
@@ -384,6 +407,9 @@ export default function PictureRecognition (props: any) {
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {pictures_value}. ({calculate_ratio()}%)
                 </span>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>
             </div>
         }
         {ShowCompare ? 

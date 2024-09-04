@@ -90,7 +90,23 @@ export default function ReactionTime (props: any) {
     function get_avg_time(){
         return ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length
     }
+    function resetAll(){
+    setShowButton(false)
+    setResponsePressed(false) 
+    setResponsesArray([])
+    setClickedButton(false)
+    setEndTest(false)
+    setResponseTime(100)
+    setPressedCount(0)
+    setIntervalTime(0)
+    setAvgTime(0)
 
+
+
+
+
+
+    }
 
   return(
     <div>
@@ -142,6 +158,9 @@ export default function ReactionTime (props: any) {
                     <span>
                         The Test is Over.
                     </span>
+                    <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                    </Button>
                 </div>        
             </div>
         }

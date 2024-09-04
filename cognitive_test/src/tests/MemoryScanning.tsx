@@ -266,7 +266,31 @@ export default function MemoryScanning (props: any) {
         setCompareString("")
     }
 
+    function resetAll(){
+        setEndTest(false)
+        setTestStart(false)
+        setAnswerCount(0)
+        setShowPrompt(false)
+        setShowCompare(false)
+        setCompareMessage(false)
+        setCompareNumbers(false)
+        setShowButtons(false)
+        setAnswered(true) 
+        setAnsweredString("")  
+        setCompareDigits(-1)
+        setDigitList([])
+        setStaticList([])
+        setCurrentDigit("4")
+        setCompareList([])
+        setCompareString("")
+        setAnswer("")
+        setDigits(-1)
 
+
+
+
+
+    }
 
   return(
     <div>
@@ -330,6 +354,9 @@ export default function MemoryScanning (props: any) {
                 <span className="mt-12">
                     {AnswerCount} answers correct out of 18. ({calculate_ratio()}%)
                 </span>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>
             </div>
         }
     </div>

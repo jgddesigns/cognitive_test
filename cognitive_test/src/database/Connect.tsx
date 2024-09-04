@@ -40,7 +40,6 @@ export default function Connect(props: any) {
     return null;
   }
 
-
   AWS.config.update({
     accessKeyId: AWS_KEY,
     secretAccessKey: AWS_SECRET,
@@ -55,7 +54,6 @@ export default function Connect(props: any) {
   // Table schemas
   const userTable = 'User';
   const testResultsTable = 'Test_Results'; // Updated table name
-
 
   // Retrieve a user profile from the 'User' table
   const retrieveUserProfile = async (profileData: string, id: number) => {
@@ -75,7 +73,6 @@ export default function Connect(props: any) {
       return null;
     }
   };
-
 
   // Insert a new user profile into the 'User' table
   const insertUserProfile = async (userProfile: any) => {
@@ -144,7 +141,6 @@ export default function Connect(props: any) {
       console.error('Parameters used:', JSON.stringify(params, null, 2));
     }
   };
-
 
   // Update an existing test result in the 'Test_Results' table
   const updateTestResult = async (testProfile: string, testId: number, updatedFields: { [key: string]: any }) => {
@@ -234,16 +230,13 @@ export default function Connect(props: any) {
     insertTestResult(newTestResult);
   };
 
-
   const handleFetchUserProfile = () => {
     retrieveUserProfile('user123', 1); // Provide both partition key and sort key
   };
 
-
   const handleFetchTestResults = () => {
     fetchTestResults('user123'); // Use the correct partition key
   };
-
 
   const handleUpdateUserProfile = () => {
     const updatedFields = {
@@ -253,7 +246,6 @@ export default function Connect(props: any) {
     };
     updateUserProfile('user123', 1, updatedFields); // Provide partition key, sort key, and updated fields
   };
-
 
   const handleUpdateTestResult = () => {
     const updatedFields = {
