@@ -2,6 +2,8 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
+import { v4 as uuidv4 } from 'uuid';
+import "../helpers/shapes.css"
 
 export default function PictureRecognition (props: any) {
 
@@ -19,10 +21,10 @@ export default function PictureRecognition (props: any) {
     const [StaticArray, setStaticArray] = React.useState([""])
     const [CurrentPicture, setCurrentPicture] = React.useState("")
     const [CompareArray, setCompareArray] = React.useState([])
+    const [CircleArray, setCircleArray] = React.useState([])
+    const [CircleMap, setCircleMap] = React.useState<any>([])
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
-    //change to 20 pictures
-    // const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 14 pictures.")
     const [ShowMessage, setShowMessage] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
@@ -66,7 +68,7 @@ export default function PictureRecognition (props: any) {
                     setShowCompare(true)
                     setCompareMessage(true)
                     setShowMessage(true)
-                    setCompareDigits(digits_value + 1)
+                    setCompareDigits(digits_value + 3)
                     setCurrentMessage("What images from the following set were in the first set?")
                 }
 
@@ -80,15 +82,14 @@ export default function PictureRecognition (props: any) {
             const timeoutId = setTimeout(() => {
 
                 if(CompareMessage){
-
-                    CompareDigits == prompt_value ? setShowPrompt(false) : null
-                    
+                    CompareDigits == prompt_value ? setShowPrompt(false) : null     
                     CompareDigits == message_value ? setShowMessage(false) : null
 
                     if(CompareDigits % 2 != 0 && CompareDigits <= digits_value){
                         setAnsweredString("Missed!")
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
+                        setAnswered(false)
                         temp_arr = StaticArray
                         temp_arr.includes(current_picture(0)) ? setAnswer("Answer was: Yes, picture is in original set.") : setAnswer("Answer was: No, picture isn't in original set.")
                     }else{
@@ -165,7 +166,7 @@ export default function PictureRecognition (props: any) {
             i++
         }
 
-        while(temp_list.length < 14){
+        while(temp_list.length < pictures_value){
             temp_list.push(temp_arr[0])
             temp_arr.splice(0, 1)
         }
@@ -230,11 +231,13 @@ export default function PictureRecognition (props: any) {
 
     function answer_handler(answer: any){
         setCurrentPicture("")
-
         var temp_arr: any = StaticArray
         if (answer && temp_arr.includes(CurrentPicture) || (!answer && !temp_arr.includes(CurrentPicture))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
+            show_circles(true)
+        }else{
+            show_circles(false)
         }
     }
 
@@ -247,6 +250,18 @@ export default function PictureRecognition (props: any) {
         setShowMessage(true)
         setTestStart(true)
         setShowPrompt(true)
+        display_circles()
+    }
+    
+
+
+    function display_circles(){
+        var i = 0
+        while(i<20){
+            show_circles(false, true)
+            i++
+        }
+        setCircleArray    
     }
 
 
@@ -258,8 +273,6 @@ export default function PictureRecognition (props: any) {
 
 
     function check_answer(compare: any){
-        console.log("\n\ncompare string")
-        // console.log(compare)
         var temp_arr: any = StaticArray
 
         if(temp_arr.includes(compare)){
@@ -272,8 +285,38 @@ export default function PictureRecognition (props: any) {
 
         if(compare == ""){
             setAnswer("")
+            setAnsweredString("")
         }
 
+        AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? show_circles(false) : null
+    }
+
+
+    function create_circle(condition: any, start: any = null){
+        var class_txt: any = null
+        start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
+        console.log(class_txt)
+        return (
+            <div className="w-8">
+                <div className={class_txt}>
+                </div>
+            </div>
+        )
+    }
+
+
+    function show_circles(condition: any, start: any = null){
+        var shown_arr: any = CircleArray 
+        !start ? shown_arr[20 - CompareDigits/2 - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
+        const circle_map = shown_arr.map((name:any, index:any) => {
+            return {
+              obj: shown_arr[index],
+              key: uuidv4()
+            }
+        })
+        console.log(20 - CompareDigits/2 - 1)
+        setCircleArray(shown_arr)
+        setCircleMap(circle_map)
     }
 
 
@@ -284,7 +327,7 @@ export default function PictureRecognition (props: any) {
             TEST #6: PICTURE RECOGNITION
         </div>
         <div className="row mt-12 text-sky-400">
-            Fourteen pictures are displayed, one every 1.5 seconds. The player is told to memorize each picture. Afterward, fourteen more pictures are shown. This time the picture set only contains some of the items from the original display. The player is asked if each displayed picture from the second set was in the original set.
+            {pictures_value} pictures are displayed, one every 1.5 seconds. The player is told to memorize each picture. Afterward, fourteen more pictures are shown. This time the picture set only contains some of the items from the original display. The player is asked if each displayed picture from the second set was in the original set.
         </div>
         {!EndTest ?
             !TestStart ? 
@@ -304,7 +347,7 @@ export default function PictureRecognition (props: any) {
                         }
                     </div>    
                 : ShowCompare ?
-                    <div className="h-[40%] mt-12 grid grid-rows-2 gap-4 place-items-center">
+                    <div className="h-[40%] mt-12 grid grid-auto-rows gap-12 place-items-center">
                         <div className="h-[100%] mt-[20px]">
                             {CompareDigits >= 0 && CurrentPicture != "" ? 
                                 <img src={CurrentPicture} className="h-[518px]"/> 
@@ -319,10 +362,9 @@ export default function PictureRecognition (props: any) {
                                 </div>  
                             }
                         </div>
-
-                        <div>
+                        <div className="h-[55%] mt-[200px]">
                             {ShowButtons ?
-                                <div className="h-[55%] mt-[200px] grid-cols-2 gap-x-[100px] place-items-center">
+                                <div className="grid-cols-2 gap-x-[100px] place-items-center">
                                     <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
                                         Yes
                                     </Button>
@@ -332,12 +374,10 @@ export default function PictureRecognition (props: any) {
                                 </div>
                             : null}
                         </div>
-
-                    </div>  
-
-            : null
+                    </div>
+                : null
         :
-            <div className="grid grid-rows-3 mt-[200px] place-items-center"> 
+            <div className="grid h-[40%] mt-12 grid-rows-3 gap-12 place-items-center"> 
                 <span className="mt-12">
                     The Test is Over.
                 </span> 
@@ -346,9 +386,20 @@ export default function PictureRecognition (props: any) {
                 </span>
             </div>
         }
+        {ShowCompare ? 
+            <div className="mt-[200px] sticky grid justify-center" style={{ gridTemplateColumns: 'repeat(20, 30px)' }}>
+                {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
+                        return(
+                            <div key={result.key}>
+                                {result.obj}
+                            </div>
+                        )
+                    })
+                }
+            </div> 
+        : null} 
     </div>
   )
-
 }
 
-  
+
