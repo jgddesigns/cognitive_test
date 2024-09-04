@@ -17,6 +17,9 @@ import Signup from '@/login/Signup'
 import MainPage from '@/screens/MainPage'
 import Profile from '@/login/Profile'
 import Connect from '@/database/Connect'
+import Cognito from '@/login/Cognito'
+
+
 
 export default function Home() {
 
@@ -55,7 +58,12 @@ export default function Home() {
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
   const [ProfileDisabled, setProfileDisabled] = React.useState(true)
   const [LoginDisabled, setLoginDisabled] = React.useState(true)
+  const [CookiesChecked, setCookiesChecked] = React.useState(false)
+  const [Cookies, setCookies] = React.useState(true)
+  const [Logout, setLogout] = React.useState(false)
   const [Username, setUsername] = React.useState("")
+  const [Email, setEmail] = React.useState("")
+  const [LogoutTimer, setLogoutTimer] = React.useState<any>(5)
 
   //placeholder only. will improve security.
   const [Password, setPassword] = React.useState("")
@@ -65,20 +73,64 @@ export default function Home() {
 
 
   useEffect(() => {
+    !CookiesChecked ? check_cookies() : null
+  }, [CookiesChecked])
 
+  useEffect(() => {
+    LoggedIn && Cookies && Username && Password  ? toggle_login(true) : null
+  }, [Cookies, Username, Password])
+
+  useEffect(() => {
     LoggedIn ? link_handler(4) : link_handler(0)
-
   }, [LoggedIn])
+
+  useEffect(() => {
+    while(Logout && LogoutTimer >= 0){
+        const timeoutId = setTimeout(() => {
+            setLogoutTimer(LogoutTimer - 1)
+            LogoutTimer <= 0 ? setLogout(false) : null
+        }, 1000 )
+
+        return () => clearTimeout(timeoutId)
+    }
+  }, [Logout, LogoutTimer])
+
+  function check_cookies(){
+    console.log("cookies")
+    console.log(document.cookie)
+    var cookies = document.cookie.split(";")
+    var cookie_arr = []
+    console.log(cookies)
+    for(var i = 0; i<cookies.length; i++){
+      cookie_arr.push(cookies[i].split("="))
+    }
+    console.log(cookie_arr)
+    if(cookie_arr[0][1]){
+      setUsername(cookie_arr[0][1])
+      setEmail(cookie_arr[1][1])
+      setPassword(cookie_arr[2][1])
+      toggle_login(true)
+      setCookies(true)
+      return true
+    }
+    setCookies(false)
+    setCookiesChecked(true)
+    return false
+  }
 
   function toggle_login(condition: any){
     setLoggedIn(condition)
     if(!condition){
       setUsername("")
       setPassword("")
+      setLogoutTimer(5)
+      setLogout(true) 
     } 
   }
 
   function link_handler(place: any){
+    console.log("link handler")
+    console.log(LoggedIn)
     clear_tests()
     setTestID(0)
     set_classes(place)
@@ -196,9 +248,13 @@ export default function Home() {
           }
         </div>
 
+        <div>
+          <Connect/>
+        </div>
+
         <div className="mt-24">
           {/* HOME */}
-          {ShowHome ? 
+          {ShowHome && !Logout ? 
             <MainPage/>  
           : null}
 
@@ -219,24 +275,79 @@ export default function Home() {
             <MemoryScanning/>
           : null}
         
-        { <Connect/> }
-        {/* <VerbalLearning/> */}
-        {/* <ReactionTime/> */}
-        {/* <NumberVigilance/> */}
-        {/* {<ChoiceReaction/>} */}
-        {/* {<MemoryScanning/>} */}
-        {/* {<PictureRecognition/>} */}
-        {/*<DigitVigilance/>*/}
+          {ShowMotorFunction ?
+            <MotorFunction/>
+          : null}
+
+          {ShowNumberVigilance ?
+            <NumberVigilance/>        
+          :null}
+
+          {ShowPictureRecognition ?
+            <PictureRecognition/>        
+          :null}
+
+          {ShowReactionTime ?
+            <ReactionTime/>        
+          :null}
+
+          {ShowVerbalLearning ?
+            <VerbalLearning/>        
+          :null}
+
+          {ShowWordRecognition ?
+            <WordRecognition/>        
+          :null}
+
+          {ShowWorkingMemory ?
+            <WorkingMemory/>        
+          :null}
+
+
+          {/* SIGNUP */}
+          {ShowSignup ?
+            <Signup link_handler={link_handler} toggle_login={toggle_login} setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
+          : null}
+
+          {/* LOGIN */}
+          {ShowLogin ?
+            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout}/>
+          : null}
+
+          {/* PROFILE */}
+          {ShowProfile ?
+            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout}/>
+          : null}
+
+          {Logout ?
+            <div className="grid grid-rows-2 gap-12 place-items-center">
+              <div className="mt-12">
+                  Logging Out... 
+              </div>
+              <div>
+                  {LogoutTimer > 0 ? 
+                      <div>
+                          {LogoutTimer} 
+                      </div>
+                  : 
+                      <div>
+                          Go!
+                      </div>
+                  }
+              </div>
+            </div>
+          : null}
+
+        </div>
       </div>
 
-
       {ShowPopover ?
-        <div className="w-full h-full flex justify-center items-center absolute top-0 z-2 bg-black opacity-65">
+        <div className="w-full h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65">
         </div>
       : null}
 
       {ShowPopover ?
-        <div className="h-[50%] w-[30%] z-99 absolute top-[10%] left-[35%] bg-blue-400 rounded-2xl text-white">
+        <div className="h-flex w-[30%] z-99 fixed top-flex left-[35%] bg-blue-400 rounded-2xl text-white">
           <div className="p-12 grid grid-auto-rows">
             <div className="text-3xl">
                 {TestTitle}
@@ -244,10 +355,10 @@ export default function Home() {
             <div className="mt-[15%] text-xl">
                 {PopoverMessage}
             </div>
-            <div className="w-full absolute bottom-48 underline cursor-pointer text-2xl" onClick={e => take_test()}>
+            <div className="mt-[15%] w-full static underline cursor-pointer text-2xl" onClick={e => take_test()}>
               Take Test
             </div>
-            <div className="w-full absolute bottom-12 underline cursor-pointer" onClick={e => hide_popover()}>
+            <div className="mt-[15%] w-full static underline cursor-pointer" onClick={e => hide_popover()}>
               Close
             </div>
           </div>
@@ -256,8 +367,8 @@ export default function Home() {
 
 
       
+      <Cognito Logout={Logout} />
 
-        </div>
     </main>
 
   )

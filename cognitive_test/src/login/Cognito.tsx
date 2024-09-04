@@ -3,35 +3,46 @@ import {credentials} from '../credentials/Credentials'
 import { CognitoIdentityProviderClient, SignUpCommand, InitiateAuthCommand, AuthFlowType} from '@aws-sdk/client-cognito-identity-provider'
 import {CognitoUserPool, CognitoUser, AuthenticationDetails} from 'amazon-cognito-identity-js'
 
-
 //MOSTLY FROM CHAT GPT
 const client = new CognitoIdentityProviderClient({ region: credentials.region });
-
-const userPool = new CognitoUserPool({
-    UserPoolId: credentials.user_pool_id,
-    ClientId: credentials.client_id
-});
 
 const login_message = ["User login successful!", "Invalid login credentials. Try again.", "Error authenticating user. Please contact support."]
 
 const login_class = ["text-green-400 text-base mt-12 ml-24 grid place-items-center", "text-red-400 text-base mt-24 ml-24 grid place-items-center"]
 
+// const pool_data = {
+//     UserPoolId: credentials.user_pool_id, // Replace with your User Pool ID
+//     ClientId: credentials.client_id, // Replace with your App Client ID
+//     SecretHash: get_hash()
+// };
+// const user_pool = new CognitoUserPool(pool_data);
+
+
 export default function Cognito(props: any) {
 
     useEffect(() => {
-        props.Submit == true ? sign_up() : null
-        props.LoginAttempt == true ? login(props.Username, props.Password) :  null
-    }, [props.Submit, props.LoginAttempt])
+        props.UserInserted ? sign_up() : null
+        props.LoginAttempt ? login(props.Username, props.Password) :  null
+    }, [props.UserInserted, props.LoginAttempt, props.ConfirmSuccess])
 
 
+    useEffect(() => {
+        props.CheckConfirm ? confirm_user() : null
+    }, [props.CheckConfirm])
+
+    useEffect(() => {
+        props.Logout ? cookie_handler(false) : null
+    }, [props.Logout])
+
+    
     async function sign_up(){
         console.log("INITIATE SIGN UP")
         console.log("Username: " + props.Username)
-        console.log("Email: " + props.Email)
+        //console.log("Email: " + props.Email)
         console.log("Password: " + props.Password)
         const data = {
-            ClientId: credentials["client_id"],
-            SecretHash: get_hash(),
+            ClientId: credentials.client_id,
+            // SecretHash: get_hash(),
             Username: props.Username,
             Password: props.Password,
             // test values
@@ -44,7 +55,7 @@ export default function Cognito(props: any) {
                 },
                 {
                     Name: "nickname",
-                    Value: props.Username
+                    Value: props.Name
                 }
             ],
         }
@@ -52,54 +63,94 @@ export default function Cognito(props: any) {
             const attempt = new SignUpCommand(data) 
             const response = await client.send(attempt)
             console.log("Sign up success")
-            props.setSubmit(false)
+            props.setUserInserted(false)
+            props.setSignupSuccess(true)
+            //props.handleInsertUser(props.Username, props.Name, props.Password)
             return response
         }catch(err){
-            props.setSubmit(false)
+            props.setUserInserted(false)
+            props.setSignupSuccess(false)
             console.log("Sign up fail")
             console.log(err)
         }
     }
 
+    function confirm_user(){
+        console.log("confirming user")
+        console.log(props.Username)
+        console.log("confirmation code")
+        console.log(props.ConfirmCode)
 
-    // async function login(Username: any, Password: any){
-    //     console.log("called")
-    //     return new Promise((resolve, reject) => {
-    //       const authenticationDetails = new AuthenticationDetails({
-    //         Username,
-    //         Password
-    //       });
-      
-    //       const cognitoUser = new CognitoUser({
-    //         Username,
-    //         Pool: userPool
-    //       });
-      
-    //       cognitoUser.authenticateUser(authenticationDetails, {
-    //         onSuccess: (result) => {
-    //             console.log("sign in success")
-    //             resolve(result)
-    //         },
-    //         onFailure: (err) => {
-    //             console.log("sign in fail")
-    //             reject(err)
-    //         }
-    //       })
-    //     })
-    // }
+        const pool_data = {
+            UserPoolId: credentials.user_pool_id, // Replace with your User Pool ID
+            ClientId: credentials.client_id, // Replace with your App Client ID
+            ClientSecret: credentials.client_secret,
+            // SecretHash: get_hash()
+        };
+        const user_pool = new CognitoUserPool(pool_data);
+
+        const user_data = {
+            Username: props.Username, // Replace with your User Pool ID
+            Pool: user_pool, // Replace with your App Client ID
+            // SecretHash: get_hash()
+        }
+
+        const cognito_user = new CognitoUser(user_data);
+
+
+        cognito_user.confirmRegistration(props.ConfirmCode, true, (err, result) => {
+            if (err) {
+                console.log(`Error confirming user: ${err.message}`);
+                
+                return;
+            }
+            console.log('User confirmed successfully!');
+            props.handleInsertUser(props.Username, props.Name, props.Password)
+            first_login(props.Username, props.Password)
+            props.setConfirmSuccess(true)
+        });
+    }
+
+    function retrieve_user(){
+        const pool_data = {
+            UserPoolId: credentials.user_pool_id, 
+            ClientId: credentials.client_id, 
+            ClientSecret: credentials.client_secret,
+        }
+
+        const user_pool = new CognitoUserPool(pool_data)
+
+        const cognito_user = user_pool.getCurrentUser()
+
+        if(cognito_user){
+            cognito_user.getUserAttributes((err, attributes) => {
+                if (err) {
+                  console.error('Error getting user attributes:', err)
+                  return;
+                }
+          
+                if (attributes) {
+                  attributes.forEach((attribute) => {
+                    console.log(`${attribute.getName()} : ${attribute.getValue()}`);
+                  });
+                }
+            });
+        }
+
+    }
+
+
 
     
     async function login(Username: any, Password: any) {
         console.log("login attempt")
-        const secretHash = get_hash()
-      
+  
         const params = {
           AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
           ClientId: credentials.client_id,
           AuthParameters: {
             USERNAME: Username,
             PASSWORD: Password,
-            SECRET_HASH: secretHash
           }
         };
       
@@ -107,10 +158,14 @@ export default function Cognito(props: any) {
           const command = new InitiateAuthCommand(params)
           try{
             const response = await client.send(command)
+            console.log("response")
+            console.log(response)
             console.log(login_message[0])
             props.setLoginSuccess(true)
             props.setLoginMessage(login_message[0])
             props.setLoginClass(login_class[0])
+            cookie_handler(true)
+            retrieve_user()
           }catch{
             console.log(login_message[1])
             props.setLoginAttempt(false)
@@ -122,18 +177,75 @@ export default function Cognito(props: any) {
             props.setLoginClass(login_class[1])
             console.error(error)
         }
-      }
+    }
+
+
+    async function first_login(Username: any, Password: any) {
+        console.log("login attempt")
+      
+        const params = {
+          AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
+          ClientId: credentials.client_id,
+          AuthParameters: {
+            USERNAME: Username,
+            PASSWORD: Password,
+          }
+        };
+      
+        try {
+          const command = new InitiateAuthCommand(params)
+          try{
+            const response = await client.send(command)
+            console.log(login_message[0])
+            props.setConfirmSuccess(true)
+            cookie_handler(true)
+            retrieve_user()
+          }catch{
+            console.log(Username)
+            console.log(Password)
+            console.log(login_message[1])
+          }
+        } catch (error) {
+            console.error(error)
+        }
+    }
     
     function get_hash(){
         const crypto = require('crypto')
         const message = `${props.Username}${credentials["client_id"]}`
-        const str = crypto.createHmac('sha256', credentials["client_secret"])
+        const str = crypto.createHmac('sha256')
         str.update(message)
         const secret_hash = str.digest('base64')
 
         return secret_hash
     }
 
+    function get_test_data(){
+        var data = [""]
+        return data
+    }
+
+    function cookie_handler(condition: any){
+        console.log("cookie handler")
+        const date = new Date()
+        if(condition){
+            date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000))
+            var utc = date.toUTCString()
+            document.cookie = "Username=" + props.Username + "; expires=" + utc + "; path=/"
+            document.cookie = "Email=" + props.Username + "; expires=" + utc + "; path=/"
+
+            //security concern? pull directly from cognito?
+            document.cookie = "Password=" + props.Password + "; expires=" + utc + "; path=/"
+            document.cookie = "TestData=" + get_test_data() + "; expires=" + utc + "; path=/"
+        }else{
+            date.setTime(date.getTime() - (24 * 60 * 60 * 1000))
+            var utc = date.toUTCString()
+            document.cookie = "Username=; expires=" + utc + "; path=/"
+            document.cookie = "Email=; expires=" + utc + "; path=/"
+            document.cookie = "Password=; expires=" + utc + "; path=/"
+            document.cookie = "TestData=; expires=" + utc + "; path=/"
+        }
+    }
 
     return (
         null

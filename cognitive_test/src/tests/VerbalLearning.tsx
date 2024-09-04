@@ -372,7 +372,44 @@ export default function VerbalLearning (props: any) {
         setScore(score)
         setScoreString(score + "% Correct")
     }
+    function resetAll(){
+    setOriginalWords([])
+    setEndWords([])
+    setMemoryWords([])
+    setKeptWords([])
+    setNextWords([])
+    setDisplayWord("")
+    isOriginalSet(false)
+    isKeptSet(false)
+    isNextSet(false)
+    setStartButton(true)
+    setStartPrompt(false)
+    setStartWords(false)
+    setStartTest(false)
+    setTimerDisplay(0)
+    setEndCount(0)
+    setWordCount(12)
+    setNextWordCount(13)
+    setStartMemory(false)
+    setYesWords([])
+    setNoWords([])
+    setContinue(false)
+    setEnd(false)
+    setYesString("") 
+    setNoString("") 
+    setOriginalString("") 
+    setCorrect(0)
+    setScore(0) 
+    setScoreString("") 
 
+
+
+
+
+
+
+
+    }
 
   return(
     <div>
@@ -463,6 +500,9 @@ export default function VerbalLearning (props: any) {
                         <div className="row mt-16 underline underline-offset-2">Score</div>
                         <div className="row mt-4 ml-[10%]">{Correct} out of 12</div>
                         <div className="row mt-2 ml-[10%]">{ScoreString}</div>
+                        <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                         Reset
+                        </Button>
                     </div>
                 : null}
 

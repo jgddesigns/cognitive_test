@@ -49,6 +49,7 @@ export default function DigitVigilance(props: any) {
             This application includes a series of assessments that measure the mental prowess of a given subject. A baseline is first established by conducting the tests under normal circumstances. Afterward, tests are conducted after various variables are introduced. Examples include following the ingestion of certain herbal supplements, or after experiencing a period of time in nature.
         </div>
 
+
         {/* {!LoginClicked && !SignupClicked ? 
             <div className="grid place-items-center gap-8 grid-cols-2 mt-24">
                 <div className="cursor-pointer text-blue-400 underline" onClick={e => login_handler()}>Login</div>

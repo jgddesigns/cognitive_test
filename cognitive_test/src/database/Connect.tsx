@@ -1,23 +1,38 @@
+//MAIN CODE - ROBERT JOASILUS (github: RobJiggs, slack: @Robert Joasilus)
+//MODIFICATIONS - JASON DUNN (github: jgddesigns, slack: @Jay Dunn)
+
 'use client';
 import AWS from 'aws-sdk';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { Button } from "@nextui-org/react";
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
+import {test_credentials} from '../credentials/Credentials'
+import Cognito from '@/login/Cognito';
+import { propagateServerField } from 'next/dist/server/lib/render-server';
 
-dotenv.config(); // Load environment variables from .env file
 
-export default function Connect() {
-  const [TestDB, setTestDB] = React.useState(false);
+//dotenv.config(); // Load environment variables from .env file
+
+
+export default function Connect(props: any) {
+  const [UserInserted, setUserInserted] = React.useState(false);
+
+  useEffect(() => {
+    props.Submit ? handleInsertUser(props.Username, props.Name, props.Email) : null
+  }, [props.Submit, props.CheckConfirm])
+
 
   // Fetch AWS credentials and region from environment variables
-  const AWS_KEY = process.env.REACT_APP_AWS_ACCESS_KEY_ID;
-  const AWS_SECRET = process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
-  const AWS_REGION = process.env.REACT_APP_AWS_REGION;
+  const AWS_KEY = test_credentials.AWS_ACCESS_KEY_ID;
+  const AWS_SECRET = test_credentials.AWS_SECRET_ACCESS_KEY;
+  const AWS_REGION = test_credentials.AWS_REGION;
 
-  console.log(process.env.REACT_APP_AWS_ACCESS_KEY_ID)
-  console.log('AWS Key:', AWS_KEY);
-  console.log('AWS Secret:', AWS_SECRET);
-  console.log('AWS Region:', AWS_REGION);
+
+  //console.log(process.env)
+  // console.log('AWS Key:', AWS_KEY);
+  // console.log('AWS Secret:', AWS_SECRET);
+  // console.log('AWS Region:', AWS_REGION);
+
 
   //Check if credentials are defined
   if (!AWS_KEY || !AWS_SECRET || !AWS_REGION) {
@@ -31,8 +46,10 @@ export default function Connect() {
     region: AWS_REGION,
   });
 
+
   const dynamoDB = new AWS.DynamoDB();
   const docClient = new AWS.DynamoDB.DocumentClient();
+
 
   // Table schemas
   const userTable = 'User';
@@ -66,22 +83,26 @@ export default function Connect() {
     try {
       await docClient.put(params).promise();
       console.log('User profile inserted successfully.');
+      setUserInserted(true)
+      props.setSubmit(false)
     } catch (err) {
       console.error('Error inserting user profile:', err);
+      props.setSubmit(false)
     }
   };
+
 
   // Update an existing user profile in the 'User' table
   const updateUserProfile = async (profileData: string, id: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
-  
+ 
     const updateExpression = 'set ' + Object.keys(updatedFields).map((key, index) => {
       expressionAttributeNames[`#${key}`] = key;
       expressionAttributeValues[`:value${index}`] = updatedFields[key];
       return `#${key} = :value${index}`;
     }).join(', ');
-  
+ 
     const params = {
       TableName: userTable,
       Key: {
@@ -93,7 +114,7 @@ export default function Connect() {
       ExpressionAttributeValues: expressionAttributeValues,
       ReturnValues: 'UPDATED_NEW'
     };
-  
+ 
     try {
       const data = await docClient.update(params).promise();
       console.log('User profile updated successfully:', data.Attributes);
@@ -103,7 +124,8 @@ export default function Connect() {
       return null;
     }
   };
-  
+ 
+
 
   // Insert a new test result into the 'Test_Results' table
   const insertTestResult = async (testResult: any) => {
@@ -124,13 +146,13 @@ export default function Connect() {
   const updateTestResult = async (testProfile: string, testId: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
-  
+ 
     const updateExpression = 'set ' + Object.keys(updatedFields).map((key, index) => {
       expressionAttributeNames[`#${key}`] = key;
       expressionAttributeValues[`:value${index}`] = updatedFields[key];
       return `#${key} = :value${index}`;
     }).join(', ');
-  
+ 
     const params = {
       TableName: testResultsTable,
       Key: {
@@ -142,7 +164,7 @@ export default function Connect() {
       ExpressionAttributeValues: expressionAttributeValues,
       ReturnValues: 'UPDATED_NEW'
     };
-  
+ 
     try {
       const data = await docClient.update(params).promise();
       console.log('Test result updated successfully:', data.Attributes);
@@ -152,7 +174,8 @@ export default function Connect() {
       return null;
     }
   };
-  
+ 
+
 
   // Retrieve test results for a specific user
   const fetchTestResults = async (testProfile: string) => {
@@ -173,30 +196,36 @@ export default function Connect() {
     }
   };
 
-  const handleInsertUser = () => {
+
+  async function handleInsertUser(username: any, name: any, email: any){
+    const id = await createID(userTable)
     const newUserProfile = {
-      profile_data: 'user123', // Partition key
-      id: 1, // Sort key
-      username: 'user123',
-      email_address: 'user123@example.com',
-      name: 'User One Two Three',
-      tests_completed: 5,
-      total_test_time: 3600,
-      variables_used: 'none',
-      mind_type: 'default'
+      profile_data: username, // Partition key
+      id: id.toString(), // Sort key
+      username: username,
+      email_address: email,
+      name: name,
+      tests_completed: '0',
+      total_test_time: '0',
+      variables_used:  null,
+      mind_type: null,
+      timestamp: getTimestamp()
     };
     insertUserProfile(newUserProfile);
   };
 
-  const handleInsertTestResult = () => {
+
+  async function handleInsertTestResult(){
+    const id = await createID(testResultsTable)
     const newTestResult = {
       test_profile: 'user123', // Partition key
-      test_id: 1, // Sort key
-      test_type: 0,
-      attempt_number: 1,
-      time_completed: 120,
-      score: 95,
-      variable: 0
+      id: id.toString(), // Sort key
+      test_type: '0',
+      attempt_number: '1',
+      time_completed: '120',
+      score: '95',
+      variable: '0',
+      timestamp: getTimestamp()
     };
     insertTestResult(newTestResult);
   };
@@ -227,20 +256,39 @@ export default function Connect() {
     updateTestResult('user123', 1, updatedFields); // Provide partition key, sort key, and updated fields
   };
 
-  return (
-    <div>
-      <div className="row">
-        <Button color="primary" onClick={handleInsertUser}>Insert User</Button>
-        <Button color="primary" onClick={handleInsertTestResult}>Insert Test Result</Button>
-      </div>
-      <div className="row">
-        <Button color="primary" onClick={handleFetchUserProfile}>Fetch User Profile</Button>
-        <Button color="primary" onClick={handleFetchTestResults}>Fetch Test Results</Button>
-      </div>
-      <div className="row">
-        <Button color="primary" onClick={handleUpdateUserProfile}>Update User Profile</Button>
-        <Button color="primary" onClick={handleUpdateTestResult}>Update Test Result</Button>
-      </div>
-    </div>
+
+  async function createID(table: any){
+    var new_id: any = await retrieveOne("id", table)
+    console.log("id created " + new_id)
+    return new_id
+  }
+
+
+  async function retrieveOne(column: any, table: any){
+    const params: any = {
+      TableName: table,
+    };
+    
+    return new Promise((resolve) => {
+      dynamoDB.scan(params, (err, data: any) => {
+        if (err) {
+          console.error("Error querying DynamoDB", err)
+        } else {
+          console.log("Query column succeeded", data.Items)
+          column == "id" ? resolve((data.Items.length + 1)) : resolve(data.Items[data.Items.length-1][column])
+        }
+      })
+    });
+  }
+
+
+  function getTimestamp(){
+    const date = new Date(Date.now())
+    return date.toString()
+  }
+
+
+return (
+    <Cognito handleInsertUser={handleInsertUser} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} setCheckConfirm={props.setCheckConfirm} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setLoggedIn={props.setLoggedIn} setConfirmSuccess={props.setConfirmSuccess}/> 
   );
 }

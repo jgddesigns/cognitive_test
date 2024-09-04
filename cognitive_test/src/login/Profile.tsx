@@ -392,8 +392,8 @@ export default function Profile(this: any, props: any) {
                                 }
                             </div>
                         </div>
-                        <div className="grid ml-12 mt-8 grid-cols-2">
-                            <div className="grid grid-auto-rows">
+                        {/* <div className="grid ml-12 mt-8 grid-cols-2"> */}
+                            {/* <div className="grid grid-auto-rows">
                                 <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(7)}>
                                     Verbal Learning
                                 </div>
@@ -415,8 +415,8 @@ export default function Profile(this: any, props: any) {
                                         Not Attempted
                                     </div>
                                 }
-                            </div>
-                        </div>
+                            </div> */}
+                        {/* </div> */}
                         <div className="grid ml-12 mt-8 grid-cols-2">
                             <div className="grid grid-auto-rows">
                                 <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(8)}>

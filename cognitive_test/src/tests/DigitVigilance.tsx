@@ -181,6 +181,22 @@ export default function DigitVigilance(props: any) {
         setShowData(true)
         create_list()
     }
+    function resetAll(){
+        setEndTest(false);
+        setTestStart(false);
+        setShowData(false);
+        setNumbers([]);
+        setSearchNumbers([]);
+        setFound(0);
+        setCorrectMarks(0);
+        setIncorrectMarks(0);
+        setPossibleFound(0);
+        setTotalTime(0);
+        setEndDelay(-1);
+        setClockDisplay("0:00");
+        setNumberMap([]);
+
+}
 
 
 
@@ -261,6 +277,9 @@ export default function DigitVigilance(props: any) {
                 <span className="mt-12">
                     {PossibleFound} possible numbers out of {Numbers.length * Numbers[0].length} total digits.
                 </span>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>
             </div>
         }
     </div>

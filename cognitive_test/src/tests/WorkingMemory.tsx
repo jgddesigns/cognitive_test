@@ -24,7 +24,7 @@ export default function WorkingMemory(props: any) {
     const [ClockDisplay, setClockDisplay] = React.useState<any>("") 
     const [AverageTime, setAverageTime] = React.useState(0)
 
-    const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
+    const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 mt-12 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
 
@@ -245,7 +245,34 @@ export default function WorkingMemory(props: any) {
             setBoxGrid(grid_arr)
         }
     }
+    function resetAll(){
+    setEndTest(false)
+    setTestStart(false)
+    setShowData(false)
+    setNextRound(false)
+    setDelay(false)
+    setTokensFound(false)
+    setTestTime(0)
+    setFoundCount(0)
+    setRoundCount(3) 
+    setCurrentAttempts(0)
+    setTotalAttempts(0)
+    setCurrentRound(1)
+    setDelayTime(0)
+    setRoundAttempts([])
+    setTokenPattern([])
+    setBoxCount(3)
+    setCurrentMessage("") 
+    setClockDisplay("") 
+    setAverageTime(0)
 
+
+
+    setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
+
+
+
+    }
 
 
   return(
@@ -395,6 +422,9 @@ export default function WorkingMemory(props: any) {
                 <div className="mt-8 ml-12">
                     Round 10: {RoundAttempts[9]}
                 </div>       
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                     Reset
+                </Button>
             </div>
         }
     </div>
