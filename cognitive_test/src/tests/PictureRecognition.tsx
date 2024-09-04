@@ -364,8 +364,9 @@ export default function PictureRecognition (props: any) {
                             <span>
                                 {CurrentMessage} 
                             </span>
-                        : 
+                        :   <div className="mt-48">
                             <img src={CurrentPicture} className="h-[518px]"/> 
+                            </div>
                         }
                     </div>    
                 : ShowCompare ?
