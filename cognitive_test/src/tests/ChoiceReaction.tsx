@@ -208,8 +208,6 @@ export default function ChoiceReaction (props: any) {
     function get_prompt(){
         if(PromptList.length < 1){
             setEndTest(true)
-            // console.log("answers")
-            // console.log(Answers)
             // console.log(analysis["attention"]("sections", Answers, time, proficiency))
             console.log(analysis["attention"](interval, Answers, time, proficiency))
             console.log(analysis["decisiveness"](Answers))
