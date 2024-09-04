@@ -2,6 +2,7 @@
 'use client'
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
+import { analysis } from '@/helpers/Analysis';
 
 
 export default function ReactionTime (props: any) {
@@ -15,6 +16,10 @@ export default function ReactionTime (props: any) {
     const [PressedCount, setPressedCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
     const [AvgTime, setAvgTime] = React.useState(0)
+
+    const proficiency = 14
+    const interval = "sections"
+    const time = 5
 
     useEffect(() => {
         if(ClickedButton){
@@ -64,6 +69,7 @@ export default function ReactionTime (props: any) {
     }
 
     function clicked_button(){
+        console.log(analysis["attention"](interval, [[.3,1.1,.25,.4], [.44,.53,.6,.8], [.5,.3,.75,.45], [.77,.84,.43,.43], [.17,.54,.68,.9]], time, proficiency, true))
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 
