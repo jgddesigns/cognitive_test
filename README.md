@@ -60,7 +60,7 @@ Coded in VS Code on Windows 10
 <br>
 <br>
 <br>
-GETTING STARTED
+GETTING STARTED:
 <br>
 <br>
 Install git ( https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -92,14 +92,14 @@ https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
 <br>
 <br>
 CODING DOCUMENTATION FORMAT
-
+<br>
 Use the following convention for documenting each function in the code comments:
 
     //Description of function's purpose
     //@param param1: Param #1 for the function and it's use (if needed, otherwise 'None')
     //@param param2: Param #2 for the function and it's use (if needed)
     //@return: Description of what is returned in the function (if no return, 'Void')
-
+<br>
 Example:
 
     //Based on the column header clicked, sort the results by that column.
@@ -136,8 +136,10 @@ MAIN PAGE LOCATION: cognitive_test/src/app/page.tsx
 TEST COMPONENETS LOCATION: cognitive_test/src/tests
 <br>
 <br>
+DATABASE COMPONENT LOCATION: cognitive_test/src/database
+<br>
 DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
 <br>
 <br>
-Related files located in 'src/database'
+
 
