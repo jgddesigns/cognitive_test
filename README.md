@@ -31,7 +31,7 @@ Signup/Login
 <br>
 User Profile (Settings, Individual results and analysis)
 <br>
-Macroscopic Results and Analysis
+Results and Analysis
 <br>
 <br>
 <br>
@@ -51,8 +51,6 @@ AWS Cognito
 Node.js & npm
 <br>
 Node Version Manager (nvm)
-<br>
-Coded in VS Code on Windows 10
 <br>
 <br>
 <br>
