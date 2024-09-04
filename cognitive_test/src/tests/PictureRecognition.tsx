@@ -260,8 +260,7 @@ export default function PictureRecognition (props: any) {
         while(i<20){
             show_circles(false, true)
             i++
-        }
-        setCircleArray    
+        }   
     }
 
 
@@ -307,7 +306,7 @@ export default function PictureRecognition (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
-        !start ? shown_arr[20 - CompareDigits/2 - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
+        !start ? shown_arr[pictures_value - CompareDigits/2 - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {
               obj: shown_arr[index],
@@ -318,30 +317,30 @@ export default function PictureRecognition (props: any) {
         setCircleArray(shown_arr)
         setCircleMap(circle_map)
     }
-function resetAll(){
-    setEndTest(false)
-    setTestStart(false)
-    setAnswerCount(0)
-    setShowPrompt(false)
-    setShowCompare(false)
-    setCompareMessage(false)
-    setShowButtons(false)
-    setAnswered(true) 
-    setAnsweredString("")  
-    setCompareDigits(-1)
-    setShownArray([])
-    setStaticArray([""])
-    setCurrentPicture("")
-    setCompareArray([])
-    setAnswer("")
-    setDigits(-1)
-    setCurrentMessage("Try to memorize the next set of 14 pictures.")
-    setShowMessage(false)
-    setAnsweredStyle(answered_style[0])
 
-
-
-}
+    function resetAll(){
+        setEndTest(false)
+        setTestStart(false)
+        setAnswerCount(0)
+        setShowPrompt(false)
+        setShowCompare(false)
+        setCompareMessage(false)
+        setShowButtons(false)
+        setAnswered(true) 
+        setAnsweredString("")  
+        setCompareDigits(-1)
+        setShownArray([])
+        setStaticArray([""])
+        setCurrentPicture("")
+        setCompareArray([])
+        setAnswer("")
+        setDigits(-1)
+        setCurrentMessage("Try to memorize the next set of " + pictures_value + " pictures.")
+        setShowMessage(false)
+        setAnsweredStyle(answered_style[0])
+        setCircleArray([])
+        setCircleMap([])
+    }
 
 
   return(
@@ -360,7 +359,7 @@ function resetAll(){
                     </Button>  
                 </div>
             :   ShowPrompt ?
-                    <div className="h-[60%] mt-12 grid grid-rows-2 gap-4 place-items-center">
+                    <div className="h-[40%] mt-12 grid grid-rows-2 gap-4 place-items-center">
                         {ShowMessage ? 
                             <span>
                                 {CurrentMessage} 
