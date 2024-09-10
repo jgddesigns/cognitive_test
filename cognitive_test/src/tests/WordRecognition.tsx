@@ -21,7 +21,7 @@ export default function WordRecognition (props: any) {
     const [CompareArray, setCompareArray] = React.useState<any>([])
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
-    const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 10 words.")
+    // const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of 10 words.")
     const [ShowMessage, setShowMessage] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
@@ -29,6 +29,8 @@ export default function WordRecognition (props: any) {
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
 
     const list_length = 10
+
+    const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of " + list_length + " words.")
 
     const start_digits = 24 
 
