@@ -58,7 +58,7 @@ Node Version Manager (nvm)
 <br>
 <br>
 <br>
-GETTING STARTED:
+GETTING STARTED (for Windows -- Mac and Linux instructions to be determined):
 <br>
 <br>
 Install git ( https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -66,7 +66,7 @@ Install git ( https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 Install Node (https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 <br>
 <br>1. Use terminal within IDE to navigate to desired folder for project. Use git to clone the project (git clone https://github.com/jgddesigns/cognitive_test)
-<br>2. In cognitive_test directory, run 'npm install' in terminal command line
+<br>2. In cognitive_test directory, run 'npm install' in terminal command line (if scripts are disabled, open Windows Powershell as administrator and enter 'Set-ExecutionPolicy Unrestricted' in the command line)
 <br>3. Next run 'npm run build' in terminal command line
 <br>4. Launch server 'npm run dev' in terminal command line (default local url in broswer is localhost:3000)
 <br>
