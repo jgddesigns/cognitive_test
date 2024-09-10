@@ -141,16 +141,19 @@ Example:
     const SortHandler = (type) => {
         
         if(type == "Name"){
-        setToggleName(!ToggleName)
+            setToggleName(!ToggleName)
         }
+        
         if(type == "EFIS"){
-        setToggleEFIS(!ToggleEFIS)
+            setToggleEFIS(!ToggleEFIS)
         }
+        
         if(type == "Role"){
-        setToggleRole(!ToggleRole)
+            setToggleRole(!ToggleRole)
         }
+        
         if(type == "District"){
-        setToggleDistrict(!ToggleDistrict)
+            setToggleDistrict(!ToggleDistrict)
         }
 
         setSortBy(type)
