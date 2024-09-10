@@ -91,6 +91,41 @@ https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
 <br>
 CODING DOCUMENTATION FORMAT
 <br>
+<br>
+<br>
+Naming Conventions: 
+<br>
+<br>
+    - snake_case for functions and variables
+    <br>
+    - PascalCase for Components
+    <br>
+    - PascalCase, camelCase for React state variables
+    <br>
+    - UPPER_SNAKECASE for credentials
+<br>
+<br>
+Example:
+    
+    function create_list(){
+        console.log("here is a function")
+    }
+
+    const variable_name = "name"
+
+    export default function ComponentName (props: any) { 
+        //component content
+        return (
+            <div>
+            </div>
+        )
+    }
+
+    const [StateVariable, setStateVariable] = React.useState(false)
+
+    const CREDENTIAL_NAME = "asdf123"
+    
+<br>
 Use the following convention for documenting each function in the code comments:
 
     //Description of function's purpose
@@ -136,8 +171,11 @@ TEST COMPONENETS LOCATION: cognitive_test/src/tests
 <br>
 DATABASE COMPONENT LOCATION: cognitive_test/src/database
 <br>
+<br>
 DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
 <br>
 <br>
-
+USER LOGIN SYSTEM CREATED WITH AWS COGNITO
+<br>
+<br>
 
