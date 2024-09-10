@@ -30,6 +30,8 @@ export default function NumberVigilance (props: any) {
     const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white", "bg-green-400 rounded px-10 h-12 text-white", "bg-red-400 rounded px-10 h-12 text-white"]
     const [CorrectClass, setCorrectClass] = React.useState(correct_class[0])
 
+    const shown_value = 120
+
     //proficient overall score
     const proficiency = 84
 
@@ -73,14 +75,14 @@ export default function NumberVigilance (props: any) {
 
     useEffect(() => {
         var temp_arr = []
-        if(ShownCount % 24 == 0 && ShownCount > 1){
+        if(ShownCount % (shown_value/time) == 0 && ShownCount > 1){
             temp_arr = AnswerArray
             temp_arr.push(SectionAnswers)
             setAnswerArray(temp_arr)
             setSectionAnswers([])
         }
               
-        ShownCount > 120 ? setEndTest(true) : null
+        ShownCount > shown_value ? setEndTest(true) : null
     }, [ShownCount])
 
     function set_interval(){
@@ -127,6 +129,7 @@ export default function NumberVigilance (props: any) {
         console.log("=====================")
     }
 
+
     function get_time(){
         var seconds = 0
         var minutes = 0
@@ -142,30 +145,29 @@ export default function NumberVigilance (props: any) {
 
         setTimerDisplay(display)
     }
+
+
     function resetAll(){
-    setShowNumber(false)
-    setResponsePressed(false) 
-    setResponsesArray([])
-    setClickedButton(false)
-    setCorrect(false)
-    setCurrentNumber(0)
-    setTimerDisplay("0:00")
-    setEndTest(false)
-    setResponseTime(100)
-    setPressedCount(0)
-    setIntervalTime(1)
-    setAvgTime(0)
-    setShownCount(0)
-    setShownTimer(0)
-    setTestNumber(0)
-    setCorrectCount(0)
-    setIncorrectCount(0)
-
-   
-    setCorrectClass(correct_class[0])
-
-
+        setShowNumber(false)
+        setResponsePressed(false) 
+        setResponsesArray([])
+        setClickedButton(false)
+        setCorrect(false)
+        setCurrentNumber(0)
+        setTimerDisplay("0:00")
+        setEndTest(false)
+        setResponseTime(100)
+        setPressedCount(0)
+        setIntervalTime(1)
+        setAvgTime(0)
+        setShownCount(0)
+        setShownTimer(0)
+        setTestNumber(0)
+        setCorrectCount(0)
+        setIncorrectCount(0)
+        setCorrectClass(correct_class[0])
     }
+
 
   return(
     <div>
@@ -178,39 +180,39 @@ export default function NumberVigilance (props: any) {
         {!EndTest ?
             <div>
                 
-                    {!ClickedButton ? 
-                        <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={clicked_button}>
-                            Start
-                        </Button>
-                        :
-                        <div className="grid grid-rows-4 place-items-center"> 
-                            <div className="grid grid-cols-2 gap-96"> 
-                                <span className="text-xl italic">
-                                    Test is Running
+                {!ClickedButton ? 
+                    <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={clicked_button}>
+                        Start
+                    </Button>
+                    :
+                    <div className="grid grid-rows-4 place-items-center"> 
+                        <div className="grid grid-cols-2 gap-96"> 
+                            <span className="text-xl italic">
+                                Test is Running
+                            </span>
+                            <span>
+                                Timer: {TimerDisplay}
+                            </span>
+                        </div>
+                        <div className="grid grid-auto-rows place-items-center">
+                            <div>
+                                <span className="text-base">
+                                    Find Number: {TestNumber ? TestNumber : null}
                                 </span>
+                            </div>
+                            <div className="text-xl mt-24">
                                 <span>
-                                    Timer: {TimerDisplay}
+                                    {ShowNumber ? CurrentNumber : null}
                                 </span>
                             </div>
-                            <div className="grid grid-auto-rows place-items-center">
-                                <div>
-                                    <span className="text-base">
-                                        Find Number: {TestNumber ? TestNumber : null}
-                                    </span>
-                                </div>
-                                <div className="text-xl mt-24">
-                                    <span>
-                                        {ShowNumber ? CurrentNumber : null}
-                                    </span>
-                                </div>
-                                <div className="row mt-36"> 
-                                    <Button color="primary" className={CorrectClass} onClick={toggle_pressed}>
-                                        Okay
-                                    </Button>
-                                </div>
+                            <div className="row mt-36"> 
+                                <Button color="primary" className={CorrectClass} onClick={toggle_pressed}>
+                                    Okay
+                                </Button>
                             </div>
-                        </div> 
-                    }
+                        </div>
+                    </div> 
+                }
                                                   
             </div>
         :

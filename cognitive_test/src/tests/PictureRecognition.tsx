@@ -122,7 +122,7 @@ export default function PictureRecognition (props: any) {
         var i: any = 1
         while(i <= 100){
             var str: any = "/img/"
-            if(i < 10){
+            if(i < (pictures_value/2)){
                 str = str + "0" + String(i) + ".jpg"
             }else{
                 str = str + String(i) + ".jpg"
@@ -155,7 +155,7 @@ export default function PictureRecognition (props: any) {
 
         copy_arr = shuffle_array(copy_arr, copy_arr.length)
 
-        while(i<10){
+        while(i < (pictures_value/2)){
             num = Math.floor(Math.random() * ((2-1)+1)) 
 
             if(num == 0){
@@ -253,14 +253,15 @@ export default function PictureRecognition (props: any) {
         display_circles()
     }
     
-
+ 
 
     function display_circles(){
         var i = 0
         while(i<20){
             show_circles(false, true)
             i++
-        }   
+        }
+        setCircleArray    
     }
 
 
@@ -313,7 +314,7 @@ export default function PictureRecognition (props: any) {
               key: uuidv4()
             }
         })
-        console.log(20 - CompareDigits/2 - 1)
+        console.log(pictures_value - CompareDigits/2 - 1)
         setCircleArray(shown_arr)
         setCircleMap(circle_map)
     }
@@ -338,9 +339,8 @@ export default function PictureRecognition (props: any) {
         setCurrentMessage("Try to memorize the next set of " + pictures_value + " pictures.")
         setShowMessage(false)
         setAnsweredStyle(answered_style[0])
-        setCircleArray([])
-        setCircleMap([])
     }
+
 
 
   return(
@@ -359,14 +359,13 @@ export default function PictureRecognition (props: any) {
                     </Button>  
                 </div>
             :   ShowPrompt ?
-                    <div className="h-[40%] mt-12 grid grid-rows-2 gap-4 place-items-center">
+                    <div className="h-[60%] mt-12 grid grid-rows-2 gap-4 place-items-center">
                         {ShowMessage ? 
                             <span>
                                 {CurrentMessage} 
                             </span>
-                        :   <div className="mt-48">
+                        : 
                             <img src={CurrentPicture} className="h-[518px]"/> 
-                            </div>
                         }
                     </div>    
                 : ShowCompare ?

@@ -28,7 +28,7 @@ export default function WordRecognition (props: any) {
 
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
 
-    const base_length = 10
+    const list_length = 10
 
     const start_digits = 24 
 
@@ -108,7 +108,7 @@ export default function WordRecognition (props: any) {
         var place = null
 
 
-        while(temp_arr.length < base_length){
+        while(temp_arr.length < list_length){
             place = Math.floor(Math.random()*500)
             temp_arr.push(words[place])
             shown_arr.push(words[place])
@@ -142,7 +142,7 @@ export default function WordRecognition (props: any) {
         console.log("INCLUDED WORDS")
         console.log(compare_arr)
 
-        while(compare_arr.length < base_length){
+        while(compare_arr.length < list_length){
             place = Math.floor(Math.random() * (words.length - 1))
             !compare_arr.includes(words[place]) ? compare_arr.push(words[place]) : null
         }
@@ -150,7 +150,7 @@ export default function WordRecognition (props: any) {
         console.log("COMPARE ARRAY")
         console.log(compare_arr)
 
-        while(final_arr.length < 10){
+        while(final_arr.length < list_length){
             place = Math.floor(Math.random() * (compare_arr.length - 1))
             final_arr.push(compare_arr[place])
             compare_arr.splice(place, 1)
@@ -221,7 +221,7 @@ export default function WordRecognition (props: any) {
 
 
     function calculate_ratio(){
-        return Math.round((AnswerCount/base_length)*100)
+        return Math.round((AnswerCount/list_length)*100)
     }
 
 
@@ -282,7 +282,7 @@ export default function WordRecognition (props: any) {
             TEST #10: WORD RECOGNITION
         </div>
         <div className="row mt-12 text-sky-400">
-            Ten words are displayed, one every 1.5 seconds. The player is told to memorize each word. Afterward, ten more words are shown. This time the word set only contains some of the items from the original display. The player is asked if each word from the second set was in the original set.
+            {list_length} words are displayed, one every 1.5 seconds. The player is told to memorize each word. Afterward, {list_length} more words are shown. This time the word set only contains some of the items from the original display. The player is asked if each word from the second set was in the original set.
         </div>
         {!EndTest ?
             !TestStart ? 
@@ -343,7 +343,7 @@ export default function WordRecognition (props: any) {
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
-                    {AnswerCount} answers correct out of 10. ({calculate_ratio()}%)
+                    {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
                 <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
                      Reset

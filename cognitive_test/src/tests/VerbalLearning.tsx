@@ -81,6 +81,7 @@ export default function VerbalLearning (props: any) {
     const [Score, setScore] = React.useState(0) 
     const [ScoreString, setScoreString] = React.useState("") 
 
+    const list_length = 12
 
     useEffect(() => {
         if(!OriginalSet){
@@ -157,7 +158,7 @@ export default function VerbalLearning (props: any) {
     function original_words(word_bank: any, original_arr:any, memory_arr: any, end_arr: any){
         var place = Math.floor(Math.random() * (word_bank.length + 1))
 
-        if(original_arr.length < 12){
+        if(original_arr.length < list_length){
             if(!original_arr.includes(word_bank[place]) && word_bank[place]){
                 original_arr.push(word_bank[place])
                 memory_arr.push(word_bank[place])
@@ -218,7 +219,7 @@ export default function VerbalLearning (props: any) {
     function next_words(word_bank: any, arr: any){
         var place = Math.floor(Math.random() * (word_bank.length + 1))
 
-        if(arr.length < 12){
+        if(arr.length < list_length){
             if(!arr.includes(word_bank[place]) && word_bank[place]){
                 arr.push(word_bank[place])
                 word_bank.splice(place, 1)
@@ -363,7 +364,7 @@ export default function VerbalLearning (props: any) {
         }
 
         original_string = "<div>" + original_string + "</div>"
-        score = Math.round(correct / 12 * 100)
+        score = Math.round(correct / list_length * 100)
 
         setYesString(yes_string)
         setNoString(no_string)
@@ -372,43 +373,37 @@ export default function VerbalLearning (props: any) {
         setScore(score)
         setScoreString(score + "% Correct")
     }
+
+
     function resetAll(){
-    setOriginalWords([])
-    setEndWords([])
-    setMemoryWords([])
-    setKeptWords([])
-    setNextWords([])
-    setDisplayWord("")
-    isOriginalSet(false)
-    isKeptSet(false)
-    isNextSet(false)
-    setStartButton(true)
-    setStartPrompt(false)
-    setStartWords(false)
-    setStartTest(false)
-    setTimerDisplay(0)
-    setEndCount(0)
-    setWordCount(12)
-    setNextWordCount(13)
-    setStartMemory(false)
-    setYesWords([])
-    setNoWords([])
-    setContinue(false)
-    setEnd(false)
-    setYesString("") 
-    setNoString("") 
-    setOriginalString("") 
-    setCorrect(0)
-    setScore(0) 
-    setScoreString("") 
-
-
-
-
-
-
-
-
+        setOriginalWords([])
+        setEndWords([])
+        setMemoryWords([])
+        setKeptWords([])
+        setNextWords([])
+        setDisplayWord("")
+        isOriginalSet(false)
+        isKeptSet(false)
+        isNextSet(false)
+        setStartButton(true)
+        setStartPrompt(false)
+        setStartWords(false)
+        setStartTest(false)
+        setTimerDisplay(0)
+        setEndCount(0)
+        setWordCount(list_length)
+        setNextWordCount(list_length + 1)
+        setStartMemory(false)
+        setYesWords([])
+        setNoWords([])
+        setContinue(false)
+        setEnd(false)
+        setYesString("") 
+        setNoString("") 
+        setOriginalString("") 
+        setCorrect(0)
+        setScore(0) 
+        setScoreString("") 
     }
 
   return(
@@ -417,7 +412,7 @@ export default function VerbalLearning (props: any) {
             TEST #1: VERBAL LEARNING 
         </div>
         <div className="row mt-12 text-sky-400">
-            A series of twelve words will be shown on the screen for three seconds each. Afterward, twelve words will be shown again. While each is shown, decide if it was in the original sequence.
+            A series of {list_length} words will be shown on the screen for three seconds each. Afterward, {list_length} words will be shown again. While each is shown, decide if it was in the original sequence.
         </div>
         <div className="mt-[200px]">
             {StartButton ? 
@@ -426,7 +421,7 @@ export default function VerbalLearning (props: any) {
             <div className="row">
                 {StartPrompt ? 
                     <div>
-                        <div>This will start the exercise. Be prepared to memorize all twelve words.</div>
+                        <div>This will start the exercise. Be prepared to memorize all {list_length} words.</div>
                         <div className="row">
                             <div className="col-md-8 mt-4">
                                 <div className="col-md-4">
@@ -498,7 +493,7 @@ export default function VerbalLearning (props: any) {
                         <div className="row mt-2 ml-[10%]" dangerouslySetInnerHTML={{ __html: OriginalString}}/>
 
                         <div className="row mt-16 underline underline-offset-2">Score</div>
-                        <div className="row mt-4 ml-[10%]">{Correct} out of 12</div>
+                        <div className="row mt-4 ml-[10%]">{Correct} out of {list_length}</div>
                         <div className="row mt-2 ml-[10%]">{ScoreString}</div>
                         <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
                          Reset

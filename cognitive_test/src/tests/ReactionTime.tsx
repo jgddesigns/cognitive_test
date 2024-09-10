@@ -12,7 +12,8 @@ export default function ReactionTime (props: any) {
     const [ResponsesArray, setResponsesArray]: any = React.useState([])
     const [ClickedButton, setClickedButton] = React.useState(false)
     const [EndTest, setEndTest] = React.useState(false)
-    const [ResponseTime, setResponseTime] = React.useState(100)
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
     const [PressedCount, setPressedCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
     const [AvgTime, setAvgTime] = React.useState(0)
@@ -49,8 +50,8 @@ export default function ReactionTime (props: any) {
         while(ShowButton && ResponseTime >= 0){
             const timeoutId = setTimeout(() => {
                 count = ResponseTime
-                setResponseTime(ResponseTime+100)
-            }, 100 )
+                setResponseTime(ResponseTime+response_time)
+            }, response_time )
 
             return () => clearTimeout(timeoutId)
         }
@@ -77,7 +78,7 @@ export default function ReactionTime (props: any) {
         setResponsePressed(true)
         var arr = ResponsesArray
         arr.push(ResponseTime*.001) 
-        setResponseTime(100)
+        setResponseTime(response_time)
         setResponsesArray(arr)
         setShowButton(false)
         set_interval()
@@ -90,23 +91,20 @@ export default function ReactionTime (props: any) {
     function get_avg_time(){
         return ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length
     }
+
+
     function resetAll(){
-    setShowButton(false)
-    setResponsePressed(false) 
-    setResponsesArray([])
-    setClickedButton(false)
-    setEndTest(false)
-    setResponseTime(100)
-    setPressedCount(0)
-    setIntervalTime(0)
-    setAvgTime(0)
-
-
-
-
-
-
+        setShowButton(false)
+        setResponsePressed(false) 
+        setResponsesArray([])
+        setClickedButton(false)
+        setEndTest(false)
+        setResponseTime(response_time)
+        setPressedCount(0)
+        setIntervalTime(0)
+        setAvgTime(0)
     }
+    
 
   return(
     <div>
