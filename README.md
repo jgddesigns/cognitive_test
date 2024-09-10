@@ -44,9 +44,9 @@ Typescript
 <br>
 Tailwind
 <br>
-AWS Dynamo DB
+AWS Dynamo DB (<i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Github for further instructions.</i>)
 <br>
-AWS Cognito
+AWS Cognito (<i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Github for further instructions.</i>)
 <br>
 Node.js & npm
 <br>
@@ -175,13 +175,5 @@ TEST COMPONENETS LOCATION: cognitive_test/src/tests
 DATABASE COMPONENT LOCATION: cognitive_test/src/database
 <br>
 <br>
-DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
-<br>
-<br>
-USER LOGIN SYSTEM CREATED WITH AWS COGNITO
-<br>
-<br>
-NEEDS AWS KEYS TO FUNCTION PROPERLY. THESE AREN'T KEPT ON GITHUB. CONTACT ADMIN (@JAY DUNN ON CROWDDOING SLACK) FOR INSTRUCTIONS.
-<br>
-<br>
+
 
