@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-import {credentials} from '../credentials/Credentials'
+import {test_credentials} from '../credentials/Credentials'
 import { CognitoIdentityProviderClient, SignUpCommand, InitiateAuthCommand, AuthFlowType} from '@aws-sdk/client-cognito-identity-provider'
 import {CognitoUserPool, CognitoUser, AuthenticationDetails} from 'amazon-cognito-identity-js'
 
 //MOSTLY FROM CHAT GPT
-const client = new CognitoIdentityProviderClient({ region: credentials.region });
+const client = new CognitoIdentityProviderClient({ region: test_credentials.REGION });
 
 const login_message = ["User login successful!", "Invalid login credentials. Try again.", "Error authenticating user. Please contact support."]
 
@@ -41,7 +41,7 @@ export default function Cognito(props: any) {
         //console.log("Email: " + props.Email)
         console.log("Password: " + props.Password)
         const data = {
-            ClientId: credentials.client_id,
+            ClientId: test_credentials.CLIENT_ID,
             // SecretHash: get_hash(),
             Username: props.Username,
             Password: props.Password,
@@ -82,9 +82,9 @@ export default function Cognito(props: any) {
         console.log(props.ConfirmCode)
 
         const pool_data = {
-            UserPoolId: credentials.user_pool_id, // Replace with your User Pool ID
-            ClientId: credentials.client_id, // Replace with your App Client ID
-            ClientSecret: credentials.client_secret,
+            UserPoolId: test_credentials.USER_POOL_ID, // Replace with your User Pool ID
+            ClientId: test_credentials.CLIENT_ID, // Replace with your App Client ID
+            ClientSecret: test_credentials.CLIENT_SECRET,
             // SecretHash: get_hash()
         };
         const user_pool = new CognitoUserPool(pool_data);
@@ -113,9 +113,9 @@ export default function Cognito(props: any) {
 
     function retrieve_user(){
         const pool_data = {
-            UserPoolId: credentials.user_pool_id, 
-            ClientId: credentials.client_id, 
-            ClientSecret: credentials.client_secret,
+            UserPoolId: test_credentials.USER_POOL_ID, 
+            ClientId: test_credentials.CLIENT_ID, 
+            ClientSecret: test_credentials.CLIENT_SECRET,
         }
 
         const user_pool = new CognitoUserPool(pool_data)
@@ -147,7 +147,7 @@ export default function Cognito(props: any) {
   
         const params = {
           AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
-          ClientId: credentials.client_id,
+          ClientId: test_credentials.CLIENT_ID,
           AuthParameters: {
             USERNAME: Username,
             PASSWORD: Password,
@@ -185,7 +185,7 @@ export default function Cognito(props: any) {
       
         const params = {
           AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
-          ClientId: credentials.client_id,
+          ClientId: test_credentials.CLIENT_ID,
           AuthParameters: {
             USERNAME: Username,
             PASSWORD: Password,
@@ -212,7 +212,7 @@ export default function Cognito(props: any) {
     
     function get_hash(){
         const crypto = require('crypto')
-        const message = `${props.Username}${credentials["client_id"]}`
+        const message = `${props.Username}${test_credentials.CLIENT_ID}`
         const str = crypto.createHmac('sha256')
         str.update(message)
         const secret_hash = str.digest('base64')

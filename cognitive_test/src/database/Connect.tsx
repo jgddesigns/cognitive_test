@@ -23,9 +23,9 @@ export default function Connect(props: any) {
 
 
   // Fetch AWS credentials and region from environment variables
-  const AWS_KEY = test_credentials.AWS_ACCESS_KEY_ID;
-  const AWS_SECRET = test_credentials.AWS_SECRET_ACCESS_KEY;
-  const AWS_REGION = test_credentials.AWS_REGION;
+  const AWS_KEY = test_credentials.ACCESS_KEY;
+  const AWS_SECRET = test_credentials.ACCESS_SECRET;
+  const AWS_REGION = test_credentials.REGION;
 
 
   //console.log(process.env)

@@ -189,7 +189,7 @@ export default function VerbalLearning (props: any) {
 
     function kept_words(word_bank: any, count: any, arr: any){
         if(!count){
-            count = 8 - (Math.floor(Math.random() * .6 * 10))
+            count = Math.floor(list_length * .75) - (Math.floor(Math.random() * .6 * 10))
         }
 
         var place = Math.floor(Math.random() * (word_bank.length) + 1) - 1
@@ -375,7 +375,7 @@ export default function VerbalLearning (props: any) {
     }
 
 
-    function resetAll(){
+    function reset_all(){
         setOriginalWords([])
         setEndWords([])
         setMemoryWords([])
@@ -495,7 +495,7 @@ export default function VerbalLearning (props: any) {
                         <div className="row mt-16 underline underline-offset-2">Score</div>
                         <div className="row mt-4 ml-[10%]">{Correct} out of {list_length}</div>
                         <div className="row mt-2 ml-[10%]">{ScoreString}</div>
-                        <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                        <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                          Reset
                         </Button>
                     </div>

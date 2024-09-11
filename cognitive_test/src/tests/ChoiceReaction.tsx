@@ -271,7 +271,7 @@ export default function ChoiceReaction (props: any) {
         setIntervalTime(Math.random() * 2.5)
     }
 
-    function resetAll(){
+    function reset_all(){
         setEndTest(false);
         setCurrentPrompt("");
         setTestStart(false);
@@ -321,7 +321,7 @@ export default function ChoiceReaction (props: any) {
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
 

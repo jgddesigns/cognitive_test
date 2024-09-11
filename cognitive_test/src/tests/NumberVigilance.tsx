@@ -147,7 +147,7 @@ export default function NumberVigilance (props: any) {
     }
 
 
-    function resetAll(){
+    function reset_all(){
         setShowNumber(false)
         setResponsePressed(false) 
         setResponsesArray([])
@@ -228,7 +228,7 @@ export default function NumberVigilance (props: any) {
                 <div className="mt-12 text-red-400">
                     Incorrect Responses: {IncorrectCount}
                 </div> 
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>

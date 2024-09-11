@@ -33,18 +33,24 @@ export default function DigitVigilance(props: any) {
     //section interval, every 36 seconds, 5 sections total
     const time = 5
 
+    const time_value = 180
+
+    const number_value = 25
+
+    const row_value = number_value * 2
+
 
 
     useEffect(() => {
 
         Numbers.length > 0 && NumberMap.length < 1 ? create_number_map() : null
 
-        while(TestStart && TotalTime <= 180){
+        while(TestStart && TotalTime <= time_value){
             const timeoutId = setTimeout(() => {
                 var temp_arr: any = []
                 setTotalTime(TotalTime + 1)
 
-                if(TotalTime % 36 == 0 && TotalTime > 0){
+                if(TotalTime % (time_value / time) == 0 && TotalTime > 0){
                     console.log(TotalFound)
                     TotalFound && TotalFound.length > 0 ? temp_arr = TotalFound : null
                     temp_arr.push(FoundArray)
@@ -52,7 +58,7 @@ export default function DigitVigilance(props: any) {
                     setFoundArray([])
                 }
 
-                if(TotalTime < 180){
+                if(TotalTime < time_value){
                     set_clock(TotalTime + 1)
                 }else{
                     setClockDisplay("Time's Up!")
@@ -133,8 +139,8 @@ export default function DigitVigilance(props: any) {
         var row_array: any = []
         var search_numbers = get_search_numbers()
 
-        while(number_array.length < 25){
-            while(row_array.length < 50){
+        while(number_array.length < number_value){
+            while(row_array.length < row_value){
                 row_array.push(create_row(search_numbers))
             }
 
@@ -166,8 +172,6 @@ export default function DigitVigilance(props: any) {
     }
 
 
-
-
     function create_row(numbers: any){
         var chance = Math.floor(Math.random() * 20)
         var random = Math.floor(Math.random() * 7)
@@ -179,7 +183,6 @@ export default function DigitVigilance(props: any) {
 
         return numbers[1][random]
     }
-
 
 
     function get_search_numbers(){
@@ -209,7 +212,7 @@ export default function DigitVigilance(props: any) {
         setShowData(true)
         create_list()
     }
-    function resetAll(){
+    function reset_all(){
         setEndTest(false);
         setTestStart(false);
         setShowData(false);
@@ -305,7 +308,7 @@ export default function DigitVigilance(props: any) {
                 <span className="mt-12">
                     {PossibleFound} possible numbers out of {Numbers.length * Numbers[0].length} total digits.
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>

@@ -28,11 +28,12 @@ export default function WorkingMemory(props: any) {
 
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
 
+    const total_rounds = 10
 
 
     useEffect(() => {
 
-        if(CurrentRound <= 10){
+        if(CurrentRound <= total_rounds){
             FoundCount == BoxCount ? setNextRound(true) : null
             NextRound ? build_next_round() : null
         } 
@@ -58,7 +59,7 @@ export default function WorkingMemory(props: any) {
 
         while(TestTime >= 0 && TestStart && !EndTest){
             const timeoutId = setTimeout(() => {
-                if(CurrentRound <= 10){ 
+                if(CurrentRound <= total_rounds){ 
                     set_clock(TestTime + 1)
                     setTestTime(TestTime + 1)
                 }else{
@@ -73,9 +74,6 @@ export default function WorkingMemory(props: any) {
 
 
     }, [CurrentRound, Delay, DelayTime, TestTime, TestStart, EndTest])
-
-
-
 
 
 
@@ -133,7 +131,7 @@ export default function WorkingMemory(props: any) {
 
 
     function average_time(time: any){
-        time = time/10
+        time = time/total_rounds
         var minutes: any = Math.floor(time/60)
         var seconds: any = Math.floor(time % 60)
         seconds < 10 ? seconds = "0" + seconds : null
@@ -245,33 +243,29 @@ export default function WorkingMemory(props: any) {
             setBoxGrid(grid_arr)
         }
     }
-    function resetAll(){
-    setEndTest(false)
-    setTestStart(false)
-    setShowData(false)
-    setNextRound(false)
-    setDelay(false)
-    setTokensFound(false)
-    setTestTime(0)
-    setFoundCount(0)
-    setRoundCount(3) 
-    setCurrentAttempts(0)
-    setTotalAttempts(0)
-    setCurrentRound(1)
-    setDelayTime(0)
-    setRoundAttempts([])
-    setTokenPattern([])
-    setBoxCount(3)
-    setCurrentMessage("") 
-    setClockDisplay("") 
-    setAverageTime(0)
 
 
-
-    setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
-
-
-
+    function reset_all(){
+        setEndTest(false)
+        setTestStart(false)
+        setShowData(false)
+        setNextRound(false)
+        setDelay(false)
+        setTokensFound(false)
+        setTestTime(0)
+        setFoundCount(0)
+        setRoundCount(3) 
+        setCurrentAttempts(0)
+        setTotalAttempts(0)
+        setCurrentRound(1)
+        setDelayTime(0)
+        setRoundAttempts([])
+        setTokenPattern([])
+        setBoxCount(3)
+        setCurrentMessage("") 
+        setClockDisplay("") 
+        setAverageTime(0)
+        setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
     }
 
 
@@ -422,7 +416,7 @@ export default function WorkingMemory(props: any) {
                 <div className="mt-8 ml-12">
                     Round 10: {RoundAttempts[9]}
                 </div>       
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>

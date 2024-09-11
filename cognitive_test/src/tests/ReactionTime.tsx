@@ -22,12 +22,16 @@ export default function ReactionTime (props: any) {
     const interval = "sections"
     const time = 5
 
+
+    
     useEffect(() => {
         if(ClickedButton){
             setPressedCount(PressedCount + 1)
             set_interval()
         }   
     }, [ClickedButton])
+
+
 
     useEffect(() => {
         var count = 1
@@ -45,6 +49,8 @@ export default function ReactionTime (props: any) {
 
     }, [IntervalTime])
 
+
+
     useEffect(() => {
         var count
         while(ShowButton && ResponseTime >= 0){
@@ -58,9 +64,12 @@ export default function ReactionTime (props: any) {
     
     }, [ShowButton, ResponseTime])
 
+
+
     useEffect(() => {
         EndTest ? setAvgTime(ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length) : null
     }, [EndTest])
+
 
 
     function set_interval(){
@@ -69,10 +78,14 @@ export default function ReactionTime (props: any) {
         setIntervalTime(time)
     }
 
+
+
     function clicked_button(){
         console.log(analysis["attention"](interval, [[.3,1.1,.25,.4], [.44,.53,.6,.8], [.5,.3,.75,.45], [.77,.84,.43,.43], [.17,.54,.68,.9]], time, proficiency, true))
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
+
+
 
     function toggle_pressed(){
         setResponsePressed(true)
@@ -88,12 +101,14 @@ export default function ReactionTime (props: any) {
     }
 
 
+
     function get_avg_time(){
         return ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length
     }
 
 
-    function resetAll(){
+
+    function reset_all(){
         setShowButton(false)
         setResponsePressed(false) 
         setResponsesArray([])
@@ -156,7 +171,7 @@ export default function ReactionTime (props: any) {
                     <span>
                         The Test is Over.
                     </span>
-                    <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                    <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                     </Button>
                 </div>        

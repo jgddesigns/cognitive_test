@@ -217,10 +217,7 @@ export default function WorkingMemory(props: any) {
         // console.log(analysis["attention"](interval, convert_time([.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4]), time, proficiency))
         console.log(analysis["attention"](interval, [.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4], time, proficiency, false))
         set_clock(0)
-        // create_item()
         setTestStart(true)
-        // setDelay(true)
-        // setShowData(true)
         toggle_countdown(true)
         setCurrentMessage("Click Shapes as Quickly as Possible")
     }
@@ -228,34 +225,26 @@ export default function WorkingMemory(props: any) {
 
 
     function check_token(event: any){
-        //if(CurrentShape != null){
-        if(Delay){
-            event.target.className != "" ? token_found(true, event) : token_found(false, event) 
-        }
-        //}
+        Delay ? event.target.className != "" ? token_found(true, event) : token_found(false, event) : null
     }
+
 
 
     function token_found(found: any, event: any){
         var time_arr = FoundTimes
-        var box_arr = BoxGrid
 
-        //if(CurrentShape != null){
-            if(found){
-                console.log("\n\nSHAPE FOUND")
-                time_arr.push(build_time())
-                setFound(true)
-                //setMissed(false)
-            }else{
-                console.log(CurrentShape)
-                setCurrentShape(null)
-                setMissed(true)
-                // setNotAttempted(NotAttempted + 1)
-                console.log("\n\nINCORRECT CLICK")
-                time_arr.push(0)
-                setFound(false)
-            }
-        //}
+        if(found){
+            console.log("\n\nSHAPE FOUND")
+            time_arr.push(build_time())
+            setFound(true)
+        }else{
+            console.log(CurrentShape)
+            setCurrentShape(null)
+            setMissed(true)
+            console.log("\n\nINCORRECT CLICK")
+            time_arr.push(0)
+            setFound(false)
+        }
 
         console.log("time array")
         console.log(time_arr)
@@ -265,6 +254,7 @@ export default function WorkingMemory(props: any) {
         setFoundTimes(time_arr)
         setDelay(false)
     }
+
 
 
     function build_time(){
@@ -285,6 +275,7 @@ export default function WorkingMemory(props: any) {
     }
 
 
+
     function clear_grid(){
         var temp_arr = BoxGrid
         for(var i=0; i<temp_arr.length; i++){
@@ -296,11 +287,11 @@ export default function WorkingMemory(props: any) {
     }
 
 
+
     function create_item(){
         var box_arr = BoxGrid
         var position = Math.floor(Math.random() * BoxGrid.length)
         var style = random_style()
-        //var delay_time = Math.floor(Math.random() * 3) + 1
         var delay_time = 5
 
         box_arr[position] = style
@@ -308,7 +299,6 @@ export default function WorkingMemory(props: any) {
         setCurrentRound(FoundTimes.length + 1)
         setCurrentPosition(position)
         setCurrentShape(style)
-        //setMissed(false)
         setFound(false)
         setBoxGrid(box_arr)
         setDelayTime(delay_time)
@@ -332,45 +322,43 @@ export default function WorkingMemory(props: any) {
 
         return str 
     }
-    function resetAll(){
+
+
+
+    function reset_all(){
         setEndTest(false);
-    setTestStart(false);
-    setShowData(false);
-    setNextRound(false);
-    setDelay(false);
-    setTokensFound(false);
-    setIsPaused(false);
-    setFound(false);
-    setMissed(false);
-    setTestTime(0);
-    setFoundCount(0);
-    setRoundCount(3);
-    setCurrentAttempts(0);
-    setTotalAttempts(0);
-    setCurrentRound(1);
-    setDelayTime(0);
-    setFoundTimes([]);
-    setTokenPattern([]);
-    setBoxCount(3);
-    setCurrentMessage("");
-    setClockDisplay("");
-    setCurrentShape("");
-    setCountMessage("");
-    setCurrentPosition(0);
-    setPause(-1);
-    setAverageTime(0);
-    setLastTime("");
-    setMissedClicks(0);
-    setNotAttempted(0);
-    setOriginalTime(0);
-    setCountDown(false);
-    setCountTimer(-1);
-    setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
-
-
-
-
-
+        setTestStart(false);
+        setShowData(false);
+        setNextRound(false);
+        setDelay(false);
+        setTokensFound(false);
+        setIsPaused(false);
+        setFound(false);
+        setMissed(false);
+        setTestTime(0);
+        setFoundCount(0);
+        setRoundCount(3);
+        setCurrentAttempts(0);
+        setTotalAttempts(0);
+        setCurrentRound(1);
+        setDelayTime(0);
+        setFoundTimes([]);
+        setTokenPattern([]);
+        setBoxCount(3);
+        setCurrentMessage("");
+        setClockDisplay("");
+        setCurrentShape("");
+        setCountMessage("");
+        setCurrentPosition(0);
+        setPause(-1);
+        setAverageTime(0);
+        setLastTime("");
+        setMissedClicks(0);
+        setNotAttempted(0);
+        setOriginalTime(0);
+        setCountDown(false);
+        setCountTimer(-1);
+        setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
     }
 
 
@@ -526,7 +514,7 @@ export default function WorkingMemory(props: any) {
                     <div className="mt-8 ml-12">
                         Round 10: {FoundTimes[9]}
                     </div> 
-                    <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                    <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>      
                 </div>

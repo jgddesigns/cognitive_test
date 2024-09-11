@@ -38,6 +38,8 @@ export default function MemoryScanning (props: any) {
     //section interval, every 3 digits, 6 sections total
     const time = 6
 
+    const total_digits = 18
+
 
     useEffect(() => {
         var temp_arr: any = DigitList
@@ -96,7 +98,7 @@ export default function MemoryScanning (props: any) {
                 if(CompareNumbers){
                     compare_arr = CompareList
 
-                    if(CompareDigits %2 != 0){
+                    if(CompareDigits % 2 != 0){
                         setAnsweredString("Missed!")
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
@@ -114,7 +116,6 @@ export default function MemoryScanning (props: any) {
                         setCompareNumbers(false)
                         setEndTest(true)
                     }
-
                 }
             
                 CompareDigits == 0 ? setCompareDigits(36) :  setCompareDigits(CompareDigits - 1)
@@ -156,7 +157,7 @@ export default function MemoryScanning (props: any) {
         temp_list = temp_list.concat(list)
         var i = temp_list.length
 
-        while(i < 18){
+        while(i < total_digits){
             var num: any = Math.floor(Math.random() * ((1000-1)+1)) 
             if(!temp_list.includes(num)){
                 temp_list.push(num)
@@ -225,7 +226,6 @@ export default function MemoryScanning (props: any) {
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
         }
-        // setShowButtons(false)
     }
 
 
@@ -241,7 +241,7 @@ export default function MemoryScanning (props: any) {
 
 
     function calculate_ratio(){
-        return Math.round((AnswerCount/18)*100)
+        return Math.round((AnswerCount/total_digits)*100)
     }
 
 
@@ -266,7 +266,9 @@ export default function MemoryScanning (props: any) {
         setCompareString("")
     }
 
-    function resetAll(){
+
+    
+    function reset_all(){
         setEndTest(false)
         setTestStart(false)
         setAnswerCount(0)
@@ -285,11 +287,6 @@ export default function MemoryScanning (props: any) {
         setCompareString("")
         setAnswer("")
         setDigits(-1)
-
-
-
-
-
     }
 
   return(
@@ -298,7 +295,7 @@ export default function MemoryScanning (props: any) {
             TEST #5: MEMORY SCANNING 
         </div>
         <div className="row mt-12 text-sky-400">
-            Three digits are presented singly at the rate of one every 2.5 seconds for the player to remember. A series of 18 digits is then presented. For each, the player must press Yes or No according to whether the digit is thought to be one of the three presented initially.
+            Three digits are presented singly at the rate of one every 2.5 seconds for the player to remember. A series of {total_digits} digits is then presented. For each, the player must press Yes or No according to whether the digit is thought to be one of the three presented initially.
         </div>
         {!EndTest ?
             !TestStart ? 
@@ -331,19 +328,15 @@ export default function MemoryScanning (props: any) {
                             </Button>
                         </div>
                     :  CompareDigits >= 0 ?
-                    <div className="mt-12 grid grid-cols-2">
-                        <span className={AnsweredStyle}>
-                            {AnsweredString}
-                        </span>
-                        <span>
-                            {Answer}
-                        </span>
-                    </div>  
-                
-                
-                
-                : null}
-
+                        <div className="mt-12 grid grid-cols-2">
+                            <span className={AnsweredStyle}>
+                                {AnsweredString}
+                            </span>
+                            <span>
+                                {Answer}
+                            </span>
+                        </div>  
+                    : null}
                 </div>    
             : null
         :
@@ -352,9 +345,9 @@ export default function MemoryScanning (props: any) {
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
-                    {AnswerCount} answers correct out of 18. ({calculate_ratio()}%)
+                    {AnswerCount} answers correct out of {total_digits}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>

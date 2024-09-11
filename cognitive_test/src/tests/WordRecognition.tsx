@@ -25,15 +25,10 @@ export default function WordRecognition (props: any) {
     const [ShowMessage, setShowMessage] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
-
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
-
     const list_length = 10
-
     const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of " + list_length + " words.")
-
     const start_digits = 24 
-
     const base_iteration = 21
     
 
@@ -229,52 +224,35 @@ export default function WordRecognition (props: any) {
 
 
     function check_answer(compare: any){
-        // console.log("\n\ncompare string")
-        // console.log(compare)
         var temp_arr: any = StaticArray
 
-        if(temp_arr.includes(compare)){
-            setAnswer("Answer was: Yes, the word is in original set.")          
-        }
+        temp_arr.includes(compare) ? setAnswer("Answer was: Yes, the word is in original set.") : setAnswer("Answer was: No, the word isn't in original set.")         
 
-        if(!temp_arr.includes(compare)){
-            setAnswer("Answer was: No, the word isn't in original set.")              
-        }
-
-        if(compare == ""){
-            setAnswer("")
-        }
-
+        compare == "" ? setAnswer("") : null
     }
-    function resetAll(){
-    setEndTest(false)
-    setTestStart(false)
-    setAnswerCount(0)
-    setShowPrompt(false)
-    setShowCompare(false)
-    setCompareMessage(false)
-    setShowButtons(false)
-    setAnswered(true) 
-    setAnsweredString("")  
-    setCompareDigits(-1)
-    setShownArray([])
-    setStaticArray([""])
-    setCurrentWord("")
-    setCompareArray([])
-    setAnswer("")
-    setDigits(-1)
-    setCurrentMessage("Try to memorize the next set of 10 words.")
-    setShowMessage(false)
-
-    
-
-    setAnsweredStyle(answered_style[0])
 
 
 
-
-
-
+    function reset_all(){
+        setEndTest(false)
+        setTestStart(false)
+        setAnswerCount(0)
+        setShowPrompt(false)
+        setShowCompare(false)
+        setCompareMessage(false)
+        setShowButtons(false)
+        setAnswered(true) 
+        setAnsweredString("")  
+        setCompareDigits(-1)
+        setShownArray([])
+        setStaticArray([""])
+        setCurrentWord("")
+        setCompareArray([])
+        setAnswer("")
+        setDigits(-1)
+        setCurrentMessage("Try to memorize the next set of 10 words.")
+        setShowMessage(false)
+        setAnsweredStyle(answered_style[0])
     }
 
 
@@ -347,7 +325,7 @@ export default function WordRecognition (props: any) {
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={resetAll}>
+                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>
