@@ -2,7 +2,9 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
+import { v4 as uuidv4 } from 'uuid';
 import "../helpers/shapes.css"
+//import { show_circles } from "../helpers/ProgressBar"
 import ProgressBar from '../helpers/ProgressBar';
 
 export default function PictureRecognition (props: any) {
@@ -21,12 +23,16 @@ export default function PictureRecognition (props: any) {
     const [StaticArray, setStaticArray] = React.useState([""])
     const [CurrentPicture, setCurrentPicture] = React.useState("")
     const [CompareArray, setCompareArray] = React.useState([])
+    const [CircleArray, setCircleArray] = React.useState([])
+    const [CircleMap, setCircleMap] = React.useState<any>([])
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
     const [ShowMessage, setShowMessage] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+
     const answered_style = ["text-red-400", "text-green-400"]
+
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
 
     const pictures_value = 20
@@ -46,6 +52,8 @@ export default function PictureRecognition (props: any) {
 
 
     useEffect(() => {
+        var temp_arr: any = ShownArray
+
         while(Digits >= 0){
 
             const timeoutId = setTimeout(() => {
@@ -72,11 +80,6 @@ export default function PictureRecognition (props: any) {
 
             return () => clearTimeout(timeoutId)
         }
-    }, [Digits])
-
-
-    useEffect(() => {
-        var temp_arr: any = ShownArray
 
         while(CompareDigits >= 0){
 
@@ -108,7 +111,9 @@ export default function PictureRecognition (props: any) {
 
             return () => clearTimeout(timeoutId)
         }
-    }, [CompareDigits])
+
+    }, [Digits, CompareDigits, Answered])
+
 
 
     //partially from chat gpt
@@ -176,6 +181,7 @@ export default function PictureRecognition (props: any) {
     }
 
 
+
     function shuffle_array(list: any, size: any){
         var new_list: any = []
         var num: any = 0
@@ -217,6 +223,7 @@ export default function PictureRecognition (props: any) {
     }
 
 
+
     function no_handler(){
         setAnsweredString("You answered: No")
         setAnswered(true)
@@ -225,17 +232,21 @@ export default function PictureRecognition (props: any) {
     }
 
 
+
     function answer_handler(answer: any){
         setCurrentPicture("")
         var temp_arr: any = StaticArray
         if (answer && temp_arr.includes(CurrentPicture) || (!answer && !temp_arr.includes(CurrentPicture))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
+            // show_circles(true, true)
             setShowCirclesGreen(true)
         }else{
+            //show_circles(false, true)
             setShowCirclesRed(true)
         }
     }
+
 
 
     function start_handler(){
@@ -245,26 +256,80 @@ export default function PictureRecognition (props: any) {
         setShowMessage(true)
         setTestStart(true)
         setShowPrompt(true)
+        // display_circles()
     }
     
  
+
+    function display_circles(){
+        var i = 0
+        while(i < pictures_value){
+            //show_circles(false, true)
+            setShowCirclesRed(true)
+            i++
+        }
+        setCircleArray    
+    }
+
+
+
     function calculate_ratio(){
         return Math.round((AnswerCount/pictures_value)*100)
     }
 
 
+
     function check_answer(compare: any){
         var temp_arr: any = StaticArray
 
-        temp_arr.includes(compare) ? setAnswer("Answer was: Yes, picture is in original set.") : setAnswer("Answer was: No, picture isn't in original set.")              
+        if(temp_arr.includes(compare)){
+            setAnswer("Answer was: Yes, picture is in original set.")          
+        }
+
+        if(!temp_arr.includes(compare)){
+            setAnswer("Answer was: No, picture isn't in original set.")              
+        }
 
         if(compare == ""){
             setAnswer("")
             setAnsweredString("")
         }
 
+        // AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? show_circles(false, true) : null
+
         AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? setShowCirclesRed(true) : null  
+
+        AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? console.log("missed") : null  
     }
+
+
+    // function create_circle(condition: any, start: any = null){
+    //     var class_txt: any = null
+    //     start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
+    //     console.log(class_txt)
+    //     return (
+    //         <div className="w-8">
+    //             <div className={class_txt}>
+    //             </div>
+    //         </div>
+    //     )
+    // }
+
+
+    // function show_circles(condition: any, start: any = null){
+    //     var shown_arr: any = CircleArray 
+    //     !start ? shown_arr[pictures_value - CompareDigits/2 - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
+    //     const circle_map = shown_arr.map((name:any, index:any) => {
+    //         return {
+    //           obj: shown_arr[index],
+    //           key: uuidv4()
+    //         }
+    //     })
+    //     console.log(pictures_value - CompareDigits/2 - 1)
+    //     setCircleArray(shown_arr)
+    //     setCircleMap(circle_map)
+    // }
+
 
 
     function reset_all(){
@@ -287,8 +352,6 @@ export default function PictureRecognition (props: any) {
         setCurrentMessage("Try to memorize the next set of " + pictures_value + " pictures.")
         setShowMessage(false)
         setAnsweredStyle(answered_style[0])
-        setShowCirclesGreen(false)
-        setShowCirclesRed(false)
     }
 
 
