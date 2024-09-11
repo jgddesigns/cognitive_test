@@ -3,8 +3,6 @@ import React, {useEffect} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import "../helpers/shapes.css"
 
-
-//Needs props ShowCirclesGreen, setShowCirclesGreen, ShowCirclesRed, setShowCirclesRed, LengthValue, CurrentPosition
 export default function ProgressBar (props: any) {
 
     const [CircleArray, setCircleArray] = React.useState([])
@@ -36,9 +34,11 @@ export default function ProgressBar (props: any) {
 
 
     function create_circle(condition: any, start: any = null){
+        console.log(condition)
+        console.log(start)
         var class_txt: any = null
         start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
-
+        console.log(class_txt)
         return (
             <div className="w-8">
                 <div className={class_txt}>
@@ -50,7 +50,7 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
-        
+        console.log(Math.floor(props.CurrentPosition/2))
         !start ? shown_arr[props.LengthValue - Math.ceil(props.CurrentPosition/2) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {
@@ -63,6 +63,9 @@ export default function ProgressBar (props: any) {
         props.setShowCirclesGreen(false)
         props.setShowCirclesRed(false)
     }
+
+
+
 
 
   return(
