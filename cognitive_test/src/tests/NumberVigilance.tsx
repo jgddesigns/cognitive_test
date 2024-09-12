@@ -31,8 +31,19 @@ export default function NumberVigilance (props: any) {
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
 
-    const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white", "bg-green-400 rounded px-10 h-12 text-white", "bg-red-400 rounded px-10 h-12 text-white"]
+    const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white outline-0", "bg-green-400 rounded px-10 h-12 text-white outline-0", "bg-red-400 rounded px-10 h-12 text-white outline-0"]
     const [CorrectClass, setCorrectClass] = React.useState(correct_class[0])
+
+    const popup_class = ["text-green-400 text-base h-12", "text-red-400 text-base h-12"]
+    const [PopupClass, setPopupClass] = React.useState(popup_class[0])
+
+    const [PopupTimer, setPopupTimer] = React.useState(0)
+
+    const popup_text = ["", "Good!", "Wrong!"]
+    const [PopupText, setPopupText] = React.useState(popup_text[0])
+
+    const popup_time = 1
+
 
     const shown_value = 120
 
@@ -93,6 +104,24 @@ export default function NumberVigilance (props: any) {
         }
     }, [ShownCount])
 
+    useEffect(() => {
+        var count = popup_time
+        while(PopupTimer > 0){
+            console.log("asdf")
+            const timeoutId = setTimeout(() => {
+                setPopupTimer(PopupTimer - .5)
+                count = PopupTimer
+                if(count <= .5){
+                    setPopupText(popup_text[0])
+                }
+                
+            }, 500 )
+
+            return () => clearTimeout(timeoutId)
+        }
+
+    }, [PopupTimer])
+
     function set_interval(){
         setIntervalTime(1)
     }
@@ -115,6 +144,7 @@ export default function NumberVigilance (props: any) {
     function correct_press(){
         var temp_arr = SectionAnswers
         temp_arr.push(1)
+        toggle_popup(true)
         setSectionAnswers(temp_arr)
         setCorrectClass(correct_class[1])
         setCorrectCount(CorrectCount + 1)
@@ -128,6 +158,7 @@ export default function NumberVigilance (props: any) {
     function incorrect_press(){
         var temp_arr = SectionAnswers
         temp_arr.push(0)
+        toggle_popup(false)
         setSectionAnswers(temp_arr)
         setCorrectClass(correct_class[2])
         setIncorrectCount(CorrectCount + 1)
@@ -137,6 +168,16 @@ export default function NumberVigilance (props: any) {
         console.log("=====================")
     }
 
+    function toggle_popup(condition: any){
+        if(condition){
+            setPopupClass(popup_class[0])
+            setPopupText(popup_text[1])   
+        }else{
+            setPopupClass(popup_class[1])
+            setPopupText(popup_text[2])
+        }
+        setPopupTimer(popup_time)
+    }
 
     function get_time(){
         var seconds = 0
@@ -216,7 +257,10 @@ export default function NumberVigilance (props: any) {
                                     {ShowNumber ? CurrentNumber : null}
                                 </span>
                             </div>
-                            <div className="row mt-36"> 
+                            <div className="row mt-36 grid grid-auto-rows place-items-center gap-12"> 
+                                <span className={PopupClass}>
+                                    {PopupText}
+                                </span>
                                 <Button color="primary" className={CorrectClass} onClick={toggle_pressed}>
                                     Okay
                                 </Button>
