@@ -1,8 +1,9 @@
 'use client'
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react'
 import {Button} from "@nextui-org/react"
 import "../helpers/shapes.css"
-import { analysis } from '@/helpers/Analysis';
+import { analysis } from '@/helpers/Analysis'
+import ProgressBar from '@/helpers/ProgressBar'
 
 
 export default function WorkingMemory(props: any) {
@@ -23,7 +24,6 @@ export default function WorkingMemory(props: any) {
     const [CurrentRound, setCurrentRound] = React.useState(1)
     const [DelayTime, setDelayTime] = React.useState<any>(0)
     const [FoundTimes, setFoundTimes] = React.useState<any[]>([])
-
     const [TokenPattern, setTokenPattern] = React.useState<any[]>([])
     const [BoxCount, setBoxCount] = React.useState(3)
     const [CurrentMessage, setCurrentMessage] = React.useState<any>("") 
@@ -37,9 +37,11 @@ export default function WorkingMemory(props: any) {
     const [MissedClicks, setMissedClicks] = React.useState(0)
     const [NotAttempted, setNotAttempted] = React.useState(0)
     const [OriginalTime, setOriginalTime] = React.useState<any>(0)
-
     const [CountDown, setCountDown] = React.useState(false)
     const [CountTimer, setCountTimer] = React.useState<any>(-1)
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
     
 
     const shapes = ["circle", "square", "triangle", "heart", "star", "moon", "hexagon", "diamond", "trapezoid"]
@@ -55,12 +57,14 @@ export default function WorkingMemory(props: any) {
 
     //section interval, every 3 digits, 6 sections total
     const time = 10
+
+    const total_rounds = 10
     
 
 
     useEffect(() => {
         //END GAME
-        FoundTimes.length >= 10 ? end_test() : null
+        FoundTimes.length >= total_rounds ? end_test() : null
 
         while(IsPaused && Pause > -1){
             const timeoutId = setTimeout(() => {
@@ -133,11 +137,9 @@ export default function WorkingMemory(props: any) {
                 if(CountTimer > 0){ 
                     CountTimer == 1 ? setCountMessage("Go!") : null
                     setCountTimer(CountTimer - 1)
-                }
-                else{
-                    
+                }else{
+                    setCountTimer(-1)
                     create_item()
-                    //setTestStart(true)
                     setDelay(true)
                     setShowData(true)
                     toggle_countdown(false)
@@ -162,6 +164,7 @@ export default function WorkingMemory(props: any) {
         }
     }
 
+
     function end_test(){
         average_time()
         setDelay(false)
@@ -173,7 +176,7 @@ export default function WorkingMemory(props: any) {
     function set_clock(time: any){
         var minutes: any = Math.floor(time / 60)
         var seconds: any = Math.floor(time % 60)
-        seconds < 10 ? seconds = "0" + seconds : null
+        seconds < total_rounds ? seconds = "0" + seconds : null
 
         var display: any = minutes + ":" + seconds
 
@@ -184,11 +187,10 @@ export default function WorkingMemory(props: any) {
     function average_time(){
         var time_arr = FoundTimes
         var total: any = 0
-        var total_str: any = ""
         var missed_clicks = 0
         var denominator = 0
 
-        for(var i=0; i<time_arr.length; i++){
+        for(var i=0; i < time_arr.length; i++){
             if(time_arr[i] > 0){
                 denominator++
                 total = total + time_arr[i]
@@ -197,21 +199,14 @@ export default function WorkingMemory(props: any) {
             }
         }
 
-        total > 0 ? total = total / denominator : total = 0
+        total > 0 ? total = total / denominator : total = "N/A"
    
-        total = total.toString().slice(0, 4)
+        !isNaN(total) ? total = total.toString().slice(0, 4) : null
 
         setMissedClicks(missed_clicks)
         setAverageTime(total)
     }
 
-    function convert_time(answers: any){
-        var time_arr: any = []
-        for(let i=0; i<answers.length; i++){
-            answers[i] > .5 ? time_arr.push(1) : time_arr.push(0)
-        }
-        return time_arr
-    }
 
     function start_handler(){
         // console.log(analysis["attention"](interval, convert_time([.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4]), time, proficiency))
@@ -223,11 +218,10 @@ export default function WorkingMemory(props: any) {
     }
 
 
-
     function check_token(event: any){
         Delay ? event.target.className != "" ? token_found(true, event) : token_found(false, event) : null
+        setShowCirclesGreen(true)
     }
-
 
 
     function token_found(found: any, event: any){
@@ -236,11 +230,13 @@ export default function WorkingMemory(props: any) {
         if(found){
             console.log("\n\nSHAPE FOUND")
             time_arr.push(build_time())
+            setShowCirclesGreen(true)
             setFound(true)
         }else{
             console.log(CurrentShape)
             setCurrentShape(null)
             setMissed(true)
+            setShowCirclesRed(true)
             console.log("\n\nINCORRECT CLICK")
             time_arr.push(0)
             setFound(false)
@@ -256,7 +252,6 @@ export default function WorkingMemory(props: any) {
     }
 
 
-
     function build_time(){
         var time: any = OriginalTime - DelayTime
         
@@ -269,11 +264,12 @@ export default function WorkingMemory(props: any) {
         time = time.slice(0, 4)
         time[3] == 0 ? time = time.slice(0,3) : null
         time[0] != 1 && time[2] == 0 ? time = time.slice(0,2) : null
-        setLastTime(time + " seconds")
+        time[0] == 0 ? time.slice(0,1) : null
+        console.log(time[0])
+        time[0] == 0 ? setLastTime(parseFloat(time) + " seconds") : setLastTime(time + " seconds")
 
         return parseFloat(time)
     }
-
 
 
     function clear_grid(){
@@ -285,7 +281,6 @@ export default function WorkingMemory(props: any) {
         setCurrentShape(null)
         setBoxGrid(temp_arr)
     }
-
 
 
     function create_item(){
@@ -307,14 +302,12 @@ export default function WorkingMemory(props: any) {
     }
 
 
-
     function random_style(){
         var shape = Math.floor(Math.random() * shapes.length)
         var color = Math.floor(Math.random() * colors.length)
         var size = Math.floor(Math.random() * sizes.length)
         var str = ""
 
-        
         shapes[shape] == "star" ? str = "bg-" + colors[color] + "-400 " + "cursor-pointer " + shapes[shape] : str = sizes[size] + " " + "bg-" + colors[color] + "-400 " + "cursor-pointer " + shapes[shape]
 
         console.log("\n\nSHAPE")
@@ -324,41 +317,41 @@ export default function WorkingMemory(props: any) {
     }
 
 
-
     function reset_all(){
-        setEndTest(false);
-        setTestStart(false);
-        setShowData(false);
-        setNextRound(false);
-        setDelay(false);
-        setTokensFound(false);
-        setIsPaused(false);
-        setFound(false);
-        setMissed(false);
-        setTestTime(0);
-        setFoundCount(0);
-        setRoundCount(3);
-        setCurrentAttempts(0);
-        setTotalAttempts(0);
-        setCurrentRound(1);
-        setDelayTime(0);
-        setFoundTimes([]);
-        setTokenPattern([]);
-        setBoxCount(3);
-        setCurrentMessage("");
-        setClockDisplay("");
-        setCurrentShape("");
-        setCountMessage("");
-        setCurrentPosition(0);
-        setPause(-1);
-        setAverageTime(0);
-        setLastTime("");
-        setMissedClicks(0);
-        setNotAttempted(0);
-        setOriginalTime(0);
-        setCountDown(false);
-        setCountTimer(-1);
-        setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+        setEndTest(false)
+        setTestStart(false)
+        setShowData(false)
+        setNextRound(false)
+        setDelay(false)
+        setTokensFound(false)
+        setIsPaused(false)
+        setFound(false)
+        setMissed(false)
+        setTestTime(0)
+        setFoundCount(0)
+        setRoundCount(3)
+        setCurrentAttempts(0)
+        setTotalAttempts(0)
+        setCurrentRound(1)
+        setDelayTime(0)
+        setFoundTimes([])
+        setTokenPattern([])
+        setBoxCount(3)
+        setCurrentMessage("")
+        setClockDisplay("")
+        setCurrentShape("")
+        setCountMessage("")
+        setCurrentPosition(0)
+        setPause(-1)
+        setAverageTime(0)
+        setLastTime("")
+        setMissedClicks(0)
+        setNotAttempted(0)
+        setOriginalTime(0)
+        setCountDown(false)
+        setCountTimer(-1)
+        setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])
+        setRestart(true)
     }
 
 
@@ -381,17 +374,16 @@ export default function WorkingMemory(props: any) {
                         <div className="h-full grid grid-flow-rows auto-rows-max mt-24 gap-y-12">
                             <div className="h-12 grid grid-flow_rows place-items-center grid-cols-2">
                                 <div>
-
-                                {CurrentMessage.length > 0 ? 
-                                    <div>
+                                    {CurrentMessage.length > 0 ? 
                                         <div>
-                                            {CurrentMessage}
+                                            <div>
+                                                {CurrentMessage}
+                                            </div>
+                                            <div>
+                                                Current Round: {CurrentRound}
+                                            </div>
                                         </div>
-                                        <div>
-                                            Current Round: {CurrentRound}
-                                        </div>
-                                    </div>
-                                : null}
+                                    : null}
                                 </div>
                                 <div>
                                     <div className="mt-8 ml-12">
@@ -428,15 +420,15 @@ export default function WorkingMemory(props: any) {
                                         </div>
                                     :   
                                         <div className="h-48 grid place-items-center text-[42px] text-white">
-                                                {Missed ? 
-                                                    <div>
-                                                        MISSED!
-                                                    </div>
-                                                :
-                                                    <div>
-                                                        Found in: {LastTime}
-                                                    </div>                         
-                                                }
+                                            {Missed ? 
+                                                <div>
+                                                    MISSED!
+                                                </div>
+                                            :
+                                                <div>
+                                                    Found in: {LastTime}
+                                                </div>                         
+                                            }
                                         </div>
                                     }
                                     <div className="h-48 grid grid-cols-5 ml-12">
@@ -456,11 +448,11 @@ export default function WorkingMemory(props: any) {
                                 </div>
                         </div>
                 :   CountTimer > 0 ? 
-                        <div className="mt-24 grid place-items-center text-4xl">
+                        <div className="mt-48 grid place-items-center text-4xl">
                             {CountTimer}
                         </div> 
                     :   
-                        <div className="mt-24 grid place-items-center text-4xl">
+                        <div className="mt-48 grid place-items-center text-4xl">
                             Go!
                         </div>   
             :
@@ -515,17 +507,20 @@ export default function WorkingMemory(props: any) {
                         Round 10: {FoundTimes[9]}
                     </div> 
                     <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
-                     Reset
-                </Button>      
+                        Reset
+                    </Button>      
                 </div>
             }
+            {CountTimer < 0 && TestStart ?
+                <div className="grid place-items-center ml-[30%]">
+                    <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_rounds} CurrentPosition={total_rounds - FoundTimes.length} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                </div>
+            : null}
         </div>
     )
 
 }
 
 
-function float(total_str: any) {
-    throw new Error('Function not implemented.');
-}
+
   

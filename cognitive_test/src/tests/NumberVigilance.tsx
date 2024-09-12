@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
+import ProgressBar from '@/helpers/ProgressBar';
 
 
 export default function NumberVigilance (props: any) {
@@ -26,6 +27,9 @@ export default function NumberVigilance (props: any) {
     const [IncorrectCount, setIncorrectCount] = React.useState(0)
     const [SectionAnswers, setSectionAnswers] = React.useState<any>([])
     const [AnswerArray, setAnswerArray] = React.useState<any>([])
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
 
     const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white", "bg-green-400 rounded px-10 h-12 text-white", "bg-red-400 rounded px-10 h-12 text-white"]
     const [CorrectClass, setCorrectClass] = React.useState(correct_class[0])
@@ -81,8 +85,12 @@ export default function NumberVigilance (props: any) {
             setAnswerArray(temp_arr)
             setSectionAnswers([])
         }
-              
-        ShownCount > shown_value ? setEndTest(true) : null
+        
+        ShownCount % 12 == 0 && ShownCount > 0 ? setShowCirclesGreen(true) : setShowCirclesGreen(false)
+        if(ShownCount >= shown_value){
+            setEndTest(true)
+            setShowCirclesGreen(true)
+        }
     }, [ShownCount])
 
     function set_interval(){
@@ -168,9 +176,13 @@ export default function NumberVigilance (props: any) {
         setCorrectClass(correct_class[0])
     }
 
+    function get_position(){
+        return ShownCount > 0 && ShownCount % 12 == 0 ? (ShownCount / 12) + 9 : ShownCount == 0 ? 0 : null 
+    }
+
 
   return(
-    <div>
+    <div className="grid grid-auto-rows">
         <div className="row">
             TEST #3: NUMBER VIGILANCE
         </div>
@@ -178,10 +190,9 @@ export default function NumberVigilance (props: any) {
             A number appears at the top of the screen. When the test is started, random numbers are shown a quick rate for one minute. Click the 'Okay' button when the two numbers match to test your reaction time.
         </div>
         {!EndTest ?
-            <div>
-                
+            <div>          
                 {!ClickedButton ? 
-                    <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={clicked_button}>
+                    <Button className="bg-blue-400 rounded px-10 h-12 text-white mt-12" onClick={clicked_button}>
                         Start
                     </Button>
                     :
@@ -211,29 +222,30 @@ export default function NumberVigilance (props: any) {
                                 </Button>
                             </div>
                         </div>
+                        <div className="ml-[30%]">
+                            <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={10} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                        </div>
                     </div> 
-                }
-                                                  
+                }                                                
             </div>
         :
-            <div className="grid grid-rows-1 mt-[200px] place-items-center">
+            <div className="grid grid-auto-rows mt-[150px] place-items-center gap-12">
                 <div className="mt-12"> 
                     <span>
                         The Test is Over
                     </span>
                 </div>    
-                <div className="mt-24 text-green-400">
-                    Correct Responses: {CorrectCount}
+                <div className="mt-12 text-green-400">
+                    Correct Responses: {CorrectCount == 0 && IncorrectCount == 0 ? "N/A" : CorrectCount}
                 </div> 
-                <div className="mt-12 text-red-400">
-                    Incorrect Responses: {IncorrectCount}
+                <div className="text-red-400">
+                    Incorrect Responses: {CorrectCount == 0 && IncorrectCount == 0 ? "N/A" : IncorrectCount}
                 </div> 
                 <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>
-        }
-
+        }   
     </div>
   )
 

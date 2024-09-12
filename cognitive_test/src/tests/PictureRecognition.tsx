@@ -30,6 +30,7 @@ export default function PictureRecognition (props: any) {
     const [ShowMessage, setShowMessage] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
 
@@ -352,6 +353,7 @@ export default function PictureRecognition (props: any) {
         setCurrentMessage("Try to memorize the next set of " + pictures_value + " pictures.")
         setShowMessage(false)
         setAnsweredStyle(answered_style[0])
+        setRestart(true)
     }
 
 
@@ -425,7 +427,7 @@ export default function PictureRecognition (props: any) {
             </div>
         }
         {ShowCompare ? 
-            <ProgressBar LengthValue={pictures_value} CurrentPosition={CompareDigits} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={pictures_value} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
         : null} 
     </div>
   )

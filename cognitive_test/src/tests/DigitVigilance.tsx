@@ -3,6 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import { v4 as uuidv4 } from 'uuid';
 import { analysis } from '@/helpers/Analysis';
+import ProgressBar from '@/helpers/ProgressBar';
 
 
 export default function DigitVigilance(props: any) {
@@ -15,13 +16,16 @@ export default function DigitVigilance(props: any) {
     const [CorrectMarks, setCorrectMarks] = React.useState(0)
     const [IncorrectMarks, setIncorrectMarks] = React.useState(0)
     const [PossibleFound, setPossibleFound] = React.useState(0)
+    const [CurrentPosition, setCurrentPosition] = React.useState(0)
     const [TotalTime, setTotalTime] = React.useState(0)
     const [EndDelay, setEndDelay] = React.useState(-1)
     const [ClockDisplay, setClockDisplay] = React.useState("0:00")
     const [NumberMap, setNumberMap] = React.useState<any[]>([])  
     const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     const number_style = ["ml-[10px] cursor-pointer", "ml-[10px] text-green-400", "ml-[10px] text-red-400"]
-
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
     const [TotalFound, setTotalFound] = React.useState<any[]>() 
     const [FoundArray, setFoundArray] = React.useState<any[]>([]) 
     
@@ -56,6 +60,12 @@ export default function DigitVigilance(props: any) {
                     temp_arr.push(FoundArray)
                     setTotalFound(temp_arr)
                     setFoundArray([])
+                }
+
+                // TotalTime % 20 == 0 && TotalTime > 0 ? setShowCirclesGreen(true) : setShowCirclesGreen(false)
+                if(TotalTime % 20 == 0){
+                     setShowCirclesGreen(true) 
+                     get_position()
                 }
 
                 if(TotalTime < time_value){
@@ -211,7 +221,10 @@ export default function DigitVigilance(props: any) {
         setTestStart(true)
         setShowData(true)
         create_list()
+        setRestart(true)
     }
+
+    
     function reset_all(){
         setEndTest(false);
         setTestStart(false);
@@ -226,10 +239,14 @@ export default function DigitVigilance(props: any) {
         setEndDelay(-1);
         setClockDisplay("0:00");
         setNumberMap([]);
+        setRestart(true)
+    }
 
-}
 
-
+    function get_position(){
+        console.log(TotalTime % 20 == 0 ? TotalTime/(time_value/9) + 11 : null)
+        return TotalTime % 20 == 0 ? setCurrentPosition(TotalTime/(time_value/9) + 11) : null
+    }
 
   return(
     <div className="h-full">
@@ -278,6 +295,9 @@ export default function DigitVigilance(props: any) {
                             )
                             })}
                         </div>
+                        <div className="grid place-items-center ml-72">
+                            <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={10} CurrentPosition={CurrentPosition} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                        </div>
                     </div>
             : null
         :
@@ -312,7 +332,8 @@ export default function DigitVigilance(props: any) {
                      Reset
                 </Button>
             </div>
-        }
+        } 
+         
     </div>
   )
 

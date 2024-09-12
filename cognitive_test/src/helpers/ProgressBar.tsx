@@ -3,15 +3,23 @@ import React, {useEffect} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import "../helpers/shapes.css"
 
+
+//Needs props Restart, setRestart, LengthValue, CurrentPosition, ShowCirclesGreen, setShowCirclesGreen, ShowCirclesRed, setShowCirclesRed
 export default function ProgressBar (props: any) {
 
     const [CircleArray, setCircleArray] = React.useState([])
     const [CircleMap, setCircleMap] = React.useState<any>([])
+    //const [Restart, setRestart] = React.useState<any>(false)
 
 
     useEffect(() => {
         CircleArray.length < 1 ? display_circles() : null  
     }, [CircleArray])
+
+    useEffect(() => {
+        props.Restart ? clear_circles() : null
+    }, [props.Restart])
+
 
     useEffect(() => {
         props.ShowCirclesGreen ? show_circles(true) : null  
@@ -22,23 +30,27 @@ export default function ProgressBar (props: any) {
     }, [props.ShowCirclesRed])
 
 
+    function clear_circles(){
+        setCircleArray([])
+        setCircleMap([])
+    }
 
     function display_circles(){
         var i = 0
         while(i < props.LengthValue){
             show_circles(false, true)
             i++
-        }
-        setCircleArray    
+        } 
+        props.setRestart(false)   
     }
 
 
     function create_circle(condition: any, start: any = null){
-        console.log(condition)
-        console.log(start)
+        // console.log(condition)
+        // console.log(start)
         var class_txt: any = null
         start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
-        console.log(class_txt)
+        //console.log(class_txt)
         return (
             <div className="w-8">
                 <div className={class_txt}>
@@ -50,8 +62,9 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
-        console.log(Math.floor(props.CurrentPosition/2))
-        !start ? shown_arr[props.LengthValue - Math.ceil(props.CurrentPosition/2) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
+        // console.log(props.LengthValue)
+        // console.log(props.CurrentPosition)
+        !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {
               obj: shown_arr[index],
@@ -65,12 +78,9 @@ export default function ProgressBar (props: any) {
     }
 
 
-
-
-
   return(
-    <div>
-        <div className="mt-[200px] sticky grid justify-center" style={{ gridTemplateColumns: 'repeat(20, 30px)' }}>
+    <div className="grid place-items-center">
+        <div className="mt-[200px] sticky grid place-items-center justify-center" style={{ gridTemplateColumns: 'repeat(20, 30px)' }}>
             {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
                     return(
                         <div key={result.key}>
