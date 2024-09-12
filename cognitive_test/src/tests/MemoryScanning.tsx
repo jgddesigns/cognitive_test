@@ -2,6 +2,7 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
+import ProgressBar from '@/helpers/ProgressBar';
 
 
 export default function MemoryScanning (props: any) {
@@ -15,15 +16,19 @@ export default function MemoryScanning (props: any) {
     const [CompareNumbers, setCompareNumbers] = React.useState(false)
     const [ShowButtons, setShowButtons] = React.useState(false)
     const [Answered, setAnswered] = React.useState(true) 
+    const answers = ["Answer was: Yes, number is original digit.", "Answer was: No, number isn't original digit.", "Missed!", "You answered: Yes", "You answered: No"]
     const [AnsweredString, setAnsweredString] = React.useState("")  
-    const [CompareDigits, setCompareDigits] = React.useState(-1)
+    const [CompareDigits, setCompareDigits] = React.useState(-2)
     const [DigitList, setDigitList] = React.useState([])
     const [StaticList, setStaticList] = React.useState([])
-    const [CurrentDigit, setCurrentDigit] = React.useState("4")
+    const [CurrentDigit, setCurrentDigit] = React.useState<any>("4")
     const [CompareList, setCompareList] = React.useState([])
     const [CompareString, setCompareString] = React.useState("")
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
 
@@ -60,6 +65,7 @@ export default function MemoryScanning (props: any) {
                 setDigits(Digits - 1)
 
                 if(Digits < 1){
+                    setCurrentDigit(null)
                     setCompareString("")
                     setShowPrompt(false)
                     setShowCompare(true)
@@ -72,7 +78,7 @@ export default function MemoryScanning (props: any) {
             return () => clearTimeout(timeoutId)
         }
 
-        while(CompareDigits >= 0 && (CompareMessage || CompareNumbers)){
+        while(CompareDigits >= -1 && (CompareMessage || CompareNumbers)){
 
             const timeoutId = setTimeout(() => {
 
@@ -86,7 +92,7 @@ export default function MemoryScanning (props: any) {
                     if(CompareDigits == 2){
                         create_string()
                     }
-                    if(CompareDigits == 0){
+                    if(CompareDigits == -1){
                         setCompareString("")
                         setCompareNumbers(true)
                         setCompareMessage(false)
@@ -99,26 +105,31 @@ export default function MemoryScanning (props: any) {
                     compare_arr = CompareList
 
                     if(CompareDigits % 2 != 0){
-                        setAnsweredString("Missed!")
+                        setAnswered(false)
+                        //setAnsweredString(answers[2])
+                        setAnsweredString(answers[2])
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
                         setCompareString(CompareList[CompareList.length-1])
-                        StaticList.includes(CompareList[CompareList.length-1]) ? setAnswer("Answer was: Yes, number is original digit.") : setAnswer("Answer was: No, number isn't original digit.")              
+                        StaticList.includes(CompareList[CompareList.length-1]) ? setAnswer(answers[0]) : setAnswer(answers[1])             
                         compare_arr.pop(0)
                         setCompareList(compare_arr)
                     }else{
+                        console.log(CompareString)
+                        console.log(Answered)
+                        !Answered ? setShowCirclesRed(true) : null
                         check_answer(CompareString)
                         setShowButtons(false)   
                     }
 
-                    if(CompareDigits == 0){
+                    if(CompareDigits == -1){
                         setShowCompare(false)
                         setCompareNumbers(false)
                         setEndTest(true)
                     }
                 }
             
-                CompareDigits == 0 ? setCompareDigits(36) :  setCompareDigits(CompareDigits - 1)
+                CompareDigits == -1 ? setCompareDigits(36) :  setCompareDigits(CompareDigits - 1)
 
             }, 2500 )
 
@@ -176,10 +187,8 @@ export default function MemoryScanning (props: any) {
 
         while(new_list.length < size){
             var num = Math.floor(Math.random() * ((list.length-1)+1)) + 1
-            console.log(num)
             new_list.push(list[num-1])
             list.splice(num-1, 1)
-            console.log(new_list)
         }
 
         setShowPrompt(true)
@@ -201,7 +210,7 @@ export default function MemoryScanning (props: any) {
 
 
     function yes_handler(){
-        setAnsweredString("You answered: Yes")
+        setAnsweredString(answers[3])
         setAnswered(true)
         answer_handler(true)
         setShowButtons(false)
@@ -210,7 +219,7 @@ export default function MemoryScanning (props: any) {
 
 
     function no_handler(){
-        setAnsweredString("You answered: No")
+        setAnsweredString(answers[4])
         setAnswered(true)
         answer_handler(false)
         setShowButtons(false)
@@ -225,7 +234,10 @@ export default function MemoryScanning (props: any) {
         if (answer && temp_arr.includes(CompareString) || (!answer && !temp_arr.includes(CompareString))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
-        }
+            setShowCirclesGreen(true) 
+        }else{
+            setShowCirclesRed(true)
+        } 
     }
 
 
@@ -236,8 +248,8 @@ export default function MemoryScanning (props: any) {
         setDigits(4)
         setTestStart(true)
         setShowPrompt(true)
+        setRestart(true)
     }
-
 
 
     function calculate_ratio(){
@@ -245,29 +257,17 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function check_answer(compare: any){
         console.log("\n\ncompare string")
         console.log(compare)
         var temp_arr: any = StaticList
 
-        if(temp_arr.includes(compare)){
-            setAnswer("Answer was: Yes, number is original digit.")          
-        }
-
-        if(!temp_arr.includes(compare)){
-            setAnswer("Answer was: No, number isn't original digit.")              
-        }
-
-        if(compare == ""){
-            setAnswer("")
-        }
-
+        compare == "" ? setAnswer("") : temp_arr.includes(compare) ? setAnswer(answers[0]) : !temp_arr.includes(compare)
+        compare == "" ? setAnsweredString("") : null
         setCompareString("")
     }
 
 
-    
     function reset_all(){
         setEndTest(false)
         setTestStart(false)
@@ -287,7 +287,9 @@ export default function MemoryScanning (props: any) {
         setCompareString("")
         setAnswer("")
         setDigits(-1)
+        setRestart(true)
     }
+
 
   return(
     <div>
@@ -299,48 +301,54 @@ export default function MemoryScanning (props: any) {
         </div>
         {!EndTest ?
             !TestStart ? 
-                <div className="mt-[200px]">              
+                <div className="mt-[150px]">              
                     <Button className="bg-blue-400 rounded px-10 h-12 text-white" onClick={start_handler}>
                         Start   
                     </Button>  
                 </div>
             :   ShowPrompt ?
-
-                    <div className="mt-[200px] grid grid-rows-2">
-                        <span>
-                           {CurrentDigit}
-                        </span>
-
-                    </div>    
+                <div className="mt-[150px] grid grid-rows-2 place-items-center text-2xl bold">
+                <span>
+                    {CurrentDigit}
+                </span>
+                </div> 
                 : ShowCompare ?
-
-                <div className="mt-[200px] grid grid-rows-2">
-                    <span>
-                       {CompareString}
-                    </span>
-                    {ShowButtons ?
-                        <div className="mt-12 grid grid-cols-2">
-                            <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
-                                Yes
-                            </Button>
-                            <Button className="bg-red-400 rounded px-10 h-12 text-white" onClick={no_handler}>
-                                No
-                            </Button>
-                        </div>
-                    :  CompareDigits >= 0 ?
-                        <div className="mt-12 grid grid-cols-2">
-                            <span className={AnsweredStyle}>
-                                {AnsweredString}
-                            </span>
-                            <span>
-                                {Answer}
-                            </span>
-                        </div>  
-                    : null}
-                </div>    
+                    <div className="mt-[150px] h-72 grid grid-rows-2 text-xl">
+                        {!ShowButtons && CompareString == "" ?
+                            <div className="mt-12 grid grid-rows-2 place-items-center gap-24">
+                                <span className={AnsweredStyle}>
+                                    {AnsweredString}
+                                </span>
+                                <span>
+                                    {Answer}
+                                </span>
+                            </div>  
+                        : 
+                            <span className="grid place-items-center text-2xl bold">
+                                {CompareString}
+                            </span> 
+                        }
+                        {ShowButtons ?
+                            <div className="grid grid-rows-2">
+                                <div className="grid place-items-center text-2xl bold">
+                                    <span>
+                                        {CurrentDigit}
+                                    </span>
+                                </div> 
+                                <div className="grid grid-cols-2 place-items-center gap-4">
+                                    <Button className="w-36 bg-green-400 rounded h-12 text-white" onClick={yes_handler}>
+                                        Yes
+                                    </Button>
+                                    <Button className="w-36 bg-red-400 rounded h-12 text-white" onClick={no_handler}>
+                                        No
+                                    </Button>
+                                </div>
+                            </div>
+                        :  null}
+                    </div>    
             : null
         :
-            <div className="grid grid-rows-3 mt-[200px]"> 
+            <div className="grid grid-rows-3 mt-[150px] place-items-center"> 
                 <span className="mt-12">
                     The Test is Over.
                 </span> 
@@ -352,6 +360,13 @@ export default function MemoryScanning (props: any) {
                 </Button>
             </div>
         }
+
+        {ShowCompare || EndTest ?
+            <div className="grid place-items-center ml-[5%]">
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_digits} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            </div>
+        : null}
+
     </div>
   )
 

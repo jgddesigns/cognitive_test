@@ -2,6 +2,7 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import {analysis} from "../helpers/Analysis"
+import ProgressBar from '@/helpers/ProgressBar';
 
 export default function ChoiceReaction (props: any) {
 
@@ -15,7 +16,9 @@ export default function ChoiceReaction (props: any) {
     const [IntervalTime, setIntervalTime] = React.useState(0)
     const [Answers, setAnswers] = React.useState<any>([])
     const [ShowPrompt, setShowPrompt] = React.useState(false)
-
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
     // const number_class = ["text-2xl bold", "text-2xl bold text-green-400"]
     // const [NumberClass, setNumberClass] = React.useState(number_class[0])
 
@@ -234,7 +237,7 @@ export default function ChoiceReaction (props: any) {
         create_prompts()
         setTestStart(true)
         setShowPrompt(true)
-
+        setRestart(true)
         console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
     }
 
@@ -255,8 +258,10 @@ export default function ChoiceReaction (props: any) {
         if(answer == Answer){
             temp_arr.push(1)
             setAnswerCount(AnswerCount + 1)
+            setShowCirclesGreen(true)
         }else{
             temp_arr.push(0)
+            setShowCirclesRed(true)
         }
         setAnswers(temp_arr)
         setShowPrompt(false)
@@ -281,7 +286,14 @@ export default function ChoiceReaction (props: any) {
         setAnswerCount(0);
         setIntervalTime(0);
         setShowPrompt(false);
-    };
+        setShowCirclesGreen(false)
+        setShowCirclesRed(false)
+        setRestart(true)
+    }
+
+    function get_position(){
+        return PromptList.length > 1 ? PromptList.length + 1 : 0
+    }
 
   return(
     <div>
@@ -312,7 +324,20 @@ export default function ChoiceReaction (props: any) {
                             </Button>
                         </div>
                     </div>    
-                : null  
+                : 
+                    <div className="mt-[200px] grid grid-rows-2">
+                        <span className="invisible">
+                            {CurrentPrompt}
+                        </span>
+                        <div className="mt-12 grid grid-cols-2">
+                            <Button className="bg-green-400 rounded px-10 h-12 text-white invisible" onClick={yes_handler}>
+                                Yes
+                            </Button>
+                            <Button className="bg-red-400 rounded px-10 h-12 text-white invisible" onClick={no_handler}>
+                                No
+                            </Button>
+                        </div>
+                    </div>   
         :
             <div className="grid grid-rows-3 mt-[200px]"> 
                 <span className="mt-12">
@@ -327,6 +352,9 @@ export default function ChoiceReaction (props: any) {
 
             </div>
         }
+
+
+        <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed} />
     </div>
   )
 
