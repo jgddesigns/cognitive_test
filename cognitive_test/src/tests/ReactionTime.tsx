@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
+import ProgressBar from '@/helpers/ProgressBar';
 
 
 export default function ReactionTime (props: any) {
@@ -16,11 +17,16 @@ export default function ReactionTime (props: any) {
     const [ResponseTime, setResponseTime] = React.useState(response_time)
     const [PressedCount, setPressedCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
-    const [AvgTime, setAvgTime] = React.useState(0)
+    const [AvgTime, setAvgTime] = React.useState("")
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
 
+    
     const proficiency = 14
     const interval = "sections"
     const time = 5
+    const test_length = 5
 
 
     
@@ -56,7 +62,7 @@ export default function ReactionTime (props: any) {
         while(ShowButton && ResponseTime >= 0){
             const timeoutId = setTimeout(() => {
                 count = ResponseTime
-                setResponseTime(ResponseTime+response_time)
+                setResponseTime(ResponseTime + response_time)
             }, response_time )
 
             return () => clearTimeout(timeoutId)
@@ -67,7 +73,7 @@ export default function ReactionTime (props: any) {
 
 
     useEffect(() => {
-        EndTest ? setAvgTime(ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length) : null
+        EndTest ? setAvgTime(get_avg_time()) : null
     }, [EndTest])
 
 
@@ -95,15 +101,16 @@ export default function ReactionTime (props: any) {
         setResponsesArray(arr)
         setShowButton(false)
         set_interval()
+        setShowCirclesGreen(true)
 
         //5 for test length, will be 25 during launch
-        ResponsesArray.length == 5 ? setEndTest(true) : null
+        ResponsesArray.length == test_length ? setEndTest(true) : null
     }
 
 
 
     function get_avg_time(){
-        return ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length
+        return (ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length).toString().slice(0,4)
     }
 
 
@@ -117,7 +124,14 @@ export default function ReactionTime (props: any) {
         setResponseTime(response_time)
         setPressedCount(0)
         setIntervalTime(0)
-        setAvgTime(0)
+        setAvgTime("")
+        setRestart(true)
+    }
+
+
+
+    function get_position(){
+        return ResponsesArray.length > 0 ? test_length - ResponsesArray.length : test_length - 1
     }
     
 
@@ -143,40 +157,49 @@ export default function ReactionTime (props: any) {
                     }
                 </div>        
                 {ShowButton ? 
-                    <div className="row mt-12"> 
+                    <div className="row mt-12 h-24"> 
                         <Button color="primary" className="bg-blue-400 rounded px-10 h-12 text-white" onClick={toggle_pressed}>
                             Okay
                         </Button>
                     </div>
-                : null}
+                :                     
+                    <div className="row mt-12 h-24"> 
+                    </div>
+                }
             </div>
         :
-            <div className="grid grid-rows-3 grid-cols-2 mt-[200px]">
-                <div className="mt-12"> 
-                    <span>
-                        The Test is Over.
-                    </span>
-                </div>
-                <div className="grid grid-rows-1 grid-cols-2 mt-12">
-                    <span>
-                        Average Time: 
-                    </span>
-                    {AvgTime > 0 ? 
+            <div className="grid grid-auto-rows mt-[150px] place-items-center">
+                <div className="grid grid-cols-2 gap-24">
+                    <div className="mt-12"> 
                         <span>
-                            {AvgTime}
-                        </span> 
-                    : null}
+                            The Test is Over.
+                        </span>
+                    </div>
+                    <div className="grid grid-rows-1 grid-cols-2 mt-12">
+                        <span>
+                            Average Time: 
+                        </span>
+                        {AvgTime != "0" ? 
+                            <span className="px-4">
+                                {AvgTime}
+                            </span> 
+                        : null}
+                    </div>
                 </div>
                 <div className="mt-12"> 
-                    <span>
-                        The Test is Over.
-                    </span>
                     <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
-                     Reset
+                        Reset
                     </Button>
                 </div>        
             </div>
         }
+        <div className="grid place-items-center ml-[40%] mt-24">
+            {ClickedButton ? 
+            <div>
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={5} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                </div>
+            : null} 
+        </div>
 
     </div>
   )
