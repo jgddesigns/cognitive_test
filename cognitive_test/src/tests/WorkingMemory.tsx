@@ -272,7 +272,7 @@ export default function WorkingMemory(props: any) {
   return(
     <div className="h-full">
         <div className="row">
-            TEST #8: SPATIAL WORKING MEMORY
+            SPATIAL WORKING MEMORY
         </div>
         <div className="row mt-12 text-sky-400">
             The test begins with three colored boxes shown on the screen. One box contains a token. When the token is found, it is added to the 'found list' above the play area. The token is then moved to another box for the user to find again. The rate at which this occurs is equal to the amount boxes shown on the screen.

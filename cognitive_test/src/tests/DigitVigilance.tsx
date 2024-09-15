@@ -62,7 +62,6 @@ export default function DigitVigilance(props: any) {
                     setFoundArray([])
                 }
 
-                // TotalTime % 20 == 0 && TotalTime > 0 ? setShowCirclesGreen(true) : setShowCirclesGreen(false)
                 if(TotalTime % 20 == 0){
                      setShowCirclesGreen(true) 
                      get_position()
@@ -111,7 +110,6 @@ export default function DigitVigilance(props: any) {
     }
 
 
-
     function create_number_map(){
         const number_map = Numbers.map((name:any, index:any) => {
             return {
@@ -121,7 +119,6 @@ export default function DigitVigilance(props: any) {
         })
         setNumberMap(number_map)
     }
-
 
 
     function check_number(value: any){
@@ -141,7 +138,6 @@ export default function DigitVigilance(props: any) {
         }
         setFoundArray(temp_arr)
     }
-
 
 
     function create_list(){
@@ -248,10 +244,11 @@ export default function DigitVigilance(props: any) {
         return TotalTime % 20 == 0 ? setCurrentPosition(TotalTime/(time_value/9) + 11) : null
     }
 
+
   return(
     <div className="h-full">
         <div className="row">
-            TEST #7: DIGIT VIGILANCE
+            DIGIT VIGILANCE
         </div>
         <div className="row mt-12 text-sky-400">
             Players are asked to find two specified numbers, which appear randomly within fifty rows of fifty single digits. The goal is to find as many of the numbers as possible.
@@ -295,7 +292,7 @@ export default function DigitVigilance(props: any) {
                             )
                             })}
                         </div>
-                        <div className="grid place-items-center ml-72">
+                        <div className="grid place-items-center">
                             <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={10} CurrentPosition={CurrentPosition} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                         </div>
                     </div>

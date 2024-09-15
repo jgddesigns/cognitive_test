@@ -224,7 +224,6 @@ export default function PictureRecognition (props: any) {
     }
 
 
-
     function no_handler(){
         setAnsweredString("You answered: No")
         setAnswered(true)
@@ -233,21 +232,17 @@ export default function PictureRecognition (props: any) {
     }
 
 
-
     function answer_handler(answer: any){
         setCurrentPicture("")
         var temp_arr: any = StaticArray
         if (answer && temp_arr.includes(CurrentPicture) || (!answer && !temp_arr.includes(CurrentPicture))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
-            // show_circles(true, true)
             setShowCirclesGreen(true)
         }else{
-            //show_circles(false, true)
             setShowCirclesRed(true)
         }
     }
-
 
 
     function start_handler(){
@@ -257,80 +252,28 @@ export default function PictureRecognition (props: any) {
         setShowMessage(true)
         setTestStart(true)
         setShowPrompt(true)
-        // display_circles()
     }
     
  
-
-    function display_circles(){
-        var i = 0
-        while(i < pictures_value){
-            //show_circles(false, true)
-            setShowCirclesRed(true)
-            i++
-        }
-        setCircleArray    
-    }
-
-
-
     function calculate_ratio(){
         return Math.round((AnswerCount/pictures_value)*100)
     }
 
 
-
     function check_answer(compare: any){
         var temp_arr: any = StaticArray
 
-        if(temp_arr.includes(compare)){
-            setAnswer("Answer was: Yes, picture is in original set.")          
-        }
-
-        if(!temp_arr.includes(compare)){
-            setAnswer("Answer was: No, picture isn't in original set.")              
-        }
-
+        temp_arr.includes(compare) ? setAnswer("Answer was: Yes, picture is in original set.") : setAnswer("Answer was: No, picture isn't in original set.")              
+ 
         if(compare == ""){
             setAnswer("")
             setAnsweredString("")
         }
 
-        // AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? show_circles(false, true) : null
-
         AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? setShowCirclesRed(true) : null  
 
         AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? console.log("missed") : null  
     }
-
-
-    // function create_circle(condition: any, start: any = null){
-    //     var class_txt: any = null
-    //     start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
-    //     console.log(class_txt)
-    //     return (
-    //         <div className="w-8">
-    //             <div className={class_txt}>
-    //             </div>
-    //         </div>
-    //     )
-    // }
-
-
-    // function show_circles(condition: any, start: any = null){
-    //     var shown_arr: any = CircleArray 
-    //     !start ? shown_arr[pictures_value - CompareDigits/2 - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
-    //     const circle_map = shown_arr.map((name:any, index:any) => {
-    //         return {
-    //           obj: shown_arr[index],
-    //           key: uuidv4()
-    //         }
-    //     })
-    //     console.log(pictures_value - CompareDigits/2 - 1)
-    //     setCircleArray(shown_arr)
-    //     setCircleMap(circle_map)
-    // }
-
 
 
     function reset_all(){
@@ -361,7 +304,7 @@ export default function PictureRecognition (props: any) {
   return(
     <div className="h-[96em]">
         <div className="row">
-            TEST #6: PICTURE RECOGNITION
+            PICTURE RECOGNITION
         </div>
         <div className="row mt-12 text-sky-400">
             {pictures_value} pictures are displayed, one every 1.5 seconds. The player is told to memorize each picture. Afterward, fourteen more pictures are shown. This time the picture set only contains some of the items from the original display. The player is asked if each displayed picture from the second set was in the original set.
@@ -427,7 +370,9 @@ export default function PictureRecognition (props: any) {
             </div>
         }
         {ShowCompare ? 
-            <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={pictures_value} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            <div className="grid place-items-center">
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={pictures_value} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            </div>
         : null} 
     </div>
   )

@@ -9,9 +9,8 @@ export default function ProgressBar (props: any) {
 
     const [CircleArray, setCircleArray] = React.useState([])
     const [CircleMap, setCircleMap] = React.useState<any>([])
-    //const [Restart, setRestart] = React.useState<any>(false)
 
-
+    
     useEffect(() => {
         CircleArray.length < 1 ? display_circles() : null  
     }, [CircleArray])
@@ -19,7 +18,6 @@ export default function ProgressBar (props: any) {
     useEffect(() => {
         props.Restart ? clear_circles() : null
     }, [props.Restart])
-
 
     useEffect(() => {
         props.ShowCirclesGreen ? show_circles(true) : null  
@@ -42,15 +40,13 @@ export default function ProgressBar (props: any) {
             i++
         } 
         props.setRestart(false)   
+        console.log(CircleMap)
     }
 
 
     function create_circle(condition: any, start: any = null){
-        // console.log(condition)
-        // console.log(start)
         var class_txt: any = null
         start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
-        //console.log(class_txt)
         return (
             <div className="w-8">
                 <div className={class_txt}>
@@ -62,8 +58,6 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
-        // console.log(props.LengthValue)
-        // console.log(props.CurrentPosition)
         !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {
@@ -79,8 +73,8 @@ export default function ProgressBar (props: any) {
 
 
   return(
-    <div className="grid place-items-center">
-        <div className="mt-[200px] sticky grid place-items-center justify-center" style={{ gridTemplateColumns: 'repeat(20, 30px)' }}>
+    <div>
+        <div className="mt-[200px] grid place-items-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
             {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
                     return(
                         <div key={result.key}>

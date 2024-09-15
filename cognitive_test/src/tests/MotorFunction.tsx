@@ -63,7 +63,7 @@ export default function WorkingMemory(props: any) {
 
 
     useEffect(() => {
-        //END GAME
+        
         FoundTimes.length >= total_rounds ? end_test() : null
 
         while(IsPaused && Pause > -1){
@@ -112,9 +112,9 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
-        while(TestTime >= 0 && TestStart && !EndTest){
+        while(TestTime >= 0 && ShowData){
             const timeoutId3 = setTimeout(() => {
-                if(CurrentRound <= 10){ 
+                if(CurrentRound <= total_rounds){ 
                     set_clock(TestTime + 1)
                     setTestTime(TestTime + 1)
                 }else{
@@ -124,10 +124,9 @@ export default function WorkingMemory(props: any) {
             }, 1000 )
     
             return () => clearTimeout(timeoutId3)
-
         }
 
-    }, [TestTime, TestStart, EndTest])
+    }, [ShowData])
 
 
     useEffect(() => {
@@ -358,7 +357,7 @@ export default function WorkingMemory(props: any) {
     return(
         <div className="h-full">
             <div className="row">
-                TEST #9: MOTOR FUNCTION
+                MOTOR FUNCTION
             </div>
             <div className="row mt-12 text-sky-400">
                 A series of individual shapes appear randomly on the screen. The goal is to click each shape as fast as possible.
@@ -512,7 +511,7 @@ export default function WorkingMemory(props: any) {
                 </div>
             }
             {CountTimer < 0 && TestStart ?
-                <div className="grid place-items-center ml-[30%]">
+                <div className="grid place-items-center">
                     <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_rounds} CurrentPosition={total_rounds - FoundTimes.length} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                 </div>
             : null}

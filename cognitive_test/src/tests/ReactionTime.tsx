@@ -138,7 +138,7 @@ export default function ReactionTime (props: any) {
   return(
     <div>
         <div className="row">
-            TEST #2: VISUAL REACTION TIME
+            VISUAL REACTION TIME
         </div>
         <div className="row mt-12 text-sky-400">
             A button appears at the center of the screen. The user is intended to press it as quickly as possible. There are twenty trials and the button appears randomly between .5 and 2.5 seconds.
@@ -193,10 +193,10 @@ export default function ReactionTime (props: any) {
                 </div>        
             </div>
         }
-        <div className="grid place-items-center ml-[40%] mt-24">
+        <div className="grid place-items-center mt-24">
             {ClickedButton ? 
             <div>
-                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={5} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={test_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                 </div>
             : null} 
         </div>

@@ -106,7 +106,6 @@ export default function MemoryScanning (props: any) {
 
                     if(CompareDigits % 2 != 0){
                         setAnswered(false)
-                        //setAnsweredString(answers[2])
                         setAnsweredString(answers[2])
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
@@ -140,7 +139,6 @@ export default function MemoryScanning (props: any) {
     }, [Digits, DigitList, CompareDigits, Answered])
 
 
-
     //partially from chat gpt
     function create_list(){
         var temp_list: any = []
@@ -162,7 +160,6 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function compare_list(list: any){
         var temp_list: any  = []
         temp_list = temp_list.concat(list)
@@ -181,7 +178,6 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function shuffle_list(list: any, size: any){
         var new_list: any = []
 
@@ -196,7 +192,6 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function create_string(){
         var str: any = ""
 
@@ -208,7 +203,6 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function yes_handler(){
         setAnsweredString(answers[3])
         setAnswered(true)
@@ -217,14 +211,12 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function no_handler(){
         setAnsweredString(answers[4])
         setAnswered(true)
         answer_handler(false)
         setShowButtons(false)
     }
-
 
 
     function answer_handler(answer: any){
@@ -239,7 +231,6 @@ export default function MemoryScanning (props: any) {
             setShowCirclesRed(true)
         } 
     }
-
 
 
     function start_handler(){
@@ -294,7 +285,7 @@ export default function MemoryScanning (props: any) {
   return(
     <div>
         <div className="row">
-            TEST #5: MEMORY SCANNING 
+            MEMORY SCANNING 
         </div>
         <div className="row mt-12 text-sky-400">
             Three digits are presented singly at the rate of one every 2.5 seconds for the player to remember. A series of {total_digits} digits is then presented. For each, the player must press Yes or No according to whether the digit is thought to be one of the three presented initially.
@@ -362,7 +353,7 @@ export default function MemoryScanning (props: any) {
         }
 
         {ShowCompare || EndTest ?
-            <div className="grid place-items-center ml-[5%]">
+            <div className="grid place-items-center">
                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_digits} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
             </div>
         : null}

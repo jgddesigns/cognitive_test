@@ -55,17 +55,20 @@ export default function NumberVigilance (props: any) {
     //section interval, every 3 digits, 6 sections total
     const time = 5
 
+
     useEffect(() => {
         if(ClickedButton){
             setPressedCount(PressedCount + 1)
         }   
     }, [ClickedButton])
 
+
     useEffect(() => {
         if(ShowNumber){
             setCurrentNumber(Math.ceil(Math.random() * 10))        
         }   
     }, [ShowNumber])
+
 
     useEffect(() => {
         var count = 1
@@ -81,12 +84,13 @@ export default function NumberVigilance (props: any) {
                     setCurrentNumber(Math.ceil(Math.random() * 10)) 
                 }
                 
-            }, 500 )
+            }, 500)
 
             return () => clearTimeout(timeoutId)
         }
 
     }, [IntervalTime])
+
 
     useEffect(() => {
         var temp_arr = []
@@ -104,10 +108,10 @@ export default function NumberVigilance (props: any) {
         }
     }, [ShownCount])
 
+
     useEffect(() => {
         var count = popup_time
         while(PopupTimer > 0){
-            console.log("asdf")
             const timeoutId = setTimeout(() => {
                 setPopupTimer(PopupTimer - .5)
                 count = PopupTimer
@@ -115,16 +119,17 @@ export default function NumberVigilance (props: any) {
                     setPopupText(popup_text[0])
                 }
                 
-            }, 500 )
+            }, 500)
 
             return () => clearTimeout(timeoutId)
         }
-
     }, [PopupTimer])
+
 
     function set_interval(){
         setIntervalTime(1)
     }
+
 
     function clicked_button(){
         console.log(analysis["attention"](interval, [[1,1,1,0,1,1,0,1,0,0,1,1,1,0,1,1,0,1,0,0,1,1,0,0], [0,0,1,1,1,1,0,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,0,1], [0,1,1,1,0,0,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,1,0], [1,0,0,1,0,1,0,1,0,1,1,0,0,1,0,1,0,1,0,1,0,0,1,1], [1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,1,0,1,0,1,1,1,1,0]], time, proficiency, true))
@@ -133,13 +138,11 @@ export default function NumberVigilance (props: any) {
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 
+
     function toggle_pressed(){
         TestNumber == CurrentNumber ? correct_press() : incorrect_press()                     
     }
 
-    function generate_number(){
-        return (Math.random() * 10)
-    }
 
     function correct_press(){
         var temp_arr = SectionAnswers
@@ -148,10 +151,6 @@ export default function NumberVigilance (props: any) {
         setSectionAnswers(temp_arr)
         setCorrectClass(correct_class[1])
         setCorrectCount(CorrectCount + 1)
-        console.log("=====================")
-        console.log("Correct press")
-        console.log(CorrectCount + 1)
-        console.log("=====================")
     }
 
 
@@ -162,11 +161,8 @@ export default function NumberVigilance (props: any) {
         setSectionAnswers(temp_arr)
         setCorrectClass(correct_class[2])
         setIncorrectCount(CorrectCount + 1)
-        console.log("=====================")
-        console.log("Incorrect press")
-        console.log(IncorrectCount + 1)
-        console.log("=====================")
     }
+
 
     function toggle_popup(condition: any){
         if(condition){
@@ -178,6 +174,7 @@ export default function NumberVigilance (props: any) {
         }
         setPopupTimer(popup_time)
     }
+
 
     function get_time(){
         var seconds = 0
@@ -217,6 +214,7 @@ export default function NumberVigilance (props: any) {
         setCorrectClass(correct_class[0])
     }
 
+
     function get_position(){
         return ShownCount > 0 && ShownCount % 12 == 0 ? (ShownCount / 12) + 9 : ShownCount == 0 ? 0 : null 
     }
@@ -225,7 +223,7 @@ export default function NumberVigilance (props: any) {
   return(
     <div className="grid grid-auto-rows">
         <div className="row">
-            TEST #3: NUMBER VIGILANCE
+            NUMBER VIGILANCE
         </div>
         <div className="row mt-12 text-sky-400">
             A number appears at the top of the screen. When the test is started, random numbers are shown a quick rate for one minute. Click the 'Okay' button when the two numbers match to test your reaction time.
@@ -266,7 +264,7 @@ export default function NumberVigilance (props: any) {
                                 </Button>
                             </div>
                         </div>
-                        <div className="ml-[30%]">
+                        <div>
                             <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={10} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                         </div>
                     </div> 

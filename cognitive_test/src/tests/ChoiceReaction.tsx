@@ -19,36 +19,9 @@ export default function ChoiceReaction (props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
-    // const number_class = ["text-2xl bold", "text-2xl bold text-green-400"]
-    // const [NumberClass, setNumberClass] = React.useState(number_class[0])
-
-    // const prompt_list = [
-    //     //TRUE
-    //     "New York is a city in the USA.", //1
-    //     "A dog is an animal.", //2
-    //     "Ice is frozen liquid.", //3
-    //     "7 + 3 = 10", //4
-    //     "Trees have leaves.", //5
-    //     "An apple is a fruit.", //6
-    //     "America has 50 states.", //7
-    //     "Soda is a drink.", //8
-    //     "Bread is a food.", //9
-    //     "Basketball is a sport.", //10
-
-    //     //FALSE
-    //     "Green is not a color.", //11
-    //     "Hamburgers aren't a food.", //12
-    //     "25 is a letter.", //13,
-    //     "America is a planet.", //14
-    //     "Star Wars is not a movie.", //15
-    //     "A person can live without water.", //16
-    //     "1 + 5 = 16", //17
-    //     "There are 180 days in a month.", //18
-    //     "Computers have always existed.", //19
-    //     "9 + 9 = 2" //20
-    // ]
 
     const prompt_list = [
+        //true questions
         "The sky is blue.",
         "Water freezes at 0 degrees Celsius.",
         "The sun provides energy for plants to grow.",
@@ -100,6 +73,7 @@ export default function ChoiceReaction (props: any) {
         "Butterflies undergo metamorphosis.",
         "Grass is green due to chlorophyll.",
         
+        //false questions
         "The sun rises in the west.",
         "Cows can fly.",
         "The capital of France is Rome.",
@@ -233,6 +207,7 @@ export default function ChoiceReaction (props: any) {
         setPromptList(temp_arr)
     }
 
+
     function start_handler(){
         create_prompts()
         setTestStart(true)
@@ -241,17 +216,20 @@ export default function ChoiceReaction (props: any) {
         console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
     }
 
+
     function yes_handler(){
         setYesCount(YesCount + 1)
         answer_handler(true)
         get_prompt()
     }
 
+
     function no_handler(){
         setNoCount(NoCount + 1)
         answer_handler(false)
         get_prompt()
     }
+
 
     function answer_handler(answer: any){
         var temp_arr = Answers
@@ -268,13 +246,16 @@ export default function ChoiceReaction (props: any) {
         set_interval()
     }
 
+
     function calculate_ratio(){
         return Math.round((AnswerCount/list_length)*100)
     }
 
+
     function set_interval(){
         setIntervalTime(Math.random() * 2.5)
     }
+
 
     function reset_all(){
         setEndTest(false);
@@ -291,14 +272,16 @@ export default function ChoiceReaction (props: any) {
         setRestart(true)
     }
 
+
     function get_position(){
         return PromptList.length > 1 ? PromptList.length + 1 : 0
     }
 
+
   return(
     <div>
         <div className="row">
-            TEST #4: CHOICE REACTION TIME
+            CHOICE REACTION TIME
         </div>
         <div className="row mt-12 text-sky-400">
             Either the word Yes or the word No is presented in the center of the screen. The user is presented a simple question and has to press the button corresponding to the answer as quickly as possible. There are {list_length} trials and the intertrial interval varies randomly between 1 and 2.5 seconds.
@@ -353,8 +336,11 @@ export default function ChoiceReaction (props: any) {
             </div>
         }
 
-
-        <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed} />
+        {TestStart ? 
+            <div className="grid place-items-center">
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            </div>
+        : null}
     </div>
   )
 
