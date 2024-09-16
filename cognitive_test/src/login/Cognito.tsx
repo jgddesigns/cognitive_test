@@ -4,7 +4,7 @@ import { CognitoIdentityProviderClient, SignUpCommand, InitiateAuthCommand, Auth
 import {CognitoUserPool, CognitoUser, AuthenticationDetails} from 'amazon-cognito-identity-js'
 
 //MOSTLY FROM CHAT GPT
-const client = new CognitoIdentityProviderClient({ region: test_credentials.REGION });
+const client = new CognitoIdentityProviderClient({ region: test_credentials.AWS_REGION });
 
 const login_message = ["User login successful!", "Invalid login credentials. Try again.", "Error authenticating user. Please contact support."]
 
