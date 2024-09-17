@@ -124,7 +124,7 @@ export default function WordRecognition (props: any) {
         var compare_arr = []
         var final_arr = []
 
-        for(var i=0; i<in_set; i++){
+        for(var i=0; i < in_set; i++){
             place = Math.floor(Math.random() * (temp_arr.length - 1))
             compare_arr.push(temp_arr[place])
             temp_arr.splice(place, 1)

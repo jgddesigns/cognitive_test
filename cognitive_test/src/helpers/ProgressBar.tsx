@@ -73,8 +73,8 @@ export default function ProgressBar (props: any) {
 
 
   return(
-    <div>
-        <div className="mt-[200px] grid place-items-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
+    <div className="grid place-items-center">
+        <div className="mt-[200px] sticky grid place-items-center justify-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
             {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
                     return(
                         <div key={result.key}>
