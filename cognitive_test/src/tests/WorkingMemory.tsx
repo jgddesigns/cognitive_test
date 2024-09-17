@@ -1,6 +1,7 @@
 'use client'
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
+import ProgressBar from '@/helpers/ProgressBar';
 
 
 export default function WorkingMemory(props: any) {
@@ -23,8 +24,11 @@ export default function WorkingMemory(props: any) {
     const [CurrentMessage, setCurrentMessage] = React.useState<any>("") 
     const [ClockDisplay, setClockDisplay] = React.useState<any>("") 
     const [AverageTime, setAverageTime] = React.useState(0)
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
 
-    const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 mt-12 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
+    const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32  bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
 
@@ -80,7 +84,7 @@ export default function WorkingMemory(props: any) {
     function build_next_round(){
         setTokensFound(false)
         setFoundCount(0)
-
+        setShowCirclesGreen(true)
         setRoundCount(RoundCount + 1)
         setBoxCount(BoxCount + 1)
         setNextRound(false)
@@ -269,6 +273,12 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    function get_position(){
+        console.log(RoundAttempts)
+        return RoundAttempts.length > 0 ? Math.abs(RoundAttempts.length - total_rounds) : 0
+    }
+
+
   return(
     <div className="h-full">
         <div className="row">
@@ -343,8 +353,10 @@ export default function WorkingMemory(props: any) {
                                     <div id="24" className={BoxGrid[24]} onClick={(event) => check_token(event)}/>
                                 </div>
                             </div>
+
+
                         :   
-                            <div className="grid place-items-center">
+                            <div className="grid place-items-center h-240">
                                 <div>
                                     Next Round:
                                 </div>
@@ -421,6 +433,11 @@ export default function WorkingMemory(props: any) {
                 </Button>
             </div>
         }
+        {TestStart && ShowData ?
+            <div className="mt-12 grid place-items-center">
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_rounds} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            </div>
+        : null}
     </div>
   )
 

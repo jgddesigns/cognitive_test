@@ -58,6 +58,7 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
+        console.log(shown_arr)
         !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {
@@ -73,8 +74,8 @@ export default function ProgressBar (props: any) {
 
 
   return(
-    <div className="grid place-items-center">
-        <div className="mt-[200px] sticky grid place-items-center justify-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
+    <div>
+        <div className="mt-[150px] grid place-items-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
             {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
                     return(
                         <div key={result.key}>
