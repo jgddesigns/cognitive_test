@@ -45,6 +45,39 @@ export default function MemoryScanning (props: any) {
 
     const total_digits = 18
 
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
+    const [TimeArray, setTimeArray]: any = React.useState([])
+
+
+    useEffect(() => {
+        var count
+        while(ShowPrompt && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowPrompt, ResponseTime])
+
+
+
+    useEffect(() => {
+        ShowButtons ? setResponseTime(response_time) : null
+    }, [ShowButtons])
+
+
+    function reset_time(){
+        var arr = TimeArray
+        arr.push(ResponseTime*.001) 
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+    }
+
 
     useEffect(() => {
         var temp_arr: any = DigitList
@@ -116,7 +149,10 @@ export default function MemoryScanning (props: any) {
                     }else{
                         console.log(CompareString)
                         console.log(Answered)
-                        !Answered ? setShowCirclesRed(true) : null
+                        if(!Answered){
+                            setShowCirclesRed(true)
+                            TimeArray.length < total_digits ? reset_time() : null
+                        }
                         check_answer(CompareString)
                         setShowButtons(false)   
                     }
@@ -137,6 +173,9 @@ export default function MemoryScanning (props: any) {
         }
 
     }, [Digits, DigitList, CompareDigits, Answered])
+
+
+
 
 
     //partially from chat gpt
@@ -230,6 +269,8 @@ export default function MemoryScanning (props: any) {
         }else{
             setShowCirclesRed(true)
         } 
+
+        TimeArray.length < total_digits ? reset_time() : null
     }
 
 
@@ -260,25 +301,26 @@ export default function MemoryScanning (props: any) {
 
 
     function reset_all(){
-        setEndTest(false)
-        setTestStart(false)
-        setAnswerCount(0)
-        setShowPrompt(false)
-        setShowCompare(false)
-        setCompareMessage(false)
-        setCompareNumbers(false)
-        setShowButtons(false)
-        setAnswered(true) 
-        setAnsweredString("")  
-        setCompareDigits(-1)
-        setDigitList([])
-        setStaticList([])
-        setCurrentDigit("4")
-        setCompareList([])
-        setCompareString("")
-        setAnswer("")
-        setDigits(-1)
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false)
+        // setTestStart(false)
+        // setAnswerCount(0)
+        // setShowPrompt(false)
+        // setShowCompare(false)
+        // setCompareMessage(false)
+        // setCompareNumbers(false)
+        // setShowButtons(false)
+        // setAnswered(true) 
+        // setAnsweredString("")  
+        // setCompareDigits(-1)
+        // setDigitList([])
+        // setStaticList([])
+        // setCurrentDigit("4")
+        // setCompareList([])
+        // setCompareString("")
+        // setAnswer("")
+        // setDigits(-1)
+        // setRestart(true)
     }
 
 

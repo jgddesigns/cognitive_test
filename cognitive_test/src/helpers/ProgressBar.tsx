@@ -9,19 +9,17 @@ export default function ProgressBar (props: any) {
 
     const [CircleArray, setCircleArray] = React.useState([])
     const [CircleMap, setCircleMap] = React.useState<any>([])
-
+    
     
     useEffect(() => {
-        CircleArray.length < 1 ? display_circles() : null  
+       CircleArray.length < 1 ? display_circles() : null  
     }, [CircleArray])
 
-    useEffect(() => {
-        props.Restart ? clear_circles() : null
-    }, [props.Restart])
 
     useEffect(() => {
         props.ShowCirclesGreen ? show_circles(true) : null  
     }, [props.ShowCirclesGreen])
+
 
     useEffect(() => {
         props.ShowCirclesRed ? show_circles(false) : null  
@@ -34,19 +32,20 @@ export default function ProgressBar (props: any) {
     }
 
     function display_circles(){
+        props.setRestart(false)
         console.log("asdf")
+        clear_circles()
         var i = 0
         while(i < props.LengthValue){
             show_circles(false, true)
             i++
-        } 
-        props.setRestart(false)   
+        }  
     }
 
 
     function create_circle(condition: any, start: any = null){
         var class_txt: any = null
-        start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
+        start ? class_txt = "progress_gray" : condition ? class_txt = "progress_green" : class_txt = "progress_red"
         return (
             <div className="w-8">
                 <div className={class_txt}>
@@ -58,6 +57,7 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
+        console.log(CircleArray)
         // console.log("position")
         // console.log(props.CurrentPosition)
         !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
@@ -76,17 +76,7 @@ export default function ProgressBar (props: any) {
 
   return(
     <div>
-        {/* <div className="mt-[150px] grid place-items-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
-            {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
-                    return(
-                        <div key={result.key}>
-                            {result.obj}
-                        </div>
-                    )
-                })
-            }
-        </div>  */}
-                <div className="" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
+        <div className="mt-[150px] grid place-items-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
             {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
                     return(
                         <div key={result.key}>

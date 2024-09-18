@@ -117,16 +117,17 @@ export default function ReactionTime (props: any) {
 
 
     function reset_all(){
-        setShowButton(false)
-        setResponsePressed(false) 
-        setResponsesArray([])
-        setClickedButton(false)
-        setEndTest(false)
-        setResponseTime(response_time)
-        setPressedCount(0)
-        setIntervalTime(0)
-        setAvgTime("")
-        setRestart(true)
+        props.setReset(true)
+        // setShowButton(false)
+        // setResponsePressed(false) 
+        // setResponsesArray([])
+        // setClickedButton(false)
+        // setEndTest(false)
+        // setResponseTime(response_time)
+        // setPressedCount(0)
+        // setIntervalTime(0)
+        // setAvgTime("")
+        // setRestart(true)
     }
 
 

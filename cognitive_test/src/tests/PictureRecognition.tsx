@@ -51,6 +51,39 @@ export default function PictureRecognition (props: any) {
     //section interval, every 3 digits, 6 sections total
     const time = 5
 
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
+    const [TimeArray, setTimeArray]: any = React.useState([])
+
+
+    useEffect(() => {
+        var count
+        while(ShowPrompt && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowPrompt, ResponseTime])
+
+
+
+    useEffect(() => {
+        ShowButtons ? setResponseTime(response_time) : null
+    }, [ShowButtons])
+
+
+    function reset_time(){
+        var arr = TimeArray
+        arr.push(ResponseTime*.001) 
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+    }
+
 
     useEffect(() => {
         var temp_arr: any = ShownArray
@@ -242,6 +275,8 @@ export default function PictureRecognition (props: any) {
         }else{
             setShowCirclesRed(true)
         }
+
+        TimeArray.length < pictures_value ? reset_time() : null
     }
 
 
@@ -270,33 +305,36 @@ export default function PictureRecognition (props: any) {
             setAnsweredString("")
         }
 
-        AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? setShowCirclesRed(true) : null  
+        if(AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered){     setShowCirclesRed(true)
+            TimeArray.length < pictures_value ? reset_time() : null 
+        } 
 
         AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? console.log("missed") : null  
     }
 
 
     function reset_all(){
-        setEndTest(false)
-        setTestStart(false)
-        setAnswerCount(0)
-        setShowPrompt(false)
-        setShowCompare(false)
-        setCompareMessage(false)
-        setShowButtons(false)
-        setAnswered(true) 
-        setAnsweredString("")  
-        setCompareDigits(-1)
-        setShownArray([])
-        setStaticArray([""])
-        setCurrentPicture("")
-        setCompareArray([])
-        setAnswer("")
-        setDigits(-1)
-        setCurrentMessage("Try to memorize the next set of " + pictures_value + " pictures.")
-        setShowMessage(false)
-        setAnsweredStyle(answered_style[0])
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false)
+        // setTestStart(false)
+        // setAnswerCount(0)
+        // setShowPrompt(false)
+        // setShowCompare(false)
+        // setCompareMessage(false)
+        // setShowButtons(false)
+        // setAnswered(true) 
+        // setAnsweredString("")  
+        // setCompareDigits(-1)
+        // setShownArray([])
+        // setStaticArray([""])
+        // setCurrentPicture("")
+        // setCompareArray([])
+        // setAnswer("")
+        // setDigits(-1)
+        // setCurrentMessage("Try to memorize the next set of " + pictures_value + " pictures.")
+        // setShowMessage(false)
+        // setAnsweredStyle(answered_style[0])
+        // setRestart(true)
     }
 
 

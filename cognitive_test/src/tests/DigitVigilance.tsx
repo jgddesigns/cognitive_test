@@ -222,20 +222,21 @@ export default function DigitVigilance(props: any) {
 
     
     function reset_all(){
-        setEndTest(false);
-        setTestStart(false);
-        setShowData(false);
-        setNumbers([]);
-        setSearchNumbers([]);
-        setFound(0);
-        setCorrectMarks(0);
-        setIncorrectMarks(0);
-        setPossibleFound(0);
-        setTotalTime(0);
-        setEndDelay(-1);
-        setClockDisplay("0:00");
-        setNumberMap([]);
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false);
+        // setTestStart(false);
+        // setShowData(false);
+        // setNumbers([]);
+        // setSearchNumbers([]);
+        // setFound(0);
+        // setCorrectMarks(0);
+        // setIncorrectMarks(0);
+        // setPossibleFound(0);
+        // setTotalTime(0);
+        // setEndDelay(-1);
+        // setClockDisplay("0:00");
+        // setNumberMap([]);
+        // setRestart(true)
     }
 
 
@@ -292,9 +293,9 @@ export default function DigitVigilance(props: any) {
                             )
                             })}
                         </div>
-                        {/* <div className="grid place-items-center"> */}
+                        <div className="grid place-items-center">
                             <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={10} CurrentPosition={CurrentPosition} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
-                        {/* </div> */}
+                        </div>
                     </div>
             : null
         :

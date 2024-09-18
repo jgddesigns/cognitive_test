@@ -42,6 +42,39 @@ export default function WordRecognition (props: any) {
     const test_length = 5
     
 
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
+    const [TimeArray, setTimeArray]: any = React.useState([])
+
+
+    useEffect(() => {
+        var count
+        while(ShowPrompt && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowPrompt, ResponseTime])
+
+
+
+    useEffect(() => {
+        ShowCompare ? setResponseTime(response_time) : null
+    }, [ShowCompare])
+
+
+    function reset_time(){
+        var arr = TimeArray
+        arr.push(ResponseTime*.001) 
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+    }
+
     useEffect(() => {
 
         var temp_arr: any = ShownArray
@@ -197,6 +230,7 @@ export default function WordRecognition (props: any) {
         }else{
             setShowCirclesRed(true)
         }
+        TimeArray.length < list_length ? reset_time() : null
     }
 
 
@@ -220,7 +254,10 @@ export default function WordRecognition (props: any) {
 
         temp_arr.includes(compare) ? setAnswer("Answer was: Yes, the word is in original set.") : setAnswer("Answer was: No, the word isn't in original set.")         
 
-        !Answered ? setShowCirclesRed(true) : null  
+        if(!Answered){
+            setShowCirclesRed(true)
+            TimeArray.length < list_length ? reset_time() : null
+        } 
 
         compare == "" ? setAnswer("") : null
         compare == "" ? setAnsweredString("") : null
@@ -228,26 +265,27 @@ export default function WordRecognition (props: any) {
 
 
     function reset_all(){
-        setEndTest(false)
-        setTestStart(false)
-        setAnswerCount(0)
-        setShowPrompt(false)
-        setShowCompare(false)
-        setCompareMessage(false)
-        setShowButtons(false)
-        setAnswered(true) 
-        setAnsweredString("")  
-        setCompareDigits(-1)
-        setShownArray([])
-        setStaticArray([""])
-        setCurrentWord("")
-        setCompareArray([])
-        setAnswer("")
-        setDigits(-1)
-        setCurrentMessage("Try to memorize the next set of 10 words.")
-        setShowMessage(false)
-        setAnsweredStyle(answered_style[0])
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false)
+        // setTestStart(false)
+        // setAnswerCount(0)
+        // setShowPrompt(false)
+        // setShowCompare(false)
+        // setCompareMessage(false)
+        // setShowButtons(false)
+        // setAnswered(true) 
+        // setAnsweredString("")  
+        // setCompareDigits(-1)
+        // setShownArray([])
+        // setStaticArray([""])
+        // setCurrentWord("")
+        // setCompareArray([])
+        // setAnswer("")
+        // setDigits(-1)
+        // setCurrentMessage("Try to memorize the next set of 10 words.")
+        // setShowMessage(false)
+        // setAnsweredStyle(answered_style[0])
+        // setRestart(true)
     }
 
 

@@ -196,7 +196,8 @@ function calculate_decisiveness(answers: any){
   return {"answers": answers, "total": total, "percentage": percentage, "rating": rating}
 }
 
-
+//not needed in:
+//digit vigilance, number vigilance
 function calculate_speed(answers: any, high: any, low: any, time: any = null){
   var score = 0
   var average = 0
