@@ -9,19 +9,17 @@ export default function ProgressBar (props: any) {
 
     const [CircleArray, setCircleArray] = React.useState([])
     const [CircleMap, setCircleMap] = React.useState<any>([])
-
+    
     
     useEffect(() => {
-        CircleArray.length < 1 ? display_circles() : null  
+       CircleArray.length < 1 ? display_circles() : null  
     }, [CircleArray])
 
-    useEffect(() => {
-        props.Restart ? clear_circles() : null
-    }, [props.Restart])
 
     useEffect(() => {
         props.ShowCirclesGreen ? show_circles(true) : null  
     }, [props.ShowCirclesGreen])
+
 
     useEffect(() => {
         props.ShowCirclesRed ? show_circles(false) : null  
@@ -34,13 +32,14 @@ export default function ProgressBar (props: any) {
     }
 
     function display_circles(){
+        props.setRestart(false)
+        console.log("asdf")
+        clear_circles()
         var i = 0
         while(i < props.LengthValue){
             show_circles(false, true)
             i++
-        } 
-        props.setRestart(false)   
-        console.log(CircleMap)
+        }  
     }
 
 
@@ -58,7 +57,9 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
-        console.log(shown_arr)
+        console.log(CircleArray)
+        // console.log("position")
+        // console.log(props.CurrentPosition)
         !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {

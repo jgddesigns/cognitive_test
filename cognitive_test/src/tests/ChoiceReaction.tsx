@@ -19,6 +19,10 @@ export default function ChoiceReaction (props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
+    const [TimeArray, setTimeArray]: any = React.useState([])
+
 
     const prompt_list = [
         //true questions
@@ -130,6 +134,7 @@ export default function ChoiceReaction (props: any) {
     const [PromptList, setPromptList] = React.useState([])
 
     const list_length = 20
+    const [Position, setPosition] = React.useState(list_length + 1)
 
 
     //proficient overall score
@@ -165,6 +170,20 @@ export default function ChoiceReaction (props: any) {
     }, [PromptList])
 
 
+    useEffect(() => {
+        var count
+        while(ShowPrompt && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowPrompt, ResponseTime])
+
+
     function create_prompts(){
         var temp_list = prompt_list
         var temp_arr: any = []
@@ -177,10 +196,16 @@ export default function ChoiceReaction (props: any) {
                 console.log(temp_list.length)
             }
         }
-
         setPromptList(temp_arr)
     }
 
+    function reset_time(){
+        var arr = TimeArray
+        arr.push(ResponseTime*.001) 
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+    }
 
     function get_prompt(){
         if(PromptList.length < 1){
@@ -203,6 +228,7 @@ export default function ChoiceReaction (props: any) {
         }
         spot < 50 ? setAnswer(true) : setAnswer(false)
         setCurrentPrompt(curr_prompt)
+        setPosition(Position - 1)
         temp_arr.splice(pos, 1)
         setPromptList(temp_arr)
     }
@@ -212,7 +238,6 @@ export default function ChoiceReaction (props: any) {
         create_prompts()
         setTestStart(true)
         setShowPrompt(true)
-        setRestart(true)
         console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
     }
 
@@ -240,10 +265,17 @@ export default function ChoiceReaction (props: any) {
         }else{
             temp_arr.push(0)
             setShowCirclesRed(true)
+            TimeArray.length < list_length ? reset_time() : null
         }
         setAnswers(temp_arr)
         setShowPrompt(false)
         set_interval()
+        var arr = TimeArray
+        arr.push(ResponseTime*.001) 
+        setResponseTime(response_time)
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
     }
 
 
@@ -258,24 +290,23 @@ export default function ChoiceReaction (props: any) {
 
 
     function reset_all(){
-        setEndTest(false);
-        setCurrentPrompt("");
-        setTestStart(false);
-        setAnswer(false);
-        setYesCount(0);
-        setNoCount(0);
-        setAnswerCount(0);
-        setIntervalTime(0);
-        setShowPrompt(false);
-        setShowCirclesGreen(false)
-        setShowCirclesRed(false)
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false)
+        // setCurrentPrompt("")
+        // setTestStart(false)
+        // setAnswer(false)
+        // setYesCount(0)
+        // setNoCount(0)
+        // setAnswerCount(0)
+        // setIntervalTime(0)
+        // setShowPrompt(false)
+        // setShowCirclesGreen(false)
+        // setShowCirclesRed(false)
+        // setRestart(true)
+        // setTimeArray([])
+        // setResponseTime(response_time)
     }
 
-
-    function get_position(){
-        return PromptList.length > 1 ? PromptList.length + 1 : 0
-    }
 
 
   return(
@@ -338,7 +369,7 @@ export default function ChoiceReaction (props: any) {
 
         {TestStart ? 
             <div className="grid place-items-center">
-                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={Position} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
             </div>
         : null}
     </div>

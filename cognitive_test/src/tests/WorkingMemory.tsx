@@ -35,6 +35,41 @@ export default function WorkingMemory(props: any) {
     const total_rounds = 10
 
 
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
+    const [TimeArray, setTimeArray]: any = React.useState([])
+
+
+    useEffect(() => {
+        var count
+        while(ShowData && !Delay && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowData, Delay, ResponseTime])
+
+
+
+    useEffect(() => {
+        Delay ? setResponseTime(response_time) : null
+    }, [Delay])
+
+
+    function reset_time(){
+        var arr = TimeArray
+        arr.push(ResponseTime*.001) 
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+    }
+
+
+
     useEffect(() => {
 
         if(CurrentRound <= total_rounds){
@@ -228,6 +263,7 @@ export default function WorkingMemory(props: any) {
                     }
 
                     build_next_round()
+                    TimeArray.length < total_rounds ? reset_time() : null
                     setDelay(true)
                 }
 
@@ -250,31 +286,32 @@ export default function WorkingMemory(props: any) {
 
 
     function reset_all(){
-        setEndTest(false)
-        setTestStart(false)
-        setShowData(false)
-        setNextRound(false)
-        setDelay(false)
-        setTokensFound(false)
-        setTestTime(0)
-        setFoundCount(0)
-        setRoundCount(3) 
-        setCurrentAttempts(0)
-        setTotalAttempts(0)
-        setCurrentRound(1)
-        setDelayTime(0)
-        setRoundAttempts([])
-        setTokenPattern([])
-        setBoxCount(3)
-        setCurrentMessage("") 
-        setClockDisplay("") 
-        setAverageTime(0)
-        setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
+        props.setReset(true)
+        // setEndTest(false)
+        // setTestStart(false)
+        // setShowData(false)
+        // setNextRound(false)
+        // setDelay(false)
+        // setTokensFound(false)
+        // setTestTime(0)
+        // setFoundCount(0)
+        // setRoundCount(3) 
+        // setCurrentAttempts(0)
+        // setTotalAttempts(0)
+        // setCurrentRound(1)
+        // setDelayTime(0)
+        // setRoundAttempts([])
+        // setTokenPattern([])
+        // setBoxCount(3)
+        // setCurrentMessage("") 
+        // setClockDisplay("") 
+        // setAverageTime(0)
+        // setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
     }
 
 
     function get_position(){
-        console.log(RoundAttempts)
+        //console.log(RoundAttempts)
         return RoundAttempts.length > 0 ? Math.abs(RoundAttempts.length - total_rounds) : 0
     }
 

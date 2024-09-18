@@ -32,7 +32,7 @@
 
 .trapezoid {
     clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
-  }
+}
 
 .progress_gray{
     width: 10px;

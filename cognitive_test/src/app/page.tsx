@@ -1,7 +1,7 @@
 'use client'
 import React, {useEffect} from 'react'
 import './globals.css'
-import VerbalLearning from "../tests/VerbalLearning"
+//import VerbalLearning from "../tests/VerbalLearning"
 import ReactionTime from "../tests/ReactionTime"
 import NumberVigilance from '@/tests/NumberVigilance'
 import ChoiceReaction from '@/tests/ChoiceReaction'
@@ -70,19 +70,29 @@ export default function Home() {
   const [TestID, setTestID] = React.useState(0)
   const [TestTitle, setTestTitle] = React.useState("")
   const [PopoverMessage, setPopoverMessage] = React.useState("")
+  const [Reset, setReset] = React.useState(false)
+  const [StateKey, setStateKey] = React.useState(0)
 
 
   useEffect(() => {
     !CookiesChecked ? check_cookies() : null
   }, [CookiesChecked])
 
+
   useEffect(() => {
     LoggedIn && Cookies && Username && Password  ? toggle_login(true) : null
   }, [Cookies, Username, Password])
 
+
   useEffect(() => {
     LoggedIn ? link_handler(4) : link_handler(0)
   }, [LoggedIn])
+
+
+  useEffect(() => {
+    Reset ? reset_handler() : null
+  }, [Reset])
+
 
   useEffect(() => {
     while(Logout && LogoutTimer >= 0){
@@ -94,6 +104,14 @@ export default function Home() {
         return () => clearTimeout(timeoutId)
     }
   }, [Logout, LogoutTimer])
+
+
+  function reset_handler(){
+    console.log("reset handler")
+    setStateKey(StateKey + 1)
+    setReset(false)
+  }
+
 
   function check_cookies(){
     console.log("cookies")
@@ -264,43 +282,43 @@ export default function Home() {
           : null}
 
           {ShowChoiceReaction ?
-            <ChoiceReaction/>
+            <ChoiceReaction setReset={setReset} key={StateKey}/>
           : null}
 
           {ShowDigitVigilance ?
-            <DigitVigilance/>
+            <DigitVigilance setReset={setReset} key={StateKey}/>
           : null}
 
           {ShowMemoryScanning ?
-            <MemoryScanning/>
+            <MemoryScanning setReset={setReset} key={StateKey}/>
           : null}
         
           {ShowMotorFunction ?
-            <MotorFunction/>
+            <MotorFunction setReset={setReset} key={StateKey}/>
           : null}
 
           {ShowNumberVigilance ?
-            <NumberVigilance/>        
+            <NumberVigilance setReset={setReset} key={StateKey}/>        
           :null}
 
           {ShowPictureRecognition ?
-            <PictureRecognition/>        
+            <PictureRecognition setReset={setReset} key={StateKey}/>        
           :null}
 
           {ShowReactionTime ?
-            <ReactionTime/>        
+            <ReactionTime setReset={setReset} key={StateKey}/>        
           :null}
 
-          {ShowVerbalLearning ?
+          {/* {ShowVerbalLearning ?
             <VerbalLearning/>        
-          :null}
+          :null} */}
 
           {ShowWordRecognition ?
-            <WordRecognition/>        
+            <WordRecognition setReset={setReset} key={StateKey}/>        
           :null}
 
           {ShowWorkingMemory ?
-            <WorkingMemory/>        
+            <WorkingMemory setReset={setReset} key={StateKey}/>        
           :null}
 
 
