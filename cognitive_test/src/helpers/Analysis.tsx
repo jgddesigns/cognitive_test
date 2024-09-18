@@ -47,6 +47,14 @@ function get_average(answers: any){
   return total_avg
 }
 
+function duplicate_answers(answers: any){
+  var temp_arr = []
+  for(var i =0; i<answers.length; i++){
+    temp_arr.push(answers[i])
+  }
+  return temp_arr
+
+}
 //used to indicate the consistency of a user's answers. an average is established based on all responses given. then the responses are divided into intervals. interval averages are then calculated and compared against the overall average. the more interval averages that are greater or equal to the overall average, the stronger the attention rating. 
 function calculate_attention(interval: any, answers: any, time: any, proficiency: any, greater=true){
   var periods: any = answers.length/time
@@ -62,6 +70,7 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
   var average: any = 0
   var poor: any = 0
   var rating: any = null
+  var original_answers: any = duplicate_answers(answers)
   // var interval_arr: any = []
   !Array.isArray(answers[0]) ? answers = create_answers(answers, time) : null
   var interval_arr: any = answers
@@ -167,12 +176,14 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
     rating = "poor"
   }
 
+  console.log(calculate_decisiveness(original_answers))
 
   return {"interval": interval, "answers": temp_answers, "sections": interval_arr, "time": time, "periods": periods, "interval_avg": interval_avg, "total": total, "deviation": deviation, "bonus_range": bonus_range, "bonus": bonus, "penalty_range": penalty_range, "penalty": penalty, "score": score, "rating": rating, "attributes": {"strong": strong, "average": average, "poor": poor}, "proficiency": proficiency}
 }
 
 
 function calculate_decisiveness(answers: any){
+  console.log(answers)
   var high = .9
   var low = .7
   var total = 0 
@@ -198,30 +209,48 @@ function calculate_decisiveness(answers: any){
 
 //not needed in:
 //digit vigilance, number vigilance
-function calculate_speed(answers: any, high: any, low: any, time: any = null){
+//
+//times: array of answer times. length is total number of test questions/sections.
+//measure: the measuring point of if an answer is fast or slow
+//sections: is there a running clock or an answer based timer?
+function calculate_speed(times: any, measure: any, sections=true){
   var score = 0
-  var average = 0
+  var proficiency = Math.round(times.length * .7)
+  var bonus_range = Math.round(proficiency * 1.2)
+  var bonus = false
+  var penalty_range = Math.round(proficiency * .5)
+  var penalty = false
+  var low = Math.round(times.length * .5)
+  var high = Math.round(times.length * .9)
   var rating = "poor"
 
-  for(let i=0; i<answers.length; i++){
-    score = score + answers[i]
-  }
-
-  if(time){
-    average = Math.round((answers.length/time) * 100) / 100
+  if(sections){
+    for(var i=0; i<times.length; i++){
+      times[i] <= measure ? score++ : null
+    }
   }else{
-    average = Math.round((score/answers.length) * 100) / 100
+    score = times
   }
 
-  if(average <= low){
+  if(score >= bonus_range){
+    score++
+    bonus = true
+  }
+
+  if(score <= penalty_range){
+    score--
+    penalty = true
+  }
+
+  if(score >= high){
     rating = "strong"
   }
 
-  if(average >= low && average < high){
+  if(score >= low && score < high){
     rating = "average"
   } 
 
-  return {"answers": answers, "high": high, "low": low, "score": score, "average": average, "rating": rating}
+  return {"answers": times, "bonus": bonus, "penalty": penalty, "high": high, "low": low, "score": score, "proficiency": proficiency, "rating": rating}
 }
 
 export const analysis = {"create_answers": create_answers, "attention": calculate_attention, "decisiveness": calculate_decisiveness, "speed": calculate_speed}

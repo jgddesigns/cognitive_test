@@ -15,6 +15,7 @@ export default function ChoiceReaction (props: any) {
     const [AnswerCount, setAnswerCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Answers2, setAnswers2] = React.useState<any>([])
     const [ShowPrompt, setShowPrompt] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
@@ -169,6 +170,12 @@ export default function ChoiceReaction (props: any) {
 
     }, [PromptList])
 
+    // useEffect(() => {
+
+    //     Answers2.length > 0 ?        console.log(analysis["decisiveness"](Answers2)) : null
+
+    // }, [Answers2])
+
 
     useEffect(() => {
         var count
@@ -205,14 +212,18 @@ export default function ChoiceReaction (props: any) {
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
+        setResponseTime(response_time)
     }
 
     function get_prompt(){
         if(PromptList.length < 1){
             setEndTest(true)
-            // console.log(analysis["attention"]("sections", Answers, time, proficiency))
             console.log(analysis["attention"](interval, Answers, time, proficiency))
-            console.log(analysis["decisiveness"](Answers))
+            console.log(analysis["speed"](TimeArray, .5))
+            // console.log("d a")
+            // console.log(attention_answers)
+            // console.log(Answers2)
+            // console.log(analysis["decisiveness"](decisive_answers))
         } 
         PromptList.length < 1 && ShowPrompt ? setEndTest(true) : null
         var temp_arr = PromptList
@@ -238,7 +249,7 @@ export default function ChoiceReaction (props: any) {
         create_prompts()
         setTestStart(true)
         setShowPrompt(true)
-        console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
+        console.log(analysis["decisiveness"]([1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1]))
     }
 
 
@@ -258,6 +269,7 @@ export default function ChoiceReaction (props: any) {
 
     function answer_handler(answer: any){
         var temp_arr = Answers
+        var temp_arr2 = Answers2
         if(answer == Answer){
             temp_arr.push(1)
             setAnswerCount(AnswerCount + 1)
@@ -265,17 +277,13 @@ export default function ChoiceReaction (props: any) {
         }else{
             temp_arr.push(0)
             setShowCirclesRed(true)
-            TimeArray.length < list_length ? reset_time() : null
+            //TimeArray.length < list_length ? reset_time() : null
         }
         setAnswers(temp_arr)
+        setAnswers2(temp_arr2)
         setShowPrompt(false)
         set_interval()
-        var arr = TimeArray
-        arr.push(ResponseTime*.001) 
-        setResponseTime(response_time)
-        console.log("time")
-        console.log(arr)
-        setTimeArray(arr)
+        TimeArray.length < list_length ? reset_time() : null
     }
 
 

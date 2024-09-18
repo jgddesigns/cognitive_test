@@ -112,7 +112,7 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
-        while(TestTime >= 0 && ShowData){
+        while(TestTime >= 0 && ShowData && !EndTest){
             const timeoutId3 = setTimeout(() => {
                 if(CurrentRound <= total_rounds){ 
                     set_clock(TestTime + 1)
@@ -126,7 +126,7 @@ export default function WorkingMemory(props: any) {
             return () => clearTimeout(timeoutId3)
         }
 
-    }, [ShowData])
+    }, [TestTime, ShowData, EndTest])
 
 
     useEffect(() => {
