@@ -20,6 +20,7 @@ export default function ChoiceReaction (props: any) {
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
 
+
     const prompt_list = [
         //true questions
         "The sky is blue.",
@@ -130,6 +131,7 @@ export default function ChoiceReaction (props: any) {
     const [PromptList, setPromptList] = React.useState([])
 
     const list_length = 20
+    const [Position, setPosition] = React.useState(list_length + 1)
 
 
     //proficient overall score
@@ -177,7 +179,7 @@ export default function ChoiceReaction (props: any) {
                 console.log(temp_list.length)
             }
         }
-
+        
         setPromptList(temp_arr)
     }
 
@@ -203,6 +205,7 @@ export default function ChoiceReaction (props: any) {
         }
         spot < 50 ? setAnswer(true) : setAnswer(false)
         setCurrentPrompt(curr_prompt)
+        setPosition(Position - 1)
         temp_arr.splice(pos, 1)
         setPromptList(temp_arr)
     }
@@ -258,24 +261,20 @@ export default function ChoiceReaction (props: any) {
 
 
     function reset_all(){
-        setEndTest(false);
-        setCurrentPrompt("");
-        setTestStart(false);
-        setAnswer(false);
-        setYesCount(0);
-        setNoCount(0);
-        setAnswerCount(0);
-        setIntervalTime(0);
-        setShowPrompt(false);
+        setEndTest(false)
+        setCurrentPrompt("")
+        setTestStart(false)
+        setAnswer(false)
+        setYesCount(0)
+        setNoCount(0)
+        setAnswerCount(0)
+        setIntervalTime(0)
+        setShowPrompt(false)
         setShowCirclesGreen(false)
         setShowCirclesRed(false)
         setRestart(true)
     }
 
-
-    function get_position(){
-        return PromptList.length > 1 ? PromptList.length + 1 : 0
-    }
 
 
   return(
@@ -338,7 +337,7 @@ export default function ChoiceReaction (props: any) {
 
         {TestStart ? 
             <div className="grid place-items-center">
-                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={Position} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
             </div>
         : null}
     </div>

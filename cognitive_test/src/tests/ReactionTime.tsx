@@ -23,7 +23,7 @@ export default function ReactionTime (props: any) {
     const [Restart, setRestart] = React.useState(false)
 
     
-    const proficiency = 14
+    const proficiency = 22 * .5 * .7
     const interval = "sections"
     const time = 5
     const test_length = 5
@@ -87,7 +87,8 @@ export default function ReactionTime (props: any) {
 
 
     function clicked_button(){
-        console.log(analysis["attention"](interval, [[.3,1.1,.25,.4], [.44,.53,.6,.8], [.5,.3,.75,.45], [.77,.84,.43,.43], [.17,.54,.68,.9]], time, proficiency, true))
+        // console.log(analysis["attention"](interval, [[.3,1.1,.25,.4], [.44,.53,.6,.8], [.5,.3,.75,.45], [.77,.84,.43,.43], [.17,.54,.68,.9, .8, .7]], time, proficiency, true))
+        console.log(analysis["attention"](interval, [.3,1.1,.25,.4,.44,.53,.6,.8,.5,.3,.75,.45,.77,.84,.43,.43,.17,.54,.68,.9, .8, .7], time, proficiency, false))
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 

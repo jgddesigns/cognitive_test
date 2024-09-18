@@ -34,13 +34,13 @@ export default function ProgressBar (props: any) {
     }
 
     function display_circles(){
+        console.log("asdf")
         var i = 0
         while(i < props.LengthValue){
             show_circles(false, true)
             i++
         } 
         props.setRestart(false)   
-        console.log(CircleMap)
     }
 
 
@@ -58,7 +58,8 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
-        console.log(shown_arr)
+        // console.log("position")
+        // console.log(props.CurrentPosition)
         !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {
@@ -75,7 +76,17 @@ export default function ProgressBar (props: any) {
 
   return(
     <div>
-        <div className="mt-[150px] grid place-items-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
+        {/* <div className="mt-[150px] grid place-items-center" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
+            {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
+                    return(
+                        <div key={result.key}>
+                            {result.obj}
+                        </div>
+                    )
+                })
+            }
+        </div>  */}
+                <div className="" style={{ gridTemplateColumns: 'repeat(' + props.LengthValue + ', 30px)' }}>
             {CircleMap.map((result: { key: React.Key | null | undefined; obj: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) =>  {         
                     return(
                         <div key={result.key}>

@@ -1,8 +1,9 @@
 'use client'
-import React, {useEffect} from 'react';
+import React, {useEffect} from 'react'
 import {Button} from "@nextui-org/react"
 import {words} from "../helpers/words"
-import ProgressBar from '@/helpers/ProgressBar';
+import { analysis } from '@/helpers/Analysis'
+import ProgressBar from '@/helpers/ProgressBar'
 
 export default function WordRecognition (props: any) {
 
@@ -29,10 +30,16 @@ export default function WordRecognition (props: any) {
 
     const answered_style = ["text-red-400", "text-green-400"]
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
+    
     const list_length = 10
     const [CurrentMessage, setCurrentMessage] = React.useState("Try to memorize the next set of " + list_length + " words.")
     const start_digits = 24 
     const base_iteration = 21
+
+    const proficiency = Math.round(list_length * .7)
+    const interval = "sections"
+    const time = 3
+    const test_length = 5
     
 
     useEffect(() => {
@@ -194,6 +201,7 @@ export default function WordRecognition (props: any) {
 
 
     function start_handler(){
+        console.log(analysis["attention"](interval, [[3, 2, 4], [5, 2, 7], [2, 3, 6, 4]], time, proficiency, true))
         build_array()
         setDigits(start_digits)
         setShowMessage(true)

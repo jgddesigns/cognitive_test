@@ -292,9 +292,9 @@ export default function DigitVigilance(props: any) {
                             )
                             })}
                         </div>
-                        <div className="grid place-items-center">
+                        {/* <div className="grid place-items-center"> */}
                             <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={10} CurrentPosition={CurrentPosition} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
-                        </div>
+                        {/* </div> */}
                     </div>
             : null
         :
