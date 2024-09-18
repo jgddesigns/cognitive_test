@@ -46,7 +46,7 @@ export default function ProgressBar (props: any) {
 
     function create_circle(condition: any, start: any = null){
         var class_txt: any = null
-        start ? class_txt = "circle bg-gray-400 w-4 h-4" : condition ? class_txt = "circle bg-green-400 w-4 h-4" : class_txt = "circle bg-red-400 w-4 h-4"
+        start ? class_txt = "progress_gray" : condition ? class_txt = "progress_green" : class_txt = "progress_red"
         return (
             <div className="w-8">
                 <div className={class_txt}>
