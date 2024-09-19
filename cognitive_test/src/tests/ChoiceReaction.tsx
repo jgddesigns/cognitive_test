@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import {analysis} from "../helpers/Analysis"
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 export default function ChoiceReaction (props: any) {
 
@@ -22,7 +23,10 @@ export default function ChoiceReaction (props: any) {
     const [Restart, setRestart] = React.useState(false)
     const response_time = 100
     const [ResponseTime, setResponseTime] = React.useState(response_time)
-    const [TimeArray, setTimeArray]: any = React.useState([])
+    const [TimeArray, setTimeArray] = React.useState<any>([])
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
 
 
     const prompt_list = [
@@ -170,6 +174,13 @@ export default function ChoiceReaction (props: any) {
 
     }, [PromptList])
 
+
+    useEffect(() => {
+
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+
+    }, [AttentionData])
+
     // useEffect(() => {
 
     //     Answers2.length > 0 ?        console.log(analysis["decisiveness"](Answers2)) : null
@@ -218,8 +229,8 @@ export default function ChoiceReaction (props: any) {
     function get_prompt(){
         if(PromptList.length < 1){
             setEndTest(true)
-            console.log(analysis["attention"](interval, Answers, time, proficiency))
-            console.log(analysis["speed"](TimeArray, .5))
+            setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+            setReactionData(analysis["speed"](TimeArray, .5))
             // console.log("d a")
             // console.log(attention_answers)
             // console.log(Answers2)
@@ -361,14 +372,17 @@ export default function ChoiceReaction (props: any) {
                         </div>
                     </div>   
         :
-            <div className="grid grid-rows-3 mt-[200px]"> 
+            <div className="grid grid-auto-rows mt-[150px]"> 
                 <span className="mt-12">
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
+                <div>
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
+                </div>
+                <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
 

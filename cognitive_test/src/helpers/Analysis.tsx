@@ -3,7 +3,6 @@ import { arrayBuffer } from "stream/consumers"
 var ratings = {attention: "", decisiveness: "", speed: ""}
 var stats = {time_interval: "", interval_answers: [], interval_average: ""} 
 
-
 function create_answers(answers: any, time: any){
   var temp_answers: any = []
   var temp_arr: any = []
@@ -53,7 +52,7 @@ function duplicate_answers(answers: any){
     temp_arr.push(answers[i])
   }
   return temp_arr
-
+  
 }
 //used to indicate the consistency of a user's answers. an average is established based on all responses given. then the responses are divided into intervals. interval averages are then calculated and compared against the overall average. the more interval averages that are greater or equal to the overall average, the stronger the attention rating. 
 function calculate_attention(interval: any, answers: any, time: any, proficiency: any, greater=true){
@@ -176,9 +175,7 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
     rating = "poor"
   }
 
-  console.log(calculate_decisiveness(original_answers))
-
-  return {"interval": interval, "answers": temp_answers, "sections": interval_arr, "time": time, "periods": periods, "interval_avg": interval_avg, "total": total, "deviation": deviation, "bonus_range": bonus_range, "bonus": bonus, "penalty_range": penalty_range, "penalty": penalty, "score": score, "rating": rating, "attributes": {"strong": strong, "average": average, "poor": poor}, "proficiency": proficiency}
+  return {"interval": interval, "answers": temp_answers, "sections": interval_arr, "time": time, "periods": periods, "interval_avg": interval_avg, "total": total, "deviation": deviation, "bonus_range": bonus_range, "bonus": bonus, "penalty_range": penalty_range, "penalty": penalty, "score": score, "rating": rating, "attributes": {"strong": strong, "average": average, "poor": poor}, "proficiency": proficiency, "original_answers": original_answers}
 }
 
 
