@@ -7,7 +7,7 @@ import "../helpers/shapes.css"
 //Needs props Restart, setRestart, LengthValue, CurrentPosition, ShowCirclesGreen, setShowCirclesGreen, ShowCirclesRed, setShowCirclesRed
 export default function ShowAnalysis (props: any) {
 
-    const classes = ["", "mt-12 underline text-lg text-gray-400 cursor-pointer", "mt-12 underline text-lg text-blue-400 cursor-pointer"] 
+    const classes = ["", "mt-12 underline text-2xl text-blue-400 cursor-pointer", "mt-12 underline text-2xl font-bold text-gray-400 cursor-pointer"] 
 
     const [ClickAttentionClass, setClickAttentionClass] = React.useState(classes[1])
     const [ClickDecisionClass, setClickDecisionClass] = React.useState(classes[1])
@@ -15,8 +15,8 @@ export default function ShowAnalysis (props: any) {
     
     const text = {
         "attention": "An overall average is determined by dividing the score by the total questions. User responses are then split into sections, where a another average is calculated. Each section average is compared to the overall average. Attention is considered stronger the more the section average meets or exceeds the overall average. It is considered weaker the more the section average dips below the overall average.",
-        "decision": "Calculated based on the amount of correct responses a user provides. More correct responses indicate stronger decisiveness. Less correct responses show weaker decision making ability.",
-        "reaction": "The metrics for reaction time are calculated based on how fast a user makes a decision. A response time profficiency level is initially set, then the user's responses are compared against it. The more the user answers quicker than the profficiency level, the higher the reaction time rating will be. If the test has a running clock, the score is determined by the amount of correct answers given within the time period."
+        "decision": "Calculated based on the amount of correct responses a user provides. More correct responses indicate stronger decisiveness. Less correct responses show a weaker decision making ability.",
+        "reaction": "The metrics for reaction time are calculated based on how fast a user makes a decision. A response time proficiency level is initially set, then the user's responses are compared against it. The more the user answers quicker than the profficiency level, the higher the reaction time rating will be. If the test has a running clock, the score is determined by the amount of correct answers given within the time period."
     }
 
     const [AttentionText, setAttentionText] = React.useState<any>("")
@@ -47,59 +47,114 @@ export default function ShowAnalysis (props: any) {
 
     return(
         <div>
-            <div className="mt-24 grid grid-auto-cols">
-                <div className="bold text-2xl justify-center">
+            <div className="mt-24">
+                <div className="text-2xl">
                     TEST ANALYSIS
                 </div>
                 <div>
                     <div className={ClickAttentionClass} onClick={e => click_handler(0)}>
                         Attention
                     </div>
-                    <div className="text-lg">
+                    <div className="text-lg mt-4">
                         {AttentionText}
                     </div>
-                    <div className="mt-4 text-base">
-                        Score: {props.AttentionData["score"]} out of {props.AttentionData["periods"]}
-                    </div>
-                    <div className="text-base">
-                        Rating: <span className={props.AttentionData["rating"] == "poor" ? "text-white px-4 bg-red-400" : props.AttentionData["rating"] == "average" ? "text-white px-4 bg-gray-400" : "text-white px-4 bg-green-400"}>{props.AttentionData["rating"]}</span>
-                    </div>
+                    {props.AttentionData ? 
+                        <div>
+                            <div className="mt-4 text-xl bold">
+                                <span className="font-bold">
+                                    Score:
+                                </span> {props.AttentionData["score"]} out of {props.AttentionData["possible"] ? props.AttentionData["possible"] : props.AttentionData["periods"]} {props.AttentionData["bonus"] ? <span className="text-base">(+ 1 bonus, greater than {props.AttentionData["bonus_range"]} bonus range)</span> : null} {props.AttentionData["penalty"] ? <span className="text-base">(-1 penalty, less than {props.AttentionData["penalty_range"]} penalty range)</span> : null}
+                            </div>
+                            <div className="text-xl">
+                                <span className="font-bold">
+                                    Proficiency Level:
+                                </span> {props.AttentionData["interval_avg"]} correct per {props.AttentionData["interval"] == "time" ? <span>minute</span> : <span>interval</span>} <span className="text-base">(+1 added to score if greater than)</span>
+                            </div>
+                            <div className="text-xl">
+                                <span className="font-bold">
+                                    Rating:
+                                </span> <span className={props.AttentionData["rating"] == "poor" ? "text-white px-4 bg-red-400 italic rounded" : props.AttentionData["rating"] == "average" ? "text-white px-4 bg-gray-400 italic rounded" : "text-white px-4 bg-green-400 italic rounded rounded"}>{props.AttentionData["rating"]}</span>
+                            </div>
+                        </div>
+                    :
+                        <div className="text-xl mt-4">
+                            N/A
+                        </div>                    
+                    }
                 </div>
+                
                 <div>
                 <div className={ClickDecisionClass} onClick={e => click_handler(1)}>
                         Decision Making
                     </div>
-                    <div className="text-lg">
+                    <div className="text-xl mt-4">
                         {DecisionText} 
-                    </div>
-                   
+                    </div>                  
                     {props.DecisionData ? 
-                    <div>
-                    <div className="mt-4 text-base">
-                        Score: {props.DecisionData["total"]} out of {props.DecisionData["answers"].length}
-                    </div>
-                    <div className="text-base">
-                        Rating: <span className={props.DecisionData["rating"] == "poor" ? "text-white px-4 bg-red-400" : props.DecisionData["rating"] == "average" ? "text-white px-4 bg-gray-400" : "text-white px-4 bg-green-400"}>{props.DecisionData["rating"]}</span>
-                    </div>
-                    </div>
-                    : null}
+                        <div>
+                            <div className="mt-4 text-xl">
+                            <span className="font-bold">
+                                Score:
+                            </span> {props.DecisionData["total"]} out of {props.DecisionData["possible"] ? props.DecisionData["possible"] : props.DecisionData["answers"]} {props.DecisionData["bonus"] ? <span>(+ 1 bonus, greater than {props.DecisionData["bonus_range"]} bonus range)</span> : null} {props.DecisionData["penalty"] ? <span className="text-base">(-1 penalty, less than {props.DecisionData["penalty_range"]} penalty range)</span> : null}
+                            </div>
+                            <div className="text-xl">
+                                <span className="font-bold">
+                                Proficiency Level:
+                                </span> {props.DecisionData["possible"] ? Math.round(props.DecisionData["possible"] * .7): Math.round(props.DecisionData["answers"] * .7)} <span className="text-base">(average or above rating if score is greater than)</span>
+                            </div>
+                            <div className="text-xl">
+                                <span className="font-bold">
+                                    Rating:
+                                </span> <span className={props.DecisionData["rating"] == "poor" ? "text-white px-4 bg-red-400 italic rounded" : props.DecisionData["rating"] == "average" ? "text-white px-4 bg-gray-400 italic rounded" : "text-white px-4 bg-green-400 italic rounded"}>{props.DecisionData["rating"]}</span>
+                            </div>
+                        </div>
+                    :
+                        <div className="text-xl mt-4">
+                            N/A
+                        </div>                    
+                    }
                     
                 </div>
-                <div>
-                <div className={ClickReactionClass} onClick={e => click_handler(2)}>
-                        Reaction Time
-                    </div>
-                    <div className="text-lg">
-                        {ReactionText}
-                    </div>
-                    <div className="mt-4 text-base">
-                        Score: {props.ReactionData["score"]} out of {props.ReactionData["answers"].length}
-                    </div>
-                    <div className="text-base">
-                        Rating: <span className={props.ReactionData["rating"] == "poor" ? "text-white px-4 bg-red-400" : props.ReactionData["rating"] == "average" ? "text-white px-4 bg-gray-400" : "text-white px-4 bg-green-400"}>{props.ReactionData["rating"]}</span> 
-                    </div>
-
-                </div>
+                    
+                        <div>
+                            <div className={ClickReactionClass} onClick={e => click_handler(2)}>
+                                    Reaction Time
+                                </div>
+                                <div className="text-lg mt-4">
+                                    {ReactionText}
+                                </div>
+                                {props.ReactionData ?
+                                    <div>
+                                        <div className="mt-4 text-xl">
+                                            <span className="font-bold">
+                                                Score:
+                                            </span> {props.ReactionData["score"]} out of {props.ReactionData["possible"] ? props.ReactionData["possible"] : props.ReactionData["answers"].length} {props.ReactionData["bonus"] ? <span className="text-base">(+{Math.round(props.ReactionData["proficiency"] * .05)} bonus, greater than {props.ReactionData["bonus_range"]} bonus range)</span> : null} {props.ReactionData["penalty"] ? <span className="text-base">(-{Math.round(props.ReactionData["proficiency"] * .05)} penalty, less than {props.ReactionData["penalty_range"]} penalty range)</span> : null}
+                                        </div>
+                                        {!props.ReactionData["possible"] ?
+                                            <div className="text-xl">
+                                                <span className="font-bold">
+                                                    Measure Level:
+                                                </span> <span className="text-base">{props.ReactionData["measure"].toFixed(2)} seconds/response (+1 added to score if less than)</span>
+                                            </div>
+                                        : null}
+                                        <div className="text-xl">
+                                            <span className="font-bold">
+                                                Proficiency Level:
+                                            </span> {props.ReactionData["possible"] ?  props.ReactionData["per_minute"] * Math.round(props.ReactionData["measure"] / 60) : props.ReactionData["proficiency"]} {props.ReactionData["possible"]  ? <span>correct in {Math.round(props.ReactionData["measure"] / 60)} minutes</span>: <span></span>} <span className="text-base">(average or above rating if score is greater than)</span>
+                                        </div>
+                                        <div className="text-xl">
+                                            <span className="font-bold">
+                                                Rating:
+                                            </span> <span className={props.ReactionData["rating"] == "poor" ? "text-white px-4 bg-red-400 italic rounded" : props.ReactionData["rating"] == "average" ? "text-white px-4 bg-gray-400 italic rounded" : "text-white px-4 bg-green-400 italic rounded"}>{props.ReactionData["rating"]}</span> 
+                                        </div>
+                                    </div>
+                                : 
+                                    <div className="text-xl mt-4">
+                                        N/A
+                                    </div>       
+                                }
+                        </div>
+                    
             </div> 
         </div>
     )

@@ -150,6 +150,8 @@ export default function ChoiceReaction (props: any) {
     //section interval, every 4 questions.. 5 sections total
     const time = 5
 
+    const time_measure = .5
+
 
     useEffect(() => {
         var count = 1
@@ -178,14 +180,9 @@ export default function ChoiceReaction (props: any) {
     useEffect(() => {
 
         AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
 
     }, [AttentionData])
-
-    // useEffect(() => {
-
-    //     Answers2.length > 0 ?        console.log(analysis["decisiveness"](Answers2)) : null
-
-    // }, [Answers2])
 
 
     useEffect(() => {
@@ -230,7 +227,7 @@ export default function ChoiceReaction (props: any) {
         if(PromptList.length < 1){
             setEndTest(true)
             setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
-            setReactionData(analysis["speed"](TimeArray, .5))
+            setReactionData(analysis["speed"](TimeArray, time_measure))
             // console.log("d a")
             // console.log(attention_answers)
             // console.log(Answers2)
@@ -260,7 +257,9 @@ export default function ChoiceReaction (props: any) {
         create_prompts()
         setTestStart(true)
         setShowPrompt(true)
-        console.log(analysis["decisiveness"]([1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1]))
+        // console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
+        // setAttentionData(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
+        // console.log(analysis["speed"]([.6,.7,.4,.5,.5,.3,.2,.3,.2,.3,.5,.3,.2,.5,.3,.2,.5,.3,.2,.1], .5))
     }
 
 
@@ -372,14 +371,14 @@ export default function ChoiceReaction (props: any) {
                         </div>
                     </div>   
         :
-            <div className="grid grid-auto-rows mt-[150px]"> 
-                <span className="mt-12">
-                    The Test is Over.
+            <div className="grid grid-auto-rows place-items-center mt-[100px]"> 
+                <span className="mt-12 text-4xl">
+                    The Test is Over
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
-                <div>
+                <div className="w-[100%]">
                     <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
                 </div>
                 <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
