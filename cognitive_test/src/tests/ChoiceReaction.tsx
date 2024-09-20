@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import {analysis} from "../helpers/Analysis"
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 export default function ChoiceReaction (props: any) {
 
@@ -15,13 +16,17 @@ export default function ChoiceReaction (props: any) {
     const [AnswerCount, setAnswerCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Answers2, setAnswers2] = React.useState<any>([])
     const [ShowPrompt, setShowPrompt] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
     const response_time = 100
     const [ResponseTime, setResponseTime] = React.useState(response_time)
-    const [TimeArray, setTimeArray]: any = React.useState([])
+    const [TimeArray, setTimeArray] = React.useState<any>([])
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
 
 
     const prompt_list = [
@@ -145,6 +150,8 @@ export default function ChoiceReaction (props: any) {
     //section interval, every 4 questions.. 5 sections total
     const time = 5
 
+    const time_measure = .5
+
 
     useEffect(() => {
         var count = 1
@@ -168,6 +175,14 @@ export default function ChoiceReaction (props: any) {
         PromptList.length == list_length ? get_prompt() : null
 
     }, [PromptList])
+
+
+    useEffect(() => {
+
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+
+    }, [AttentionData])
 
 
     useEffect(() => {
@@ -205,14 +220,18 @@ export default function ChoiceReaction (props: any) {
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
+        setResponseTime(response_time)
     }
 
     function get_prompt(){
         if(PromptList.length < 1){
             setEndTest(true)
-            // console.log(analysis["attention"]("sections", Answers, time, proficiency))
-            console.log(analysis["attention"](interval, Answers, time, proficiency))
-            console.log(analysis["decisiveness"](Answers))
+            setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+            setReactionData(analysis["speed"](TimeArray, time_measure))
+            // console.log("d a")
+            // console.log(attention_answers)
+            // console.log(Answers2)
+            // console.log(analysis["decisiveness"](decisive_answers))
         } 
         PromptList.length < 1 && ShowPrompt ? setEndTest(true) : null
         var temp_arr = PromptList
@@ -238,7 +257,9 @@ export default function ChoiceReaction (props: any) {
         create_prompts()
         setTestStart(true)
         setShowPrompt(true)
-        console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
+        // console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
+        // setAttentionData(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
+        // console.log(analysis["speed"]([.6,.7,.4,.5,.5,.3,.2,.3,.2,.3,.5,.3,.2,.5,.3,.2,.5,.3,.2,.1], .5))
     }
 
 
@@ -258,6 +279,7 @@ export default function ChoiceReaction (props: any) {
 
     function answer_handler(answer: any){
         var temp_arr = Answers
+        var temp_arr2 = Answers2
         if(answer == Answer){
             temp_arr.push(1)
             setAnswerCount(AnswerCount + 1)
@@ -265,17 +287,13 @@ export default function ChoiceReaction (props: any) {
         }else{
             temp_arr.push(0)
             setShowCirclesRed(true)
-            TimeArray.length < list_length ? reset_time() : null
+            //TimeArray.length < list_length ? reset_time() : null
         }
         setAnswers(temp_arr)
+        setAnswers2(temp_arr2)
         setShowPrompt(false)
         set_interval()
-        var arr = TimeArray
-        arr.push(ResponseTime*.001) 
-        setResponseTime(response_time)
-        console.log("time")
-        console.log(arr)
-        setTimeArray(arr)
+        TimeArray.length < list_length ? reset_time() : null
     }
 
 
@@ -353,14 +371,17 @@ export default function ChoiceReaction (props: any) {
                         </div>
                     </div>   
         :
-            <div className="grid grid-rows-3 mt-[200px]"> 
-                <span className="mt-12">
-                    The Test is Over.
+            <div className="grid grid-auto-rows place-items-center mt-[100px]"> 
+                <span className="mt-12 text-4xl">
+                    The Test is Over
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
+                </div>
+                <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
 

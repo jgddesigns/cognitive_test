@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import "../helpers/shapes.css"
 //import { show_circles } from "../helpers/ProgressBar"
 import ProgressBar from '../helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 export default function PictureRecognition (props: any) {
 
@@ -23,14 +24,16 @@ export default function PictureRecognition (props: any) {
     const [StaticArray, setStaticArray] = React.useState([""])
     const [CurrentPicture, setCurrentPicture] = React.useState("")
     const [CompareArray, setCompareArray] = React.useState([])
-    const [CircleArray, setCircleArray] = React.useState([])
-    const [CircleMap, setCircleMap] = React.useState<any>([])
     const [Answer, setAnswer] = React.useState("")
     const [Digits, setDigits] = React.useState(-1)
     const [ShowMessage, setShowMessage] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
 
     const answered_style = ["text-red-400", "text-green-400"]
 
@@ -44,9 +47,11 @@ export default function PictureRecognition (props: any) {
 
 
     //proficient overall score
-    const proficiency = 14
+    const proficiency = Math.round(pictures_value * .7)
 
     const interval = "sections"
+
+    const time_measure = 1
 
     //section interval, every 3 digits, 6 sections total
     const time = 5
@@ -54,6 +59,14 @@ export default function PictureRecognition (props: any) {
     const response_time = 100
     const [ResponseTime, setResponseTime] = React.useState(response_time)
     const [TimeArray, setTimeArray]: any = React.useState([])
+
+
+    useEffect(() => {
+
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+
+    }, [AttentionData])
 
 
     useEffect(() => {
@@ -76,13 +89,16 @@ export default function PictureRecognition (props: any) {
     }, [ShowButtons])
 
 
-    function reset_time(){
+
+    function reset_time(missed=false){
         var arr = TimeArray
-        arr.push(ResponseTime*.001) 
+        missed ? arr.push(3) : arr.push(ResponseTime*.001) 
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
+        setResponseTime(0)
     }
+
 
 
     useEffect(() => {
@@ -136,7 +152,11 @@ export default function PictureRecognition (props: any) {
                         setCurrentPicture("")
                     }
 
-                    CompareDigits == 0 ? setEndTest(true) : null
+                    if(CompareDigits < 1 && !EndTest){
+                        setEndTest(true)
+                        setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+                        setReactionData(analysis["speed"](TimeArray, time_measure))
+                    } 
                 }
 
                 setCompareDigits(CompareDigits - 1)
@@ -146,7 +166,7 @@ export default function PictureRecognition (props: any) {
             return () => clearTimeout(timeoutId)
         }
 
-    }, [Digits, CompareDigits, Answered])
+    }, [Digits, CompareDigits, Answered, EndTest])
 
 
 
@@ -268,20 +288,24 @@ export default function PictureRecognition (props: any) {
     function answer_handler(answer: any){
         setCurrentPicture("")
         var temp_arr: any = StaticArray
+        var answers = Answers
         if (answer && temp_arr.includes(CurrentPicture) || (!answer && !temp_arr.includes(CurrentPicture))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
             setShowCirclesGreen(true)
+            answers.push(1)
         }else{
             setShowCirclesRed(true)
+            answers.push(0)
         }
-
+        TimeArray.length <= pictures_value ? setAnswers(answers) : null
         TimeArray.length < pictures_value ? reset_time() : null
     }
 
 
     function start_handler(){
-        console.log(analysis["attention"](interval, [[1,1,1,0], [0,0,0,1], [0,1,1,1], [1,0,0,1], [1,0,0,1]], time, proficiency, true))
+        // setAttentionData(analysis["attention"](interval, [1,1,1,1,0,0,0,0,1,1,0,0,1,1,1,0,0,0,1,1], time, proficiency))
+        // console.log(analysis["speed"]([.3,.7,.5,.7,.8,.3,.2,.2,.4,.5,.3,.2,.4,.4,.3,.6,.5,.4,.4,.2], time_measure))
         build_array()
         setDigits(digits_value + 2)
         setShowMessage(true)
@@ -305,8 +329,10 @@ export default function PictureRecognition (props: any) {
             setAnsweredString("")
         }
 
-        if(AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered){     setShowCirclesRed(true)
-            TimeArray.length < pictures_value ? reset_time() : null 
+        if(AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered){     let answers = Answers 
+            setShowCirclesRed(true)
+            TimeArray.length < pictures_value ? reset_time(true) : null 
+            TimeArray.length <= pictures_value ? setAnswers(answers) : null 
         } 
 
         AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered ? console.log("missed") : null  
@@ -380,7 +406,7 @@ export default function PictureRecognition (props: any) {
                                 </div>  
                             }
                         </div>
-                        <div className="h-[55%] mt-[200px]">
+                        <div className="h-[55%] mt-[75px]">
                             {ShowButtons ?
                                 <div className="grid-cols-2 gap-x-[100px] place-items-center">
                                     <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
@@ -395,19 +421,22 @@ export default function PictureRecognition (props: any) {
                     </div>
                 : null
         :
-            <div className="grid h-[40%] mt-12 grid-rows-3 gap-12 place-items-center"> 
+            <div className="grid h-[40%] mt-12 grid-auto-rows gap-12 place-items-center"> 
                 <span className="mt-12">
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {pictures_value}. ({calculate_ratio()}%)
                 </span>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
+                </div> 
                 <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>
         }
-        {ShowCompare ? 
+        {ShowCompare && !EndTest ? 
             <div className="grid place-items-center">
                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={pictures_value} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
             </div>

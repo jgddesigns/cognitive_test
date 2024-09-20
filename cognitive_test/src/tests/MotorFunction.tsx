@@ -4,6 +4,7 @@ import {Button} from "@nextui-org/react"
 import "../helpers/shapes.css"
 import { analysis } from '@/helpers/Analysis'
 import ProgressBar from '@/helpers/ProgressBar'
+import ShowAnalysis from '@/helpers/ShowAnalysis'
 
 
 export default function WorkingMemory(props: any) {
@@ -42,7 +43,10 @@ export default function WorkingMemory(props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
-    
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
 
     const shapes = ["circle", "square", "triangle", "heart", "star", "moon", "hexagon", "diamond", "trapezoid"]
     const colors = ["red", "yellow", "green", "blue"]
@@ -51,16 +55,26 @@ export default function WorkingMemory(props: any) {
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]) 
     
     //proficient overall score
-    const proficiency = 7
-
-    const interval = "time"
-
-    //section interval, every 3 digits, 6 sections total
-    const time = 10
-
-    const total_rounds = 10
     
 
+    const interval = "sections"
+
+    //section interval, every 3 digits, 6 sections total
+    const time = 3
+
+    const total_rounds = 10
+
+    const time_measure = 1.5
+
+    const proficiency = Math.round(total_rounds * .7)
+    
+
+    useEffect(() => {
+
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        // AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+
+    }, [AttentionData])
 
     useEffect(() => {
         
@@ -112,7 +126,7 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
-        while(TestTime >= 0 && ShowData){
+        while(TestTime >= 0 && ShowData && !EndTest){
             const timeoutId3 = setTimeout(() => {
                 if(CurrentRound <= total_rounds){ 
                     set_clock(TestTime + 1)
@@ -126,7 +140,7 @@ export default function WorkingMemory(props: any) {
             return () => clearTimeout(timeoutId3)
         }
 
-    }, [ShowData])
+    }, [TestTime, ShowData, EndTest])
 
 
     useEffect(() => {
@@ -169,6 +183,10 @@ export default function WorkingMemory(props: any) {
         setDelay(false)
         setIsPaused(false)
         setEndTest(true) 
+        !AttentionData ? setAttentionData(analysis["attention"](interval, Answers, time, proficiency)) : null
+        // console.log(analysis["attention"](interval, Answers, time, proficiency))
+        !ReactionData ? setReactionData(analysis["speed"](FoundTimes, time_measure)) : null
+        // console.log(analysis["speed"](FoundTimes, time_measure))
     }
 
 
@@ -208,8 +226,8 @@ export default function WorkingMemory(props: any) {
 
 
     function start_handler(){
-        // console.log(analysis["attention"](interval, convert_time([.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4]), time, proficiency))
-        console.log(analysis["attention"](interval, [.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4], time, proficiency, false))
+        // setAttentionData(analysis["attention"](interval, [1,1,1,0,0,0,1,1,1,1], time, proficiency))
+        // console.log(analysis["attention"](interval, [1,1,1,0,0,0,1,1,1,1], time, proficiency))
         set_clock(0)
         setTestStart(true)
         toggle_countdown(true)
@@ -225,22 +243,28 @@ export default function WorkingMemory(props: any) {
 
     function token_found(found: any, event: any){
         var time_arr = FoundTimes
+        var temp_arr = Answers
+        var time = build_time()
 
         if(found){
             console.log("\n\nSHAPE FOUND")
-            time_arr.push(build_time())
-            setShowCirclesGreen(true)
+            time_arr.push(time)
+            //setShowCirclesGreen(true)
             setFound(true)
         }else{
             console.log(CurrentShape)
             setCurrentShape(null)
             setMissed(true)
-            setShowCirclesRed(true)
+            //setShowCirclesRed(true)
             console.log("\n\nINCORRECT CLICK")
             time_arr.push(0)
             setFound(false)
         }
-
+        time <= time_measure ? temp_arr.push(1) : temp_arr.push(0)
+        time <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true)
+        console.log("answer array")
+        console.log(temp_arr)
+        setAnswers(temp_arr)
         console.log("time array")
         console.log(time_arr)
         clear_grid()
@@ -505,6 +529,9 @@ export default function WorkingMemory(props: any) {
                     </div>                
                     <div className="mt-8 ml-12">
                         Round 10: {FoundTimes[9]}
+                    </div>
+                    <div className="w-[100%]">
+                        <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
                     </div> 
                     <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                         Reset

@@ -33,7 +33,6 @@ export default function ProgressBar (props: any) {
 
     function display_circles(){
         props.setRestart(false)
-        console.log("asdf")
         clear_circles()
         var i = 0
         while(i < props.LengthValue){
@@ -57,9 +56,6 @@ export default function ProgressBar (props: any) {
 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
-        console.log(CircleArray)
-        // console.log("position")
-        // console.log(props.CurrentPosition)
         !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))
         const circle_map = shown_arr.map((name:any, index:any) => {
             return {

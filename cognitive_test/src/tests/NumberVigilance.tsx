@@ -4,6 +4,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 
 export default function NumberVigilance (props: any) {
@@ -25,11 +26,15 @@ export default function NumberVigilance (props: any) {
     const [TestNumber, setTestNumber] = React.useState(0)
     const [CorrectCount, setCorrectCount] = React.useState(0)
     const [IncorrectCount, setIncorrectCount] = React.useState(0)
+    const [MatchedNumbers, setMatchedNumbers] = React.useState(0)
     const [SectionAnswers, setSectionAnswers] = React.useState<any>([])
     const [AnswerArray, setAnswerArray] = React.useState<any>([])
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
 
     const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white outline-0", "bg-green-400 rounded px-10 h-12 text-white outline-0", "bg-red-400 rounded px-10 h-12 text-white outline-0"]
     const [CorrectClass, setCorrectClass] = React.useState(correct_class[0])
@@ -44,13 +49,14 @@ export default function NumberVigilance (props: any) {
 
     const popup_time = 1
 
+    const per_minute = 12
 
-    const shown_value = 120
+    const shown_value = 60
 
     //proficient overall score
-    const proficiency = 84
+    const proficiency = Math.round(Math.round(shown_value / 60) * per_minute * .7)
 
-    const interval = "sections"
+    const interval = "time"
 
     //section interval, every 3 digits, 6 sections total
     const time = 5
@@ -77,11 +83,13 @@ export default function NumberVigilance (props: any) {
                 setIntervalTime(IntervalTime-.5)
                 count = IntervalTime
                 if(count <= .5){
+                    let number = Math.ceil(Math.random() * 10)
                     setCorrectClass(correct_class[0])
                     setShownCount(ShownCount + 1)
                     Math.round(ShownCount + 1) % 2 == 0 ? get_time() : null
                     set_interval()
-                    setCurrentNumber(Math.ceil(Math.random() * 10)) 
+                    setCurrentNumber(number) 
+                    number == TestNumber ? setMatchedNumbers(MatchedNumbers + 1) : null
                 }
                 
             }, 500)
@@ -102,8 +110,9 @@ export default function NumberVigilance (props: any) {
         }
         
         ShownCount % 12 == 0 && ShownCount > 0 ? setShowCirclesGreen(true) : setShowCirclesGreen(false)
-        if(ShownCount >= shown_value){
+        if(ShownTimer == 60){
             setEndTest(true)
+            setAttentionData(analysis["attention"](interval, CorrectCount, shown_value, proficiency, true, MatchedNumbers))
             setShowCirclesGreen(true)
         }
     }, [ShownCount])
@@ -126,13 +135,22 @@ export default function NumberVigilance (props: any) {
     }, [PopupTimer])
 
 
+    useEffect(() => {
+
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"], shown_value, per_minute, MatchedNumbers)) : null
+        // AttentionData ? console.log(analysis["decisiveness"](AttentionData["original_answers"], shown_value, per_minute, MatchedNumbers)) : null
+
+    }, [AttentionData])
+
+
     function set_interval(){
         setIntervalTime(1)
     }
 
 
     function clicked_button(){
-        console.log(analysis["attention"](interval, [[1,1,1,0,1,1,0,1,0,0,1,1,1,0,1,1,0,1,0,0,1,1,0,0], [0,0,1,1,1,1,0,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,0,1], [0,1,1,1,0,0,1,1,0,0,0,1,1,1,0,0,1,1,0,0,1,1,1,0], [1,0,0,1,0,1,0,1,0,1,1,0,0,1,0,1,0,1,0,1,0,0,1,1], [1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,1,0,1,0,1,1,1,1,0]], time, proficiency, true))
+        // setAttentionData(analysis["attention"](interval, 16, shown_value, proficiency, true, 20))
+        setReactionData(null)
         setTestNumber(Math.ceil(Math.random()*10))
         setShowNumber(true)
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
@@ -160,7 +178,7 @@ export default function NumberVigilance (props: any) {
         toggle_popup(false)
         setSectionAnswers(temp_arr)
         setCorrectClass(correct_class[2])
-        setIncorrectCount(CorrectCount + 1)
+        setIncorrectCount(IncorrectCount + 1)
     }
 
 
@@ -283,8 +301,11 @@ export default function NumberVigilance (props: any) {
                 </div> 
                 <div className="text-red-400">
                     Incorrect Responses: {CorrectCount == 0 && IncorrectCount == 0 ? "N/A" : IncorrectCount}
+                </div>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData}/>
                 </div> 
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
+                <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>
