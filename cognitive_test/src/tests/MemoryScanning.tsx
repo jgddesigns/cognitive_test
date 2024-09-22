@@ -165,14 +165,10 @@ export default function MemoryScanning (props: any) {
                         if(!Answered){
                             setShowCirclesRed(true)
                             temp_arr.push(0)
-                            console.log("answers")
-                            console.log(temp_arr)
                             setAnswers(temp_arr)
                             TimeArray.length < total_digits ? reset_time(true) : null
                         }
                         check_answer(CompareString)
-                           
-                        // setResponseTime(0)
                     }
 
                     if(CompareDigits == -1){

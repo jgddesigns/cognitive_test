@@ -366,7 +366,7 @@ export default function WordRecognition (props: any) {
                             </div>
                         }
 
-                        {!EndTest && (AnsweredString.length > 0 || ShowCompare) ?
+                        {!EndTest && CompareDigits > 1 ?
                             <div>
                                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                             </div>
