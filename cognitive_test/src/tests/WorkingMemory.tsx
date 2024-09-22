@@ -2,6 +2,8 @@
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
+import { analysis } from '@/helpers/Analysis';
 
 
 export default function WorkingMemory(props: any) {
@@ -27,6 +29,10 @@ export default function WorkingMemory(props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
 
     const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32  bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
@@ -34,10 +40,15 @@ export default function WorkingMemory(props: any) {
 
     const total_rounds = 10
 
-
     const response_time = 100
     const [ResponseTime, setResponseTime] = React.useState(response_time)
     const [TimeArray, setTimeArray]: any = React.useState([])
+
+
+    const proficiency = Math.round(total_rounds * .7)
+    const interval = "sections"
+    const time = 3
+    const time_measure = 4
 
 
     useEffect(() => {
@@ -67,7 +78,6 @@ export default function WorkingMemory(props: any) {
         console.log(arr)
         setTimeArray(arr)
     }
-
 
 
     useEffect(() => {
@@ -251,6 +261,8 @@ export default function WorkingMemory(props: any) {
                     if(CurrentRound + 1 > 10){ 
                         average_time(TestTime)
                         setEndTest(true)
+                        setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+                        setReactionData(analysis["speed"](TimeArray, time_measure))
 
                         var num = 0
                         for(var i=0; i<RoundAttempts.length; i++){
@@ -433,7 +445,9 @@ export default function WorkingMemory(props: any) {
 
                 {/* REPLACE WITH MAP? */}
                 <div className="mt-16">
-                    <span className="text-underline">Round Attempts</span>
+                    <span className="text-underline">
+                        Round Attempts
+                    </span>
                 </div>
                 <div className="mt-8 ml-12">
                     Round 1: {RoundAttempts[0]}
@@ -464,7 +478,10 @@ export default function WorkingMemory(props: any) {
                 </div>                
                 <div className="mt-8 ml-12">
                     Round 10: {RoundAttempts[9]}
-                </div>       
+                </div> 
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData}/>
+                </div>      
                 <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>

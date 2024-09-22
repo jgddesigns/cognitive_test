@@ -2,13 +2,18 @@
 
 function create_answers(answers: any, time: any){
   console.log(answers)
+  console.log(time)
   var temp_answers: any = []
   var temp_arr: any = []
   var length = Math.round(answers.length/time)
+  console.log("length")
+  console.log(length)
   for(var i=0; i < length; i++){
     temp_answers = []
     for(var  j=0; j < time; j++){
       temp_answers.push(answers[j])
+      console.log("temp answers")
+      console.log(temp_answers)
     }
     temp_arr.push(temp_answers)
     answers.splice(0, time)
@@ -41,7 +46,7 @@ function get_average(answers: any, time_value=0, base_level: any = null){
     total_avg += temp_avg/answers[i].length
   }
 
-  !Array.isArray(answers) ? total_avg = Math.round(answers / Math.round(time_value/60)) : total_avg = total_avg/answers[0].length
+  !Array.isArray(answers) ? total_avg = Math.round(answers / Math.round(time_value/60)) : !Array.isArray(answers[0]) ? total_avg = total_avg/answers.length : total_avg = total_avg/answers[0].length
 
   total_avg < base_level ? total_avg = base_level : null
 
@@ -90,6 +95,10 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
     periods = time
   }
 
+  console.log("periods")
+  console.log(periods)
+
+
   if(!Array.isArray(answers[0])){
     for(let i=0; i<answers.length; i++){
       total = total + answers[i]
@@ -117,8 +126,6 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
       for(let k=0; k<interval_arr[j].length; k++){
         sum = sum + interval_arr[j][k]
       }
-      console.log("sum")
-      console.log(sum)
       greater ? sum/interval_arr[j].length >= deviation ? score++ : null : sum/interval_arr[j].length <= deviation ? score++ : null    
     }
   }else{
@@ -189,8 +196,6 @@ function calculate_decisiveness(answers: any, time_value: any = null, per_minute
 
   percentage = !time_value ? Math.round((total/answers.length) * 100) / 100 : total/((Math.round(time_value/60) * per_minute)) 
 
-  // time_value ? percentage = Math.round((total/Math.round(time_value/60)) * 100) / (Math.round(time_value/60) * per_minute) : null
-
   time_value ? answers = possible ? possible : Math.round(time_value/60) * per_minute : answers = answers.length
 
   if(percentage >= high){
@@ -206,11 +211,11 @@ function calculate_decisiveness(answers: any, time_value: any = null, per_minute
 
 //not needed in:
 //digit vigilance, number vigilance
-//
 //times: array of answer times. length is total number of test questions/sections.
 //measure: the measuring point of if an answer is fast or slow
 //sections: is there a running clock or an answer based timer?
 function calculate_speed(times: any, measure: any, sections=true, per_minute: any = null, possible: any = null){
+  console.log(times)
   var score = 0
   var proficiency = sections ? Math.round(times.length * .7) : Math.round(measure/60) * per_minute
   var bonus_range = Math.round(proficiency * 1.2)
@@ -234,12 +239,12 @@ function calculate_speed(times: any, measure: any, sections=true, per_minute: an
   !sections ? score = times : null
 
   if(score >= bonus_range){
-    sections ? score++ : score += Math.round(proficiency * .05)
+    sections ? score++ : score += Math.ceil(proficiency * .05)
     bonus = true
   }
 
   if(score <= penalty_range){
-    sections ? score-- : score -= Math.round(proficiency * .05)
+    sections ? score-- : score -= Math.ceil(proficiency * .05)
     penalty = true
   }
 
@@ -247,7 +252,7 @@ function calculate_speed(times: any, measure: any, sections=true, per_minute: an
     rating = "strong"
   }
 
-  if(score >= low && score < high){
+  if(score > low && score < high){
     rating = "average"
   } 
 

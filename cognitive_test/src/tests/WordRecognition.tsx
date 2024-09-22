@@ -4,6 +4,7 @@ import {Button} from "@nextui-org/react"
 import {words} from "../helpers/words"
 import { analysis } from '@/helpers/Analysis'
 import ProgressBar from '@/helpers/ProgressBar'
+import ShowAnalysis from '@/helpers/ShowAnalysis'
 
 export default function WordRecognition (props: any) {
 
@@ -27,6 +28,10 @@ export default function WordRecognition (props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
 
     const answered_style = ["text-red-400", "text-green-400"]
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
@@ -40,6 +45,7 @@ export default function WordRecognition (props: any) {
     const interval = "sections"
     const time = 3
     const test_length = 5
+    const time_measure = 1.5
     
 
     const response_time = 100
@@ -49,7 +55,7 @@ export default function WordRecognition (props: any) {
 
     useEffect(() => {
         var count
-        while(ShowPrompt && ResponseTime >= 0){
+        while(CompareDigits >= 0 && CurrentWord != "" && ResponseTime >= 0){
             const timeoutId = setTimeout(() => {
                 count = ResponseTime
                 setResponseTime(ResponseTime + response_time)
@@ -57,14 +63,14 @@ export default function WordRecognition (props: any) {
 
             return () => clearTimeout(timeoutId)
         }
-    
-    }, [ShowPrompt, ResponseTime])
-
+    }, [CompareDigits, CurrentWord, ResponseTime])
 
 
     useEffect(() => {
-        ShowCompare ? setResponseTime(response_time) : null
-    }, [ShowCompare])
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+    }, [AttentionData])
+
 
 
     function reset_time(){
@@ -73,20 +79,18 @@ export default function WordRecognition (props: any) {
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
+        setResponseTime(0)
     }
 
-    useEffect(() => {
 
+    useEffect(() => {
         var temp_arr: any = ShownArray
 
         while(Digits >= 0){
-
             const timeoutId = setTimeout(() => {
 
                 Digits > base_iteration ? setShowMessage(true) : setShowMessage(false)
-
                 Digits % 2 != 0 && Digits <= base_iteration + 1 && Digits ?current_word(1) : setCurrentWord("")
-
                 setDigits(Digits - 1)
                 
                 if(Digits < 1){
@@ -103,12 +107,9 @@ export default function WordRecognition (props: any) {
         }
 
         while(CompareDigits >= 0){
-
             const timeoutId = setTimeout(() => {
                 if(CompareMessage){
-
-                    CompareDigits == base_iteration ? setShowPrompt(false) : null
-                    
+                    CompareDigits == base_iteration ? setShowPrompt(false) : null 
                     CompareDigits == base_iteration ? setShowMessage(false) : null
 
                     if(CompareDigits % 2 != 0 && CompareDigits <= base_iteration + 1 && CompareDigits > 1){
@@ -125,7 +126,12 @@ export default function WordRecognition (props: any) {
                     }
 
                     CompareDigits == 1 ? setAnsweredString("") : null
-                    CompareDigits == 0 ? setEndTest(true) : null
+                    if(CompareDigits < 1){
+                        setEndTest(true)
+                        setShowCompare(false)
+                        setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+                        setReactionData(analysis["speed"](TimeArray, time_measure))
+                    }  
                 }
 
                 setCompareDigits(CompareDigits - 1)
@@ -222,20 +228,25 @@ export default function WordRecognition (props: any) {
     function answer_handler(answer: any){
         setCurrentWord("")
         var temp_arr: any = StaticArray
+        var answers: any = Answers
 
         if (answer && temp_arr.includes(CurrentWord) || (!answer && !temp_arr.includes(CurrentWord))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
             setShowCirclesGreen(true)
+            answers.push(1)
         }else{
             setShowCirclesRed(true)
-        }
+            answers.push(0)
+        } 
+        setAnswers(answers)
         TimeArray.length < list_length ? reset_time() : null
     }
 
 
     function start_handler(){
-        console.log(analysis["attention"](interval, [[3, 2, 4], [5, 2, 7], [2, 3, 6, 4]], time, proficiency, true))
+        console.log(analysis["attention"](interval, Answers, time, proficiency))
+        console.log(analysis["speed"](TimeArray, time_measure))
         build_array()
         setDigits(start_digits)
         setShowMessage(true)
@@ -251,11 +262,14 @@ export default function WordRecognition (props: any) {
 
     function check_answer(compare: any){
         var temp_arr: any = StaticArray
+        var time_arr: any = TimeArray
 
         temp_arr.includes(compare) ? setAnswer("Answer was: Yes, the word is in original set.") : setAnswer("Answer was: No, the word isn't in original set.")         
 
         if(!Answered){
             setShowCirclesRed(true)
+            TimeArray.length < list_length ? time_arr.push(3) : null 
+            setTimeArray(time_arr)
             TimeArray.length < list_length ? reset_time() : null
         } 
 
@@ -290,7 +304,6 @@ export default function WordRecognition (props: any) {
 
 
     function get_position(){
-        console.log(CompareArray)
         return CompareArray.length != 10 ? CompareArray.length : list_length + 1
     }
 
@@ -353,22 +366,27 @@ export default function WordRecognition (props: any) {
                             </div>
                         }
 
-                        <div>
-                            <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
-                        </div>
+                        {!EndTest && (AnsweredString.length > 0 || ShowCompare) ?
+                            <div>
+                                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                            </div>
+                        : null}
 
                     </div>  
 
             : null
         :
-            <div className="grid grid-rows-3 mt-[150px] place-items-center"> 
+            <div className="grid grid-auto-rows mt-[150px] place-items-center"> 
                 <span className="mt-12">
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
+                </div>
+                <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>

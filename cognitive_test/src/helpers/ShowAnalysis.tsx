@@ -62,12 +62,12 @@ export default function ShowAnalysis (props: any) {
                             <div className="mt-4 text-xl bold">
                                 <span className="font-bold">
                                     Score:
-                                </span> {props.AttentionData["score"]} out of {props.AttentionData["possible"] ? props.AttentionData["possible"] : props.AttentionData["periods"]} {props.AttentionData["bonus"] ? <span className="text-base">(+ 1 bonus, greater than {props.AttentionData["bonus_range"]} bonus range)</span> : null} {props.AttentionData["penalty"] ? <span className="text-base">(-1 penalty, less than {props.AttentionData["penalty_range"]} penalty range)</span> : null}
+                                </span> {props.AttentionData["score"]} out of {props.AttentionData["possible"] ? props.AttentionData["possible"] : props.AttentionData["periods"]} {props.AttentionData["bonus"] ? <span className="text-base">(+1 bonus, greater than {props.AttentionData["bonus_range"]} bonus range)</span> : null} {props.AttentionData["penalty"] ? <span className="text-base">(-1 penalty, less than {props.AttentionData["penalty_range"]} penalty range)</span> : null}
                             </div>
                             <div className="text-xl">
                                 <span className="font-bold">
                                     Proficiency Level:
-                                </span> {props.AttentionData["interval_avg"]} correct per {props.AttentionData["interval"] == "time" ? <span>minute</span> : <span>interval</span>} <span className="text-base">(+1 added to score if greater than)</span>
+                                </span> {props.AttentionData["interval_avg"].toString().length > 3 ? props.AttentionData["interval_avg"].toString().slice(4, props.AttentionData["interval_avg"].toString().length - 4) : props.AttentionData["interval_avg"]}% correct per {props.AttentionData["interval"] == "time" ? <span>minute</span> : <span>interval</span>} <span className="text-base">(+1 added to score if greater than)</span>
                             </div>
                             <div className="text-xl">
                                 <span className="font-bold">
@@ -127,7 +127,7 @@ export default function ShowAnalysis (props: any) {
                                         <div className="mt-4 text-xl">
                                             <span className="font-bold">
                                                 Score:
-                                            </span> {props.ReactionData["score"]} out of {props.ReactionData["possible"] ? props.ReactionData["possible"] : props.ReactionData["answers"].length} {props.ReactionData["bonus"] ? <span className="text-base">(+{Math.round(props.ReactionData["proficiency"] * .05)} bonus, greater than {props.ReactionData["bonus_range"]} bonus range)</span> : null} {props.ReactionData["penalty"] ? <span className="text-base">(-{Math.round(props.ReactionData["proficiency"] * .05)} penalty, less than {props.ReactionData["penalty_range"]} penalty range)</span> : null}
+                                            </span> {props.ReactionData["score"]} out of {props.ReactionData["possible"] ? props.ReactionData["possible"] : props.ReactionData["answers"].length} {props.ReactionData["bonus"] ? <span className="text-base">(+{Math.ceil(props.ReactionData["proficiency"] * .05)} bonus, greater than {props.ReactionData["bonus_range"]} bonus range)</span> : null} {props.ReactionData["penalty"] ? <span className="text-base">(-{Math.round(props.ReactionData["proficiency"] * .05)} penalty, less than {props.ReactionData["penalty_range"]} penalty range)</span> : null}
                                         </div>
                                         {!props.ReactionData["possible"] ?
                                             <div className="text-xl">
