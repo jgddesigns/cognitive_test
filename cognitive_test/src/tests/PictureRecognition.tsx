@@ -2,7 +2,6 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
-import { v4 as uuidv4 } from 'uuid';
 import "../helpers/shapes.css"
 //import { show_circles } from "../helpers/ProgressBar"
 import ProgressBar from '../helpers/ProgressBar';

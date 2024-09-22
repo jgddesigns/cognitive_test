@@ -1,7 +1,4 @@
-import { arrayBuffer } from "stream/consumers"
 
-var ratings = {attention: "", decisiveness: "", speed: ""}
-var stats = {time_interval: "", interval_answers: [], interval_average: ""} 
 
 function create_answers(answers: any, time: any){
   console.log(answers)

@@ -4,6 +4,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 
 export default function ReactionTime (props: any) {
@@ -21,13 +22,25 @@ export default function ReactionTime (props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
 
     
     const proficiency = 22 * .5 * .7
     const interval = "sections"
     const time = 5
-    const test_length = 5
+    const test_length = 20
+    const time_measure = .5
 
+
+    useEffect(() => {
+
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+
+    }, [AttentionData])
 
     
     useEffect(() => {
@@ -88,7 +101,7 @@ export default function ReactionTime (props: any) {
 
     function clicked_button(){
         // console.log(analysis["attention"](interval, [[.3,1.1,.25,.4], [.44,.53,.6,.8], [.5,.3,.75,.45], [.77,.84,.43,.43], [.17,.54,.68,.9, .8, .7]], time, proficiency, true))
-        console.log(analysis["attention"](interval, [.3,1.1,.25,.4,.44,.53,.6,.8,.5,.3,.75,.45,.77,.84,.43,.43,.17,.54,.68,.9, .8, .7], time, proficiency, false))
+        // console.log(analysis["attention"](interval, [.3,1.1,.25,.4,.44,.53,.6,.8,.5,.3,.75,.45,.77,.84,.43,.43,.17,.54,.68,.9, .8, .7], time, proficiency, false))
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 
@@ -96,16 +109,25 @@ export default function ReactionTime (props: any) {
 
     function toggle_pressed(){
         setResponsePressed(true)
+        var answers_arr = Answers
         var arr = ResponsesArray
-        arr.push(ResponseTime*.001) 
-        setResponseTime(response_time)
+        var time = ResponseTime*.001
+        answers_arr.push(time)
+        arr.push(time)
+        setAnswers(answers_arr)
         setResponsesArray(arr)
+        setResponseTime(response_time)
         setShowButton(false)
         set_interval()
         setShowCirclesGreen(true)
 
         //5 for test length, will be 25 during launch
-        ResponsesArray.length == test_length ? setEndTest(true) : null
+        if(ResponsesArray.length == test_length){
+            console.log("asdf")
+            setEndTest(true)
+            setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+            setReactionData(analysis["speed"](ResponsesArray, time_measure))
+        } 
     }
 
 
@@ -171,7 +193,7 @@ export default function ReactionTime (props: any) {
             </div>
         :
             <div className="grid grid-auto-rows mt-[150px] place-items-center">
-                <div className="grid grid-cols-2 gap-24">
+                <div className="grid grid-auto-cols gap-24">
                     <div className="mt-12"> 
                         <span>
                             The Test is Over.
@@ -187,6 +209,9 @@ export default function ReactionTime (props: any) {
                             </span> 
                         : null}
                     </div>
+                </div>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
                 </div>
                 <div className="mt-12"> 
                     <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
