@@ -48,7 +48,7 @@ export default function WorkingMemory(props: any) {
     const proficiency = Math.round(total_rounds * .7)
     const interval = "sections"
     const time = 3
-    const time_measure = 4
+    const time_measure = 5
 
 
     useEffect(() => {
@@ -73,7 +73,7 @@ export default function WorkingMemory(props: any) {
 
     function reset_time(){
         var arr = TimeArray
-        arr.push(ResponseTime*.001) 
+        CurrentAttempts < 4 ? arr.push(ResponseTime*.001) : arr.push(8)
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
@@ -81,9 +81,18 @@ export default function WorkingMemory(props: any) {
 
 
     useEffect(() => {
+        
+        AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
+ 
+    }, [AttentionData])
+
+
+    useEffect(() => {
 
         if(CurrentRound <= total_rounds){
+            var answers = Answers
             FoundCount == BoxCount ? setNextRound(true) : null
+            TotalAttempts < 4 ? answers.push(1) : answers.push(0)
             NextRound ? build_next_round() : null
         } 
 
@@ -129,7 +138,7 @@ export default function WorkingMemory(props: any) {
     function build_next_round(){
         setTokensFound(false)
         setFoundCount(0)
-        setShowCirclesGreen(true)
+        CurrentAttempts < 4 ? setShowCirclesGreen(true) : setShowCirclesRed(true) 
         setRoundCount(RoundCount + 1)
         setBoxCount(BoxCount + 1)
         setNextRound(false)
@@ -223,14 +232,12 @@ export default function WorkingMemory(props: any) {
     }
 
 
-
     function check_token(event: any){
         var grid_arr = BoxGrid
         if(grid_arr[event.target.id] == box_style[0]){
             event.target.id == TokenPattern[FoundCount] ? token_found(true, event) : token_found(false, event) 
         }
     }
-
 
 
     function token_found(found: any, event: any){
@@ -323,7 +330,6 @@ export default function WorkingMemory(props: any) {
 
 
     function get_position(){
-        //console.log(RoundAttempts)
         return RoundAttempts.length > 0 ? Math.abs(RoundAttempts.length - total_rounds) : 0
     }
 

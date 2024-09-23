@@ -45,7 +45,7 @@ export default function ReactionTime (props: any) {
         AttentionData ? setAvgTime(get_avg_time()) : null
         AttentionData  ? setReactionData(analysis["speed"](AttentionData["original_answers"], time_measure)) : null
         AttentionData  ? console.log(analysis["speed"](AttentionData["original_answers"], time_measure)) : null
-        AttentionData ? setShowCirclesGreen(true) : null
+        AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
  
     }, [AttentionData])
 
