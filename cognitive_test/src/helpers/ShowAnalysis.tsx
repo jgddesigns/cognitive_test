@@ -44,6 +44,14 @@ export default function ShowAnalysis (props: any) {
         }
     }
 
+
+    function get_average(){
+        props.AttentionData ? console.log(props.AttentionData["interval_avg"].toString().length) : null
+        return props.AttentionData ? props.AttentionData["interval_avg"].toString().length > 4 ? props.AttentionData["interval_avg"].toString().slice(0, 4) : props.AttentionData["interval_avg"] : null
+    }
+
+
+
     return(
         <div>
             <div className="mt-24">
@@ -64,10 +72,16 @@ export default function ShowAnalysis (props: any) {
                                     Score:
                                 </span> {props.AttentionData["score"]} out of {props.AttentionData["possible"] ? props.AttentionData["possible"] : props.AttentionData["periods"]} {props.AttentionData["bonus"] ? <span className="text-base">(+1 bonus, greater than {props.AttentionData["bonus_range"]} bonus range)</span> : null} {props.AttentionData["penalty"] ? <span className="text-base">(-1 penalty, less than {props.AttentionData["penalty_range"]} penalty range)</span> : null}
                             </div>
-                            <div className="text-xl">
+                            {/* <div className="text-xl">
                                 <span className="font-bold">
                                     Proficiency Level:
                                 </span> {props.AttentionData["interval_avg"].toString().length > 3 ? props.AttentionData["interval_avg"].toString().slice(4, props.AttentionData["interval_avg"].toString().length - 4) : props.AttentionData["interval_avg"]}% correct per {props.AttentionData["interval"] == "time" ? <span>minute</span> : <span>interval</span>} <span className="text-base">(+1 added to score if greater than)</span>
+                            </div>
+                             */}
+                            <div className="text-xl">
+                                <span className="font-bold">
+                                    Proficiency Level:
+                                </span> {get_average()}% correct per {props.AttentionData["interval"] == "time" ? <span>minute</span> : <span>interval</span>} <span className="text-base">(+1 added to score if greater than)</span>
                             </div>
                             <div className="text-xl">
                                 <span className="font-bold">
@@ -133,7 +147,7 @@ export default function ShowAnalysis (props: any) {
                                             <div className="text-xl">
                                                 <span className="font-bold">
                                                     Measure Level:
-                                                </span> <span className="text-base">{props.ReactionData["measure"].toFixed(2)} seconds/response (+1 added to score if less than)</span>
+                                                </span> <span className="text-base">{props.ReactionData["measure"].toString().length > 2 ? props.ReactionData["measure"].toString().slice(0, 3) : props.ReactionData["measure"]} seconds/response (+1 added to score if less than)</span>
                                             </div>
                                         : null}
                                         <div className="text-xl">

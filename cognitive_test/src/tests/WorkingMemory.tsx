@@ -49,11 +49,16 @@ export default function WorkingMemory(props: any) {
     const interval = "sections"
     const time = 3
     const time_measure = 25
+    const max_time = 50
+
 
     useEffect(() => {
         AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
         AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
     }, [AttentionData])
+
 
     useEffect(() => {
         var count
@@ -69,7 +74,6 @@ export default function WorkingMemory(props: any) {
     }, [ShowData, Delay, ResponseTime])
 
 
-
     useEffect(() => {
         Delay ? setResponseTime(response_time) : null
     }, [Delay])
@@ -77,19 +81,12 @@ export default function WorkingMemory(props: any) {
 
     function reset_time(){
         var arr = TimeArray
-        CurrentAttempts < 4 ? arr.push(ResponseTime*.001) : arr.push(100)
+        CurrentAttempts < 4 ? arr.push(ResponseTime*.001) : arr.push(max_time)
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
         setResponseTime(0)
     }
-
-
-    useEffect(() => {
-        
-        AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
- 
-    }, [AttentionData])
 
 
     useEffect(() => {
@@ -139,9 +136,6 @@ export default function WorkingMemory(props: any) {
 
 
     function build_next_round(){
-        var answers = Answers
-        TotalAttempts < 4 ? answers.push(1) : answers.push(0)
-        setAnswers(answers)
         setTokensFound(false)
         setFoundCount(0)
         CurrentAttempts < 4 ? setShowCirclesGreen(true) : setShowCirclesRed(true) 
@@ -149,6 +143,12 @@ export default function WorkingMemory(props: any) {
         setBoxCount(BoxCount + 1)
         setNextRound(false)
         add_token(RoundCount + 1)
+    }
+
+    function handle_answers(){
+        var answers = Answers
+        CurrentAttempts < 4 ? answers.push(1) : answers.push(0)
+        setAnswers(answers)
     }
 
 
@@ -266,6 +266,7 @@ export default function WorkingMemory(props: any) {
                 
                 //pulsing graphics?
                 if(FoundCount + 1 == RoundCount){
+                    handle_answers()
                     round_arr.push(CurrentAttempts)
                     setRoundAttempts(round_arr)
                     console.log("\n\nAll Tokens Found")
@@ -276,6 +277,7 @@ export default function WorkingMemory(props: any) {
                         setEndTest(true)
                         setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
                         setReactionData(analysis["speed"](TimeArray, time_measure))
+
 
                         var num = 0
                         for(var i=0; i<RoundAttempts.length; i++){
@@ -312,26 +314,6 @@ export default function WorkingMemory(props: any) {
 
     function reset_all(){
         props.setReset(true)
-        // setEndTest(false)
-        // setTestStart(false)
-        // setShowData(false)
-        // setNextRound(false)
-        // setDelay(false)
-        // setTokensFound(false)
-        // setTestTime(0)
-        // setFoundCount(0)
-        // setRoundCount(3) 
-        // setCurrentAttempts(0)
-        // setTotalAttempts(0)
-        // setCurrentRound(1)
-        // setDelayTime(0)
-        // setRoundAttempts([])
-        // setTokenPattern([])
-        // setBoxCount(3)
-        // setCurrentMessage("") 
-        // setClockDisplay("") 
-        // setAverageTime(0)
-        // setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
     }
 
 

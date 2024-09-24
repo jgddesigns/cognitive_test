@@ -1,35 +1,27 @@
 
-
 function create_answers(answers: any, time: any){
-  console.log(answers)
-  console.log(time)
   var temp_answers: any = []
   var temp_arr: any = []
   var length = Math.round(answers.length/time)
-  console.log("length")
-  console.log(length)
+
   for(var i=0; i < length; i++){
     temp_answers = []
     for(var  j=0; j < time; j++){
       temp_answers.push(answers[j])
-      console.log("temp answers")
-      console.log(temp_answers)
     }
     temp_arr.push(temp_answers)
     answers.splice(0, time)
   }
 
-  console.log("create answers")
-  console.log(temp_arr)
-  console.log(length)
   if(answers.length > 0){
     for(var k=0; k < answers.length; k++){
       temp_arr[length - 1].push(answers[k])
     }
   }
-  console.log(temp_arr)
+
   return temp_arr
 }
+
 
 function get_average(answers: any, time_value=0, base_level: any = null){
   var total_avg = 0
@@ -50,11 +42,9 @@ function get_average(answers: any, time_value=0, base_level: any = null){
 
   total_avg < base_level ? total_avg = base_level : null
 
-  console.log("total avg")
-  console.log(test_arr)
-  console.log(total_avg)
   return total_avg
 }
+
 
 function duplicate_answers(answers: any, interval: any = null){
   var temp_data: any = []
@@ -62,8 +52,10 @@ function duplicate_answers(answers: any, interval: any = null){
     temp_data.push(answers[i])
   }
   interval ? temp_data = answers : null
+
   return temp_data
 }
+
 
 //used to indicate the consistency of a user's answers. an average is established based on all responses given. then the responses are divided into intervals. interval averages are then calculated and compared against the overall average. the more interval averages that are greater or equal to the overall average, the stronger the attention rating. 
 function calculate_attention(interval: any, answers: any, time: any, proficiency: any, greater=true, possible: any = null){
@@ -95,10 +87,6 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
     periods = time
   }
 
-  console.log("periods")
-  console.log(periods)
-
-
   if(!Array.isArray(answers[0])){
     for(let i=0; i<answers.length; i++){
       total = total + answers[i]
@@ -117,7 +105,7 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
   interval_avg = interval == "time" ? get_average(answers, time, Math.round(Math.round(proficiency/time) * .5)) : get_average(answers, 0, .5)
 
   greater ? deviation = Math.round((interval_avg - (interval_avg * .2)) * 100) / 100 : deviation = Math.round((interval_avg + (interval_avg * .2)) * 100) / 100
-  bonus_range = Math.round(proficiency * 1.2)
+  bonus_range = Math.round(possible ? possible * 1.2 : proficiency * 1.2)
   penalty_range = Math.round(proficiency * .5)
 
   if(Array.isArray(interval_arr[0])){
@@ -134,9 +122,13 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
     }
   }
 
-  score = interval == "time" ? answers : score
-
+  console.log("score")
   console.log(score)
+
+  console.log("bonus range")
+  console.log(bonus_range)
+
+  score = interval == "time" ? answers : score
 
   if(greater){
     if(total >= bonus_range){
@@ -157,9 +149,6 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
       bonus = true
     }
   }
-
-
-
 
   strong = interval != "time" ? periods >= 5 ? Math.round(periods * .8) : 3 : Math.round(Math.round(time/60) * Math.round(possible / Math.round(time/60)) * .9) 
   average = interval != "time" ? periods >= 5 ? Math.round(periods * .6) : 2 : Math.round(strong * .75)
@@ -208,6 +197,7 @@ function calculate_decisiveness(answers: any, time_value: any = null, per_minute
   
   return {"answers": answers, "total": total, "percentage": percentage, "rating": rating, "time_value": time_value, "per_minute": per_minute, "possible": possible, "attributes": {"strong": high, "average": low + .01, "poor": low}}
 }
+
 
 //not needed in:
 //digit vigilance, number vigilance
