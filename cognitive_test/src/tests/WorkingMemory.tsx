@@ -48,8 +48,12 @@ export default function WorkingMemory(props: any) {
     const proficiency = Math.round(total_rounds * .7)
     const interval = "sections"
     const time = 3
-    const time_measure = 5
+    const time_measure = 25
 
+    useEffect(() => {
+        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+    }, [AttentionData])
 
     useEffect(() => {
         var count
@@ -73,10 +77,11 @@ export default function WorkingMemory(props: any) {
 
     function reset_time(){
         var arr = TimeArray
-        CurrentAttempts < 4 ? arr.push(ResponseTime*.001) : arr.push(8)
+        CurrentAttempts < 4 ? arr.push(ResponseTime*.001) : arr.push(100)
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
+        setResponseTime(0)
     }
 
 
@@ -89,10 +94,8 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
-        if(CurrentRound <= total_rounds){
-            var answers = Answers
-            FoundCount == BoxCount ? setNextRound(true) : null
-            TotalAttempts < 4 ? answers.push(1) : answers.push(0)
+        if(CurrentRound <= total_rounds && FoundCount == BoxCount){
+            setNextRound(true)
             NextRound ? build_next_round() : null
         } 
 
@@ -136,6 +139,9 @@ export default function WorkingMemory(props: any) {
 
 
     function build_next_round(){
+        var answers = Answers
+        TotalAttempts < 4 ? answers.push(1) : answers.push(0)
+        setAnswers(answers)
         setTokensFound(false)
         setFoundCount(0)
         CurrentAttempts < 4 ? setShowCirclesGreen(true) : setShowCirclesRed(true) 
