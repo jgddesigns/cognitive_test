@@ -28,17 +28,12 @@ export default function Connect(props: any) {
   const AWS_REGION = test_credentials.REGION;
 
 
-  //console.log(process.env)
-  // console.log('AWS Key:', AWS_KEY);
-  // console.log('AWS Secret:', AWS_SECRET);
-  // console.log('AWS Region:', AWS_REGION);
-
-
   //Check if credentials are defined
   if (!AWS_KEY || !AWS_SECRET || !AWS_REGION) {
     console.error('AWS credentials or region are not defined.');
     return null;
   }
+  
 
   AWS.config.update({
     accessKeyId: AWS_KEY,

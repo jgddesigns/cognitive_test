@@ -274,12 +274,9 @@ export default function Home() {
         setShowReactionTime(true)
         break
       case 8:
-        // setShowVerbalLearning(true)
-        break
-      case 9:
         setShowWordRecognition(true)
         break
-      case 10:
+      case 9:
         setShowWorkingMemory(true)
         break
     }
@@ -330,12 +327,10 @@ export default function Home() {
         </div>
 
         <div className="mt-24">
-          {/* HOME */}
           {ShowHome && !Logout ? 
             <MainPage/>  
           : null}
 
-          {/* TEST INFO */}
           {ShowTestInfo ?
             <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID}/>
           : null}
@@ -368,10 +363,6 @@ export default function Home() {
             <ReactionTime setReset={setReset} key={StateKey}/>        
           :null}
 
-          {/* {ShowVerbalLearning ?
-            <VerbalLearning/>        
-          :null} */}
-
           {ShowWordRecognition ?
             <WordRecognition setReset={setReset} key={StateKey}/>        
           :null}
@@ -380,18 +371,14 @@ export default function Home() {
             <WorkingMemory setReset={setReset} key={StateKey}/>        
           :null}
 
-
-          {/* SIGNUP */}
           {ShowSignup ?
             <Signup link_handler={link_handler} toggle_login={toggle_login} setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
           : null}
 
-          {/* LOGIN */}
           {ShowLogin ?
             <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout}/>
           : null}
 
-          {/* PROFILE */}
           {ShowProfile ?
             <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout}/>
           : null}
