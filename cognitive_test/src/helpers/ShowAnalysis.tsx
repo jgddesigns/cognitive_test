@@ -2,8 +2,8 @@
 import React, {useEffect} from 'react';
 import "../helpers/shapes.css"
 
-
-//Needs props Restart, setRestart, LengthValue, CurrentPosition, ShowCirclesGreen, setShowCirclesGreen, ShowCirclesRed, setShowCirclesRed
+// Shows the post-test analysis display
+// Needs props Restart, setRestart, LengthValue, CurrentPosition, ShowCirclesGreen, setShowCirclesGreen, ShowCirclesRed, setShowCirclesRed
 export default function ShowAnalysis (props: any) {
 
     const classes = ["", "mt-12 underline text-2xl text-blue-400 cursor-pointer", "mt-12 underline text-2xl font-bold text-gray-400 cursor-pointer"] 
@@ -22,11 +22,11 @@ export default function ShowAnalysis (props: any) {
     const [DecisionText, setDecisionText] = React.useState<any>("")
     const [ReactionText, setReactionText] = React.useState<any>("")
 
-    useEffect(() => {
-        
-    }, [])
 
 
+    // Toggles the description text for each type of analysis
+    // @param 'value': The number value designated for each type of analysis
+    // @return: N/A
     function click_handler(value: any){
         switch(value){
             case 0: 
@@ -45,8 +45,10 @@ export default function ShowAnalysis (props: any) {
     }
 
 
+    // Retrieves the interval average from the Attention calculations. Cuts off the string if longer than 4 and eliminates trivial decimal values.
+    // @param: N/A
+    // @return: N/A
     function get_average(){
-        props.AttentionData ? console.log(props.AttentionData["interval_avg"].toString().length) : null
         return props.AttentionData ? props.AttentionData["interval_avg"].toString().length > 4 ? props.AttentionData["interval_avg"].toString().slice(0, 4) : props.AttentionData["interval_avg"] : null
     }
 

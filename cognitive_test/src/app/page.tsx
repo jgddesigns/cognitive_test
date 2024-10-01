@@ -237,6 +237,8 @@ export default function Home() {
   }
 
   // Loops through all state variables in 'test_types' array and sets them to false. This results in no test being displayed.
+  // @param: N/A
+  // @return: N/A
   function clear_tests(){
     for(var i=0; i<test_types.length; i++){
       test_types[i](false)
@@ -245,6 +247,8 @@ export default function Home() {
 
 
   // Routes to the appropriate test page, based on the TestID state variable.  Clears all pages and classes to allow for a fresh screen.
+  // @param: N/A
+  // @return: N/A
   function take_test(){
     setHomeClass(link_class[0])
     setShowPopover(false)

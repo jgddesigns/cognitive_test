@@ -3,8 +3,8 @@ import React, {useEffect} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import "../helpers/shapes.css"
 
-
-//Needs props Restart, setRestart, LengthValue, CurrentPosition, ShowCirclesGreen, setShowCirclesGreen, ShowCirclesRed, setShowCirclesRed
+// Creates the display for the progress bar
+// Needs props Restart, setRestart, LengthValue, CurrentPosition, ShowCirclesGreen, setShowCirclesGreen, ShowCirclesRed, setShowCirclesRed
 export default function ProgressBar (props: any) {
 
     const [CircleArray, setCircleArray] = React.useState([])
@@ -26,11 +26,17 @@ export default function ProgressBar (props: any) {
     }, [props.ShowCirclesRed])
 
 
+    // Clears the circle array and map
+    // @param: N/A
+    // @return: N/A
     function clear_circles(){
         setCircleArray([])
         setCircleMap([])
     }
 
+    // Starts the process to display the progress bar circles. First the circles are cleared, then the 'show_circles' function is called based on the needed length (LengthValue prop). 
+    // @param: N/A
+    // @return: N/A
     function display_circles(){
         props.setRestart(false)
         clear_circles()
@@ -41,7 +47,9 @@ export default function ProgressBar (props: any) {
         }  
     }
 
-
+    // Creates a circle to be added to the array. Called whenever a change is made (set to gray, red, green etc...). Used in combination with 'show_circles' function.
+    // @param 'condition': True if circle is to be green. False if it is to be red.
+    // @return HTML Object: The div containing one circle
     function create_circle(condition: any, start: any = null){
         var class_txt: any = null
         start ? class_txt = "progress_gray" : condition ? class_txt = "progress_green" : class_txt = "progress_red"
@@ -54,6 +62,10 @@ export default function ProgressBar (props: any) {
     }
 
 
+    // Creates all needed circles and adds them to the circle map. 
+    // @param 'condition': True if the circle is to be green, false if red
+    // @param 'start': Only set if it is the initial display, null if otherwise
+    // @return: N/A 
     function show_circles(condition: any, start: any = null){
         var shown_arr: any = CircleArray 
         !start ? shown_arr[Math.abs(props.LengthValue - props.CurrentPosition) - 1] = create_circle(condition) : shown_arr.push(create_circle(condition, start))

@@ -4,37 +4,37 @@
 'use client';
 import AWS from 'aws-sdk';
 import React, {useEffect, useRef} from 'react';
-import { Button } from "@nextui-org/react";
-//import dotenv from 'dotenv';
 import {test_credentials} from '../credentials/Credentials'
 import Cognito from '@/login/Cognito';
-import { propagateServerField } from 'next/dist/server/lib/render-server';
 
 
-//dotenv.config(); // Load environment variables from .env file
 
-
+// Used to esstablish the main database connection. (AWS Dynamo DB)
+// EDIT?: Combine all fetch, retrieve and update functions into one. (pass the table name as a parameter? set it in a state variable prior to call?)
 export default function Connect(props: any) {
+  
   const [UserInserted, setUserInserted] = React.useState(false);
+
 
   useEffect(() => {
     props.Submit ? handleInsertUser(props.Username, props.Name, props.Email) : null
   }, [props.Submit, props.CheckConfirm])
 
 
-  // Fetch AWS credentials and region from environment variables
+  // Fetch AWS credentials and region from 'src/credentials/Credentials.tsx
   const AWS_KEY = test_credentials.ACCESS_KEY;
   const AWS_SECRET = test_credentials.ACCESS_SECRET;
   const AWS_REGION = test_credentials.REGION;
 
 
-  //Check if credentials are defined
+  // Check if credentials are defined
   if (!AWS_KEY || !AWS_SECRET || !AWS_REGION) {
     console.error('AWS credentials or region are not defined.');
     return null;
   }
   
 
+  // Connect credentials to AWS instance
   AWS.config.update({
     accessKeyId: AWS_KEY,
     secretAccessKey: AWS_SECRET,
@@ -42,15 +42,20 @@ export default function Connect(props: any) {
   });
 
 
+  // Create Dynamo DB connection
   const dynamoDB = new AWS.DynamoDB();
   const docClient = new AWS.DynamoDB.DocumentClient();
 
 
   // Table schemas
   const userTable = 'User';
-  const testResultsTable = 'Test_Results'; // Updated table name
+  const testResultsTable = 'Test_Results'; 
 
-  // Retrieve a user profile from the 'User' table
+
+  // Retrieve a user profile from the 'Users' table
+  // @param 'profileData': Username
+  // @param 'id': Unique row id
+  // @return json: The desired row in the 'Users' table or 'null' if failure
   const retrieveUserProfile = async (profileData: string, id: number) => {
     const params = {
       TableName: userTable,
@@ -69,7 +74,10 @@ export default function Connect(props: any) {
     }
   };
 
-  // Insert a new user profile into the 'User' table
+
+  // Insert a new user profile into the 'Users' table
+  // @param 'userProfile': Username
+  // @return: N/A
   const insertUserProfile = async (userProfile: any) => {
     const params = {
       TableName: userTable,
@@ -87,7 +95,11 @@ export default function Connect(props: any) {
   };
 
 
-  // Update an existing user profile in the 'User' table
+  // Update an existing user profile in the 'Users' table
+  // @param 'profileData': Username
+  // @param 'id': Unique row id
+  // @param 'updatedFields': Object of columns to update
+  // @return json: Updated column values
   const updateUserProfile = async (profileData: string, id: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
@@ -121,8 +133,9 @@ export default function Connect(props: any) {
   };
  
 
-
   // Insert a new test result into the 'Test_Results' table
+  // @param 'testResult': The results from a particular test
+  // @return: N/A
   const insertTestResult = async (testResult: any) => {
     const params = {
       TableName: testResultsTable, // Updated table name
@@ -137,7 +150,12 @@ export default function Connect(props: any) {
     }
   };
 
+
   // Update an existing test result in the 'Test_Results' table
+  // @param 'testProfile': Username
+  // @param 'testId': Unique row id
+  // @param 'updatedFields': The columns to update (needs json string)
+  // @return: Updated data or null when failure
   const updateTestResult = async (testProfile: string, testId: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
@@ -171,11 +189,12 @@ export default function Connect(props: any) {
   };
  
 
-
   // Retrieve test results for a specific user
+  // @param 'testProfile': Username
+  // @return: Fetched items or null when failure
   const fetchTestResults = async (testProfile: string) => {
     const params = {
-      TableName: testResultsTable, // Updated table name
+      TableName: testResultsTable, 
       KeyConditionExpression: 'test_profile = :test_profile',
       ExpressionAttributeValues: {
         ':test_profile': testProfile
@@ -192,11 +211,16 @@ export default function Connect(props: any) {
   };
 
 
+  // Sets the data to insert into the user table
+  // @param 'username': Username
+  // @param 'name': Name of user
+  // @param 'email': Email of user
+  // @return: N/A
   async function handleInsertUser(username: any, name: any, email: any){
     const id = await createID(userTable)
     const newUserProfile = {
-      profile_data: username, // Partition key
-      id: id.toString(), // Sort key
+      profile_data: username, 
+      id: id.toString(), 
       username: username,
       email_address: email,
       name: name,
@@ -210,48 +234,9 @@ export default function Connect(props: any) {
   };
 
 
-  async function handleInsertTestResult(){
-    const id = await createID(testResultsTable)
-    const newTestResult = {
-      test_profile: 'user123', // Partition key
-      id: id.toString(), // Sort key
-      test_type: '0',
-      attempt_number: '1',
-      time_completed: '120',
-      score: '95',
-      variable: '0',
-      timestamp: getTimestamp()
-    };
-    insertTestResult(newTestResult);
-  };
-
-  const handleFetchUserProfile = () => {
-    retrieveUserProfile('user123', 1); // Provide both partition key and sort key
-  };
-
-  const handleFetchTestResults = () => {
-    fetchTestResults('user123'); // Use the correct partition key
-  };
-
-  const handleUpdateUserProfile = () => {
-    const updatedFields = {
-      email_address: 'new_email@example.com', // Example field to update
-      name: 'New Name'
-      // Add other fields you want to update
-    };
-    updateUserProfile('user123', 1, updatedFields); // Provide partition key, sort key, and updated fields
-  };
-
-  const handleUpdateTestResult = () => {
-    const updatedFields = {
-      score: 98, // Example field to update
-      time_completed: 110
-      // Add other fields you want to update
-    };
-    updateTestResult('user123', 1, updatedFields); // Provide partition key, sort key, and updated fields
-  };
-
-
+  // Uses the 'retrieveOne' function to create a new id. Used when inserting a new row.
+  // @param 'table': The table to create the id in 
+  // @return: The id that was created
   async function createID(table: any){
     var new_id: any = await retrieveOne("id", table)
     console.log("id created " + new_id)
@@ -259,6 +244,10 @@ export default function Connect(props: any) {
   }
 
 
+  // Retrieves one value from a given table
+  // @param 'column': The column to get the data from
+  // @param 'table': The table to get the data from
+  // @return: If column is 'id', the new id. Otherwise, data from the given row.
   async function retrieveOne(column: any, table: any){
     const params: any = {
       TableName: table,
@@ -277,6 +266,9 @@ export default function Connect(props: any) {
   }
 
 
+  // Retrieves the current time
+  // @param: N/A
+  // @return: The current time
   function getTimestamp(){
     const date = new Date(Date.now())
     return date.toString()

@@ -303,8 +303,6 @@ export default function PictureRecognition (props: any) {
 
 
     function start_handler(){
-        // setAttentionData(analysis["attention"](interval, [1,1,1,1,0,0,0,0,1,1,0,0,1,1,1,0,0,0,1,1], time, proficiency))
-        // console.log(analysis["speed"]([.3,.7,.5,.7,.8,.3,.2,.2,.4,.5,.3,.2,.4,.4,.3,.6,.5,.4,.4,.2], time_measure))
         build_array()
         setDigits(digits_value + 2)
         setShowMessage(true)
