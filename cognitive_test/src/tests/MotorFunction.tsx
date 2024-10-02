@@ -47,6 +47,7 @@ export default function WorkingMemory(props: any) {
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const shapes = ["circle", "square", "triangle", "heart", "star", "moon", "hexagon", "diamond", "trapezoid"]
     const colors = ["red", "yellow", "green", "blue"]
@@ -67,14 +68,21 @@ export default function WorkingMemory(props: any) {
     const time_measure = 1.5
 
     const proficiency = Math.round(total_rounds * .7)
+
+    const test_name = "motor_function"
     
 
     useEffect(() => {
 
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
-        // AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
 
-    }, [AttentionData])
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
 
     useEffect(() => {
         
@@ -165,6 +173,14 @@ export default function WorkingMemory(props: any) {
         }
 
     }, [CountDown, CountTimer])
+
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function toggle_countdown(condition: any){

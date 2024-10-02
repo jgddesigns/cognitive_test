@@ -32,6 +32,7 @@ export default function WordRecognition (props: any) {
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
@@ -46,6 +47,7 @@ export default function WordRecognition (props: any) {
     const time = 3
     const test_length = 5
     const time_measure = 1.5
+    const test_name = "word_recognition"
     
 
     const response_time = 100
@@ -67,10 +69,22 @@ export default function WordRecognition (props: any) {
 
 
     useEffect(() => {
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
-        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
-    }, [AttentionData])
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
 
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
+
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function reset_time(){
@@ -245,8 +259,6 @@ export default function WordRecognition (props: any) {
 
 
     function start_handler(){
-        console.log(analysis["attention"](interval, Answers, time, proficiency))
-        console.log(analysis["speed"](TimeArray, time_measure))
         build_array()
         setDigits(start_digits)
         setShowMessage(true)

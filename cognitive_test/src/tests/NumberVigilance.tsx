@@ -35,6 +35,7 @@ export default function NumberVigilance (props: any) {
     const [AttentionData, setAttentionData]  = React.useState<any>(null)
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Inserted, setInserted] = React.useState(false)
 
     const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white outline-0", "bg-green-400 rounded px-10 h-12 text-white outline-0", "bg-red-400 rounded px-10 h-12 text-white outline-0"]
     const [CorrectClass, setCorrectClass] = React.useState(correct_class[0])
@@ -61,6 +62,9 @@ export default function NumberVigilance (props: any) {
     //section interval, every 3 digits, 6 sections total
     const time = 5
 
+    const test_name = "number_vigilance"
+
+    
 
     useEffect(() => {
         if(ClickedButton){
@@ -137,14 +141,27 @@ export default function NumberVigilance (props: any) {
 
     useEffect(() => {
 
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"], shown_value, per_minute, MatchedNumbers)) : null
-        // AttentionData ? console.log(analysis["decisiveness"](AttentionData["original_answers"], shown_value, per_minute, MatchedNumbers)) : null
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"], shown_value, per_minute, MatchedNumbers)) : null
+        !Inserted && AttentionData && DecisionData ? handle_insert() : null
 
-    }, [AttentionData])
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
 
 
     function set_interval(){
         setIntervalTime(1)
+    }
+
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
     }
 
 

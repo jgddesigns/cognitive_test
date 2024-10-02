@@ -26,6 +26,7 @@ export default function ReactionTime (props: any) {
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const answer_string = ["", "Good!", "Too Slow!"]
     const [AnswerString, setAnswerString] = React.useState(answer_string[0])
@@ -38,18 +39,24 @@ export default function ReactionTime (props: any) {
     const test_length = 20
     const proficiency = test_length * .7
     const time_measure = .5
+    const test_name = "reaction_time"
 
 
     useEffect(() => {
 
         AttentionData ? setAvgTime(get_avg_time()) : null
-        AttentionData  ? setReactionData(analysis["speed"](AttentionData["original_answers"], time_measure)) : null
-        AttentionData  ? console.log(analysis["speed"](AttentionData["original_answers"], time_measure)) : null
+        !ReactionData && AttentionData  ? setReactionData(analysis["speed"](AttentionData["original_answers"], time_measure)) : null
         AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
- 
-    }, [AttentionData])
+        !Inserted && AttentionData && ReactionData ? handle_insert() : null
 
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
     
+
     useEffect(() => {
         if(ClickedButton){
             setPressedCount(PressedCount + 1)
@@ -88,6 +95,14 @@ export default function ReactionTime (props: any) {
     }, [ShowButton, ResponseTime])
 
 
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
+
+
     function set_interval(){
         var time = Math.abs((3.5 - (Math.ceil(Math.random() * 4))))
         console.log(ResponsesArray)
@@ -95,9 +110,7 @@ export default function ReactionTime (props: any) {
     }
 
 
-
     function clicked_button(){
-        console.log(analysis["attention"](interval, [[.3,1.1,.25,.4], [.44,.53,.6,.8], [.5,.3,.75,.45], [.77,.84,.43,.43], [.17,.54,.68,.9, .8, .7]], time, proficiency, true))
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 

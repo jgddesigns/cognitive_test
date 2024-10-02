@@ -34,6 +34,7 @@ export default function MemoryScanning (props: any) {
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
 
@@ -56,12 +57,19 @@ export default function MemoryScanning (props: any) {
 
     const time_measure = 1.5
 
+    const test_name = "memory_scanning"
+
     useEffect(() => {
 
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
-        // AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
 
-    }, [AttentionData])
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
 
 
 
@@ -78,6 +86,13 @@ export default function MemoryScanning (props: any) {
     
     }, [ShowButtons, ResponseTime])
 
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function reset_time(missed=false){

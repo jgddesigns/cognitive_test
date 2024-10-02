@@ -33,6 +33,7 @@ export default function PictureRecognition (props: any) {
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
 
@@ -50,7 +51,7 @@ export default function PictureRecognition (props: any) {
 
     const interval = "sections"
 
-    const time_measure = 1
+    const time_measure = 1.5
 
     //section interval, every 3 digits, 6 sections total
     const time = 5
@@ -59,18 +60,25 @@ export default function PictureRecognition (props: any) {
     const [ResponseTime, setResponseTime] = React.useState(response_time)
     const [TimeArray, setTimeArray]: any = React.useState([])
 
+    const test_name = "picture_recognition"
+
 
     useEffect(() => {
 
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
-        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !DecisionData && AttentionData ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
 
-    }, [AttentionData])
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
 
 
     useEffect(() => {
         var count
-        while(ShowPrompt && ResponseTime >= 0){
+        while(ShowButtons && ResponseTime >= 0){
             const timeoutId = setTimeout(() => {
                 count = ResponseTime
                 setResponseTime(ResponseTime + response_time)
@@ -79,7 +87,7 @@ export default function PictureRecognition (props: any) {
             return () => clearTimeout(timeoutId)
         }
     
-    }, [ShowPrompt, ResponseTime])
+    }, [ShowButtons, ResponseTime])
 
 
 
@@ -88,11 +96,19 @@ export default function PictureRecognition (props: any) {
     }, [ShowButtons])
 
 
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
+
 
     function reset_time(missed=false){
         var arr = TimeArray
         missed ? arr.push(3) : arr.push(ResponseTime*.001) 
         console.log("time")
+        console.log(ResponseTime*.001)
         console.log(arr)
         setTimeArray(arr)
         setResponseTime(0)
@@ -297,6 +313,8 @@ export default function PictureRecognition (props: any) {
             setShowCirclesRed(true)
             answers.push(0)
         }
+        console.log("answers")
+        console.log(answers)
         TimeArray.length <= pictures_value ? setAnswers(answers) : null
         TimeArray.length < pictures_value ? reset_time() : null
     }
@@ -327,6 +345,7 @@ export default function PictureRecognition (props: any) {
         }
 
         if(AnsweredString == "Missed!" && CompareDigits % 2 == 0 && !Answered){     let answers = Answers 
+            answers.push(0)
             setShowCirclesRed(true)
             TimeArray.length < pictures_value ? reset_time(true) : null 
             TimeArray.length <= pictures_value ? setAnswers(answers) : null 

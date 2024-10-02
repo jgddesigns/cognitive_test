@@ -32,6 +32,8 @@ export default function Connect(props: any) {
   }, [ID, AttemptNumber])
 
 
+
+
   // Fetch AWS credentials and region from environment variables
   const AWS_KEY = test_credentials.ACCESS_KEY;
   const AWS_SECRET = test_credentials.ACCESS_SECRET;
@@ -63,6 +65,14 @@ export default function Connect(props: any) {
   const testResultsTable = 'Test_Results'; 
 
 
+  useEffect(() => {
+    if(props.Retrieve){
+      console.log("retrieve in connect")
+      retrieveHandler()
+    }
+  }, [props.Retrieve])
+
+
   // Retrieve a user profile from the 'Users' table
   // @param 'profileData': Username
   // @param 'id': Unique row id
@@ -85,6 +95,14 @@ export default function Connect(props: any) {
     }
   };
 
+  async function retrieveHandler(){
+    const data = await retrieveAll(testResultsTable)
+    console.log("data retrieved")
+    console.log(data)
+    props.setRetrievedData(data)
+    props.setRetrieve(false)
+    return data
+  }
 
   // Insert a new user profile into the 'Users' table
   // @param 'userProfile': Username
@@ -158,6 +176,8 @@ export default function Connect(props: any) {
       props.setInsert(false)
       props.setData([])
       props.setTestName("")
+      setID(null)
+      setAttemptNumber(null)
     } catch (err) {
       console.error('Error inserting test result:', err);
       console.error('Parameters used:', JSON.stringify(params, null, 2));
@@ -223,7 +243,6 @@ export default function Connect(props: any) {
   };
 
   async function handleInsertUser(username: any, name: any, email: any){
-    console.log("insert test results in connect component")
     const id: any = await retrieveOne("id", testResultsTable)
     const newUserProfile = {
       profile_data: username, 
@@ -242,6 +261,7 @@ export default function Connect(props: any) {
 
 
   async function handleInsertTestResult(){
+    console.log("inserting test results id:" + ID + ", attempt number: " + AttemptNumber)
     const newTestResult = {
       user_id: props.Username, 
       id: ID, 
@@ -257,10 +277,13 @@ export default function Connect(props: any) {
 
 
   async function createEntries(){
+    console.log("creating entries")
     const id: any = await retrieveOne("id", testResultsTable)
     id ? setID(id.toString()) : console.log("Error creating id.")
-    const attempt: any = await getAttempt()
+    var attempt: any = await getAttempt() 
+    attempt == 0 ? attempt = 1 : attempt = attempt + 1 
     attempt ? setAttemptNumber(attempt.toString()) : console.log("Error creating attempt number.")
+    // ID && AttemptNumber ? handleInsertTestResult() : null
   }
 
 
@@ -272,7 +295,8 @@ export default function Connect(props: any) {
         attempt[i]["test_name"]["S"] == props.TestName && attempt_num < parseInt(attempt[i]["attempt_number"]["S"]) ? attempt_num = parseInt(attempt[i]["attempt_number"]["S"]) : null
       }
     }
-    return attempt_num + 1
+    console.log("attempt " + attempt_num)
+    return attempt_num
   }
 
 

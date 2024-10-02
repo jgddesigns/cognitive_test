@@ -32,6 +32,7 @@ export default function DigitVigilance(props: any) {
     const [AttentionData, setAttentionData]  = React.useState<any>(null)
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Inserted, setInserted] = React.useState(false)
     
     //proficient overall score
     
@@ -51,9 +52,9 @@ export default function DigitVigilance(props: any) {
 
     const high_level = 100
 
-    
-
     const row_value = number_value * 2
+
+    const test_name = "digit_vigilance"
 
 
 
@@ -112,10 +113,23 @@ export default function DigitVigilance(props: any) {
 
     useEffect(() => {
 
-        //AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"], time_value, per_minute, high_level)) : null
-        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"], time_value, per_minute, high_level)) : null
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"], time_value, per_minute, high_level)) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
 
-    }, [AttentionData])
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
+
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function set_clock(time: any){

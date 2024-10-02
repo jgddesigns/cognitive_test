@@ -123,7 +123,9 @@ export default function Home() {
   const [Data, setData] = React.useState([])
   const [TestName, setTestName] = React.useState("")
 
-  
+  const [Retrieve, setRetrieve] = React.useState(false)
+  const [RetrievedData, setRetrievedData] = React.useState(null)
+
   // Active only when the home page is first displayed. Checks if user login cookies currently exist.
   useEffect(() => {
     !CookiesChecked ? check_cookies() : null
@@ -143,6 +145,11 @@ export default function Home() {
   useEffect(() => {
     Reset ? reset_handler() : null
   }, [Reset])
+
+
+  useEffect(() => {
+    !RetrievedData ? setRetrieve(true) : null
+  }, [RetrievedData])
 
 
   // Controls the logout timer and its associated display.
@@ -171,11 +178,9 @@ export default function Home() {
   function check_cookies(){
     var cookies = document.cookie.split(";")
     var cookie_arr = []
-    console.log(cookies)
     for(var i = 0; i<cookies.length; i++){
       cookie_arr.push(cookies[i].split("="))
     }
-    console.log(cookie_arr)
     if(cookie_arr[0][1]){
       setUsername(cookie_arr[0][1])
       setEmail(cookie_arr[1][1])
@@ -206,8 +211,6 @@ export default function Home() {
   // @param place: Number. The spot in the 'classes' and 'screens' array that corresponds to each page.
   // @return: N/A
   function link_handler(place: any){
-    console.log("link handler")
-    console.log(LoggedIn)
     clear_tests()
     setTestID(0)
     set_classes(place)
@@ -333,7 +336,7 @@ export default function Home() {
         </div>
 
         <div>
-          <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName}/>
+          <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
         </div>
 
         <div className="mt-24">
@@ -390,7 +393,7 @@ export default function Home() {
           : null}
 
           {ShowProfile ?
-            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout}/>
+            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout} setRetrieve={setRetrieve} RetrievedData={RetrievedData} setRetrievedData={setRetrievedData}/>
           : null}
 
           {Logout ?

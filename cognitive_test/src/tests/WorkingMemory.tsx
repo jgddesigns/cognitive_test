@@ -33,6 +33,7 @@ export default function WorkingMemory(props: any) {
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32  bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
@@ -50,14 +51,20 @@ export default function WorkingMemory(props: any) {
     const time = 3
     const time_measure = 25
     const max_time = 50
+    const test_name = "working_memory"
 
 
     useEffect(() => {
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
-        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
         AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
-    }, [AttentionData])
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
+
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
 
 
     useEffect(() => {
@@ -133,6 +140,13 @@ export default function WorkingMemory(props: any) {
 
     }, [CurrentRound, Delay, DelayTime, TestTime, TestStart, EndTest])
 
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function build_next_round(){
@@ -235,6 +249,11 @@ export default function WorkingMemory(props: any) {
         setTestStart(true)
         setShowData(true)
         setCurrentMessage("Click Boxes to Find Tokens")
+
+
+        setEndTest(true)
+        setAttentionData(analysis["attention"](interval, [1,1,1,0,0,0,1,1,0,0], time, proficiency))
+        setReactionData(analysis["speed"]([.7,.7,.5,.6,.5,1,1.2,.3,.8,1.6], time_measure))
     }
 
 
@@ -271,6 +290,7 @@ export default function WorkingMemory(props: any) {
                     setRoundAttempts(round_arr)
                     console.log("\n\nAll Tokens Found")
                     setTokensFound(true)
+                    reset_time()
                     setCurrentMessage("All Tokens Found")
                     if(CurrentRound + 1 > 10){ 
                         average_time(TestTime)

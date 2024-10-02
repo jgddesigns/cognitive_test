@@ -20,7 +20,6 @@ export default function ChoiceReaction (props: any) {
     const [ShowPrompt, setShowPrompt] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
-    const [Inserted, setInserted] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
     const response_time = 100
     const [ResponseTime, setResponseTime] = React.useState(response_time)
@@ -28,7 +27,7 @@ export default function ChoiceReaction (props: any) {
     const [AttentionData, setAttentionData]  = React.useState<any>(null)
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
-
+    const [Inserted, setInserted] = React.useState(false)
 
     const prompt_list = [
         //true questions
@@ -206,7 +205,7 @@ export default function ChoiceReaction (props: any) {
     
     }, [ShowPrompt, ResponseTime])
 
-    //needed for inserting data for other tests
+
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -244,10 +243,6 @@ export default function ChoiceReaction (props: any) {
             setEndTest(true)
             setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
             setReactionData(analysis["speed"](TimeArray, time_measure))
-            // console.log("d a")
-            // console.log(attention_answers)
-            // console.log(Answers2)
-            // console.log(analysis["decisiveness"](decisive_answers))
         } 
         PromptList.length < 1 && ShowPrompt ? setEndTest(true) : null
         var temp_arr = PromptList
@@ -273,9 +268,6 @@ export default function ChoiceReaction (props: any) {
         create_prompts()
         setTestStart(true)
         setShowPrompt(true)
-        // console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
-        // setAttentionData(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
-        // console.log(analysis["speed"]([.6,.7,.4,.5,.5,.3,.2,.3,.2,.3,.5,.3,.2,.5,.3,.2,.5,.3,.2,.1], .5))
     }
 
 
@@ -303,7 +295,6 @@ export default function ChoiceReaction (props: any) {
         }else{
             temp_arr.push(0)
             setShowCirclesRed(true)
-            //TimeArray.length < list_length ? reset_time() : null
         }
         setAnswers(temp_arr)
         setAnswers2(temp_arr2)
