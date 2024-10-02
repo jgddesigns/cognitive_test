@@ -243,6 +243,8 @@ export default function Home() {
   }
 
   // Loops through all state variables in 'test_types' array and sets them to false. This results in no test being displayed.
+  // @param: N/A
+  // @return: N/A
   function clear_tests(){
     for(var i=0; i<test_types.length; i++){
       test_types[i](false)
@@ -251,6 +253,8 @@ export default function Home() {
 
 
   // Routes to the appropriate test page, based on the TestID state variable.  Clears all pages and classes to allow for a fresh screen.
+  // @param: N/A
+  // @return: N/A
   function take_test(){
     setHomeClass(link_class[0])
     setShowPopover(false)
@@ -280,12 +284,9 @@ export default function Home() {
         setShowReactionTime(true)
         break
       case 8:
-        // setShowVerbalLearning(true)
-        break
-      case 9:
         setShowWordRecognition(true)
         break
-      case 10:
+      case 9:
         setShowWorkingMemory(true)
         break
     }
@@ -336,12 +337,10 @@ export default function Home() {
         </div>
 
         <div className="mt-24">
-          {/* HOME */}
           {ShowHome && !Logout ? 
             <MainPage/>  
           : null}
 
-          {/* TEST INFO */}
           {ShowTestInfo ?
             <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID}/>
           : null}
@@ -374,10 +373,6 @@ export default function Home() {
             <ReactionTime setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
 
-          {/* {ShowVerbalLearning ?
-            <VerbalLearning/>        
-          :null} */}
-
           {ShowWordRecognition ?
             <WordRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
@@ -386,18 +381,14 @@ export default function Home() {
             <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
 
-
-          {/* SIGNUP */}
           {ShowSignup ?
             <Signup link_handler={link_handler} toggle_login={toggle_login} setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
           : null}
 
-          {/* LOGIN */}
           {ShowLogin ?
             <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout}/>
           : null}
 
-          {/* PROFILE */}
           {ShowProfile ?
             <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout}/>
           : null}

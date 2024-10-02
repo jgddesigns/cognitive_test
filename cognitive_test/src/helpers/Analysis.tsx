@@ -1,16 +1,20 @@
 
-function create_answers(answers: any, time: any){
+// Creates a divided sub-array of the original array. Used to calculate attention within segments.
+// @param 'answers': The original answers array
+// @param 'segments': The number of segments for the new array
+// @return: A new array where the originally passed array is divided into segmented sub-arrays
+function create_answers(answers: any, segments: any){
   var temp_answers: any = []
   var temp_arr: any = []
-  var length = Math.round(answers.length/time)
+  var length = Math.round(answers.length/segments)
 
   for(var i=0; i < length; i++){
     temp_answers = []
-    for(var  j=0; j < time; j++){
+    for(var  j=0; j < segments; j++){
       temp_answers.push(answers[j])
     }
     temp_arr.push(temp_answers)
-    answers.splice(0, time)
+    answers.splice(0, segments)
   }
 
   if(answers.length > 0){
@@ -23,6 +27,11 @@ function create_answers(answers: any, time: any){
 }
 
 
+// Gets the average correct answers within a segmented array (origial array split into sub-arrays). Then calculate the average of the averages (overall average). Used in the 'calculate_attention' function.
+// @param 'answers': The array of arrays (original array split into sub-arrays)
+// @param 'time_value': If time is a factor, use it to get the average correct answers within the segment
+// @param 'base_level': If time is a factor and varies outside of normal range, then it is set to this level
+// @return: The average of correct answers per segment. Example: [[1,1,0],[0,1,0],[1,1,1]] = [.67, .33, 1] = .67
 function get_average(answers: any, time_value=0, base_level: any = null){
   var total_avg = 0
   var temp_avg = 0
@@ -45,7 +54,10 @@ function get_average(answers: any, time_value=0, base_level: any = null){
   return total_avg
 }
 
-
+// Creates a duplicate answers array. This keeps the array constant in the case the original values are modified.
+// @param 'answers': The original answers array
+// @param 'interval': If there is an interval, specify true or false
+// @return: The duplicate array 
 function duplicate_answers(answers: any, interval: any = null){
   var temp_data: any = []
   for(var i =0; i<answers.length; i++){
@@ -56,10 +68,18 @@ function duplicate_answers(answers: any, interval: any = null){
   return temp_data
 }
 
-
-//used to indicate the consistency of a user's answers. an average is established based on all responses given. then the responses are divided into intervals. interval averages are then calculated and compared against the overall average. the more interval averages that are greater or equal to the overall average, the stronger the attention rating. 
+// SPLIT INTO SMALLER FUNCTIONS???
+// Used to indicate the consistency of a user's answers. The answer array is split into intervals, then a percentage of correct answers is calculated in each interval. Each interval average is compared to the overall average. The more interval averages that are greater or equal to the overall average, the stronger the attention rating. The total possible score is equal to the number of intervals.
+// Deviation: An interval average can fall below the overall average (down to the deviation range) and still contibute to a positive score. 
+// Penalty/Bonus: A bonus and penalty are also calculated based on the overall score. If a user answers 120% correct or above the proficiency level (70% of possible score), a bonus point is given. If the score is at or below 50% of the proficiency level, a penalty is given and a point is subtracted.
+// @param 'interval': The type of interval (correct this to be a boolean value?). The value is based on if a test has a question set, or a running clock. A question set will have intervals, and a running clock is based on the responses versus the possible points.
+// @param 'answers': The array of answers
+// @param 'time': The amount of intervals to split the array into
+// @param 'proficiency': The score to measure calculations from (70% of possible points, remove and calculated based on answers array length)
+// @param 'greater': If an answer is supposed to be greater of less than the average. If reaction time is a factor, the value is false. Otherwise it is true.
+// @param 'possible': The total amount of points possible. Used when there are no intervals.
+// @return: A json string of values calculated in the function 
 function calculate_attention(interval: any, answers: any, time: any, proficiency: any, greater=true, possible: any = null){
-  console.log(answers)
   var periods: any = Math.round(answers.length/time)
   var interval_avg: any = null
   var total: any = null
@@ -122,12 +142,6 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
     }
   }
 
-  console.log("score")
-  console.log(score)
-
-  console.log("bonus range")
-  console.log(bonus_range)
-
   score = interval == "time" ? answers : score
 
   if(greater){
@@ -170,6 +184,12 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
 }
 
 
+// Used to calculate a user's choices. A simple calculation based on the number of correct answers compared to the amount of questions. If the test is timed and does not have a question set, the percentage is calculated based on the total possible score.
+// @param 'answers': The array of answers. If there is no question set, the total score.
+// @param 'time_value': If the test is time based and has no question set, the amount of time given for the test.
+// @param 'per_minute': A boolean value set to true if the test is time based and has no question set.
+// @param 'possible': If the test is time based and has no question set, the total amount of possible points.
+// @return: A json array of values calculated in the function.
 function calculate_decisiveness(answers: any, time_value: any = null, per_minute: any = null, possible: any = null){
   var high = .9
   var low = .7
@@ -204,6 +224,14 @@ function calculate_decisiveness(answers: any, time_value: any = null, per_minute
 //times: array of answer times. length is total number of test questions/sections.
 //measure: the measuring point of if an answer is fast or slow
 //sections: is there a running clock or an answer based timer?
+
+// Used to calculate a user's speed or reaction time. 
+// @param 'times': An array of reaction times
+// @param 'measure': The level to measure the reaction time against. If the time is equal or less to this level, add to the overall score.
+// @param 'sections': Whether the test has a question set or is based on a running clock.
+// @param 'per_minute': If the test has a running clock, the amount of expected correct answers per minute. 
+// @param 'possible': If the test has a running clock, the total possible amount of points.
+// @return json: Values that were calculated in the function 
 function calculate_speed(times: any, measure: any, sections=true, per_minute: any = null, possible: any = null){
   console.log(times)
   var score = 0

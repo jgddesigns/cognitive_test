@@ -9,7 +9,7 @@ INTRODUCTION:
 The purpose of this app is for users to take a set of 10-15 different cognitive tests. Initially the baseline is determined by taking a test under regular circumstances. 
 <br>
 <br>
-Afterward, various variables pertaining to the CrowdDoing platform are introduced such as use of herbal supplements or walks in nature. Previously attempted tests are to be taken again following the indtroduction of a specific variable. 
+Afterward, various variables pertaining to the CrowdDoing platform are introduced such as use of herbal supplements or walks in nature. Previously attempted tests are to be taken again following the introduction of a specific variable. 
 <br>
 <br>
 A comparison is made with subsequent analysis, based on typically expected results and how the variables affect or have no influence on a particular test.
@@ -44,9 +44,9 @@ Typescript
 <br>
 Tailwind
 <br>
-AWS Dynamo DB -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Github for further instructions.</i>
+AWS Dynamo DB -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Slack for further instructions.</i>
 <br>
-AWS Cognito -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Github for further instructions.</i>
+AWS Cognito -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Slack for further instructions.</i>
 <br>
 Node.js & npm
 <br>

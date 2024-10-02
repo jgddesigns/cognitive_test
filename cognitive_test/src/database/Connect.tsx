@@ -8,10 +8,14 @@ import {test_credentials} from '../credentials/Credentials'
 import Cognito from '@/login/Cognito';
 
 
+// Used to esstablish the main database connection. (AWS Dynamo DB)
+// EDIT?: Combine all fetch, retrieve and update functions into one. (pass the table name as a parameter? set it in a state variable prior to call?)
 export default function Connect(props: any) {
+  
   const [UserInserted, setUserInserted] = React.useState(false);
   const [ID, setID] = React.useState(null)
   const [AttemptNumber, setAttemptNumber] = React.useState(null)
+
 
   useEffect(() => {
     props.Submit ? handleInsertUser(props.Username, props.Name, props.Email) : null
@@ -39,7 +43,9 @@ export default function Connect(props: any) {
     console.error('AWS credentials or region are not defined.');
     return null;
   }
+  
 
+  // Connect credentials to AWS instance
   AWS.config.update({
     accessKeyId: AWS_KEY,
     secretAccessKey: AWS_SECRET,
@@ -47,15 +53,20 @@ export default function Connect(props: any) {
   });
 
 
+  // Create Dynamo DB connection
   const dynamoDB = new AWS.DynamoDB();
   const docClient = new AWS.DynamoDB.DocumentClient();
 
 
   // Table schemas
   const userTable = 'User';
-  const testResultsTable = 'Test_Results'; // Updated table name
+  const testResultsTable = 'Test_Results'; 
 
-  // Retrieve a user profile from the 'User' table
+
+  // Retrieve a user profile from the 'Users' table
+  // @param 'profileData': Username
+  // @param 'id': Unique row id
+  // @return json: The desired row in the 'Users' table or 'null' if failure
   const retrieveUserProfile = async (profileData: string, id: number) => {
     const params = {
       TableName: userTable,
@@ -74,7 +85,10 @@ export default function Connect(props: any) {
     }
   };
 
-  // Insert a new user profile into the 'User' table
+
+  // Insert a new user profile into the 'Users' table
+  // @param 'userProfile': Username
+  // @return: N/A
   const insertUserProfile = async (userProfile: any) => {
     const params = {
       TableName: userTable,
@@ -92,7 +106,11 @@ export default function Connect(props: any) {
   };
 
 
-  // Update an existing user profile in the 'User' table
+  // Update an existing user profile in the 'Users' table
+  // @param 'profileData': Username
+  // @param 'id': Unique row id
+  // @param 'updatedFields': Object of columns to update
+  // @return json: Updated column values
   const updateUserProfile = async (profileData: string, id: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
@@ -126,8 +144,9 @@ export default function Connect(props: any) {
   };
  
 
-
   // Insert a new test result into the 'Test_Results' table
+  // @param 'testResult': The results from a particular test
+  // @return: N/A
   const insertTestResult = async (testResult: any) => {
     const params = {
       TableName: testResultsTable, // Updated table name
@@ -145,7 +164,12 @@ export default function Connect(props: any) {
     }
   };
 
+
   // Update an existing test result in the 'Test_Results' table
+  // @param 'testProfile': Username
+  // @param 'testId': Unique row id
+  // @param 'updatedFields': The columns to update (needs json string)
+  // @return: Updated data or null when failure
   const updateTestResult = async (testProfile: string, testId: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
@@ -179,7 +203,6 @@ export default function Connect(props: any) {
   };
  
 
-
   // Retrieve test results for a specific user
   const fetchTestResults = async () => {
     const params = {
@@ -203,8 +226,8 @@ export default function Connect(props: any) {
     console.log("insert test results in connect component")
     const id: any = await retrieveOne("id", testResultsTable)
     const newUserProfile = {
-      profile_data: username, // Partition key
-      id: id.toString(), // Sort key
+      profile_data: username, 
+      id: id.toString(), 
       username: username,
       email_address: email,
       name: name,
@@ -253,6 +276,10 @@ export default function Connect(props: any) {
   }
 
 
+  // Retrieves one value from a given table
+  // @param 'column': The column to get the data from
+  // @param 'table': The table to get the data from
+  // @return: If column is 'id', the new id. Otherwise, data from the given row.
   async function retrieveOne(column: any, table: any){
     const params: any = {
       TableName: table,
@@ -289,6 +316,9 @@ export default function Connect(props: any) {
   }
 
 
+  // Retrieves the current time
+  // @param: N/A
+  // @return: The current time
   function getTimestamp(){
     const date = new Date(Date.now())
     return date.toString()
