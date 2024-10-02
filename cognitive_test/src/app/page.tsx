@@ -119,6 +119,11 @@ export default function Home() {
   // Passes to: All test functions located in 'src/tests'.
   const [StateKey, setStateKey] = React.useState(0)
 
+  const [Insert, setInsert] = React.useState(false)
+  const [Data, setData] = React.useState([])
+  const [TestName, setTestName] = React.useState("")
+
+  
   // Active only when the home page is first displayed. Checks if user login cookies currently exist.
   useEffect(() => {
     !CookiesChecked ? check_cookies() : null
@@ -138,6 +143,7 @@ export default function Home() {
   useEffect(() => {
     Reset ? reset_handler() : null
   }, [Reset])
+
 
   // Controls the logout timer and its associated display.
   useEffect(() => {
@@ -326,7 +332,7 @@ export default function Home() {
         </div>
 
         <div>
-          <Connect/>
+          <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName}/>
         </div>
 
         <div className="mt-24">
@@ -341,31 +347,31 @@ export default function Home() {
           : null}
 
           {ShowChoiceReaction ?
-            <ChoiceReaction setReset={setReset} key={StateKey}/>
+            <ChoiceReaction setInsert={setInsert} setData={setData} setTestName={setTestName} setReset={setReset} key={StateKey}/>
           : null}
 
           {ShowDigitVigilance ?
-            <DigitVigilance setReset={setReset} key={StateKey}/>
+            <DigitVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>
           : null}
 
           {ShowMemoryScanning ?
-            <MemoryScanning setReset={setReset} key={StateKey}/>
+            <MemoryScanning setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>
           : null}
         
           {ShowMotorFunction ?
-            <MotorFunction setReset={setReset} key={StateKey}/>
+            <MotorFunction setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>
           : null}
 
           {ShowNumberVigilance ?
-            <NumberVigilance setReset={setReset} key={StateKey}/>        
+            <NumberVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
 
           {ShowPictureRecognition ?
-            <PictureRecognition setReset={setReset} key={StateKey}/>        
+            <PictureRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
 
           {ShowReactionTime ?
-            <ReactionTime setReset={setReset} key={StateKey}/>        
+            <ReactionTime setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
 
           {/* {ShowVerbalLearning ?
@@ -373,11 +379,11 @@ export default function Home() {
           :null} */}
 
           {ShowWordRecognition ?
-            <WordRecognition setReset={setReset} key={StateKey}/>        
+            <WordRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
 
           {ShowWorkingMemory ?
-            <WorkingMemory setReset={setReset} key={StateKey}/>        
+            <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
           :null}
 
 

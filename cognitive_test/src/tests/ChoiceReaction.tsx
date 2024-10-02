@@ -20,6 +20,7 @@ export default function ChoiceReaction (props: any) {
     const [ShowPrompt, setShowPrompt] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Inserted, setInserted] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
     const response_time = 100
     const [ResponseTime, setResponseTime] = React.useState(response_time)
@@ -152,6 +153,8 @@ export default function ChoiceReaction (props: any) {
 
     const time_measure = .5
 
+    const test_name = "choice_reaction"
+
 
     useEffect(() => {
         var count = 1
@@ -179,10 +182,15 @@ export default function ChoiceReaction (props: any) {
 
     useEffect(() => {
 
-        AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
-        AttentionData  ? console.log(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
 
-    }, [AttentionData])
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
 
 
     useEffect(() => {
@@ -197,6 +205,14 @@ export default function ChoiceReaction (props: any) {
         }
     
     }, [ShowPrompt, ResponseTime])
+
+    //needed for inserting data for other tests
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function create_prompts(){

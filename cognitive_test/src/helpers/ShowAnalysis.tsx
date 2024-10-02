@@ -46,7 +46,6 @@ export default function ShowAnalysis (props: any) {
 
 
     function get_average(){
-        props.AttentionData ? console.log(props.AttentionData["interval_avg"].toString().length) : null
         return props.AttentionData ? props.AttentionData["interval_avg"].toString().length > 4 ? props.AttentionData["interval_avg"].toString().slice(0, 4) : props.AttentionData["interval_avg"] : null
     }
 
@@ -81,7 +80,7 @@ export default function ShowAnalysis (props: any) {
                             <div className="text-xl">
                                 <span className="font-bold">
                                     Proficiency Level:
-                                </span> {get_average()}% correct per {props.AttentionData["interval"] == "time" ? <span>minute</span> : <span>interval</span>} <span className="text-base">(+1 added to score if greater than)</span>
+                                </span> {(get_average() * 100).toString().slice(0,2)}% correct per {props.AttentionData["interval"] == "time" ? <span>minute</span> : <span>interval</span>} <span className="text-base">(+1 added to score if greater than)</span>
                             </div>
                             <div className="text-xl">
                                 <span className="font-bold">

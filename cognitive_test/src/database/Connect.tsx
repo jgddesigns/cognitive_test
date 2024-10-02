@@ -4,34 +4,34 @@
 'use client';
 import AWS from 'aws-sdk';
 import React, {useEffect, useRef} from 'react';
-import { Button } from "@nextui-org/react";
-//import dotenv from 'dotenv';
 import {test_credentials} from '../credentials/Credentials'
 import Cognito from '@/login/Cognito';
-import { propagateServerField } from 'next/dist/server/lib/render-server';
-
-
-//dotenv.config(); // Load environment variables from .env file
 
 
 export default function Connect(props: any) {
   const [UserInserted, setUserInserted] = React.useState(false);
+  const [ID, setID] = React.useState(null)
+  const [AttemptNumber, setAttemptNumber] = React.useState(null)
 
   useEffect(() => {
     props.Submit ? handleInsertUser(props.Username, props.Name, props.Email) : null
   }, [props.Submit, props.CheckConfirm])
 
 
+  useEffect(() => {
+    props.Insert && props.Data && props.TestName ? createEntries() :null 
+  }, [props.Insert, props.Data, props.TestName])
+
+
+  useEffect(() => {
+    ID && AttemptNumber ? handleInsertTestResult() : null
+  }, [ID, AttemptNumber])
+
+
   // Fetch AWS credentials and region from environment variables
   const AWS_KEY = test_credentials.ACCESS_KEY;
   const AWS_SECRET = test_credentials.ACCESS_SECRET;
   const AWS_REGION = test_credentials.REGION;
-
-
-  //console.log(process.env)
-  // console.log('AWS Key:', AWS_KEY);
-  // console.log('AWS Secret:', AWS_SECRET);
-  // console.log('AWS Region:', AWS_REGION);
 
 
   //Check if credentials are defined
@@ -136,6 +136,9 @@ export default function Connect(props: any) {
     try {
       await docClient.put(params).promise();
       console.log('Test result inserted successfully.');
+      props.setInsert(false)
+      props.setData([])
+      props.setTestName("")
     } catch (err) {
       console.error('Error inserting test result:', err);
       console.error('Parameters used:', JSON.stringify(params, null, 2));
@@ -178,12 +181,12 @@ export default function Connect(props: any) {
 
 
   // Retrieve test results for a specific user
-  const fetchTestResults = async (testProfile: string) => {
+  const fetchTestResults = async () => {
     const params = {
       TableName: testResultsTable, // Updated table name
-      KeyConditionExpression: 'test_profile = :test_profile',
+      KeyConditionExpression: 'test_name = :test_name',
       ExpressionAttributeValues: {
-        ':test_profile': testProfile
+        ':test_name': props.TestName
       }
     };
     try {
@@ -196,9 +199,9 @@ export default function Connect(props: any) {
     }
   };
 
-
   async function handleInsertUser(username: any, name: any, email: any){
-    const id = await createID(userTable)
+    console.log("insert test results in connect component")
+    const id: any = await retrieveOne("id", testResultsTable)
     const newUserProfile = {
       profile_data: username, // Partition key
       id: id.toString(), // Sort key
@@ -216,51 +219,37 @@ export default function Connect(props: any) {
 
 
   async function handleInsertTestResult(){
-    const id = await createID(testResultsTable)
     const newTestResult = {
-      test_profile: 'user123', // Partition key
-      id: id.toString(), // Sort key
-      test_type: '0',
-      attempt_number: '1',
-      time_completed: '120',
-      score: '95',
-      variable: '0',
+      user_id: props.Username, 
+      id: ID, 
+      attempt_number: AttemptNumber,
+      test_name: props.TestName,
+      attention: props.Data[0],
+      decisiveness: props.Data[1],
+      reaction: props.Data[2],
       timestamp: getTimestamp()
-    };
-    insertTestResult(newTestResult);
-  };
-
-  const handleFetchUserProfile = () => {
-    retrieveUserProfile('user123', 1); // Provide both partition key and sort key
-  };
-
-  const handleFetchTestResults = () => {
-    fetchTestResults('user123'); // Use the correct partition key
-  };
-
-  const handleUpdateUserProfile = () => {
-    const updatedFields = {
-      email_address: 'new_email@example.com', // Example field to update
-      name: 'New Name'
-      // Add other fields you want to update
-    };
-    updateUserProfile('user123', 1, updatedFields); // Provide partition key, sort key, and updated fields
-  };
-
-  const handleUpdateTestResult = () => {
-    const updatedFields = {
-      score: 98, // Example field to update
-      time_completed: 110
-      // Add other fields you want to update
-    };
-    updateTestResult('user123', 1, updatedFields); // Provide partition key, sort key, and updated fields
+    } 
+    newTestResult ? insertTestResult(newTestResult) : console.log("Error building insert test data.")
   };
 
 
-  async function createID(table: any){
-    var new_id: any = await retrieveOne("id", table)
-    console.log("id created " + new_id)
-    return new_id
+  async function createEntries(){
+    const id: any = await retrieveOne("id", testResultsTable)
+    id ? setID(id.toString()) : console.log("Error creating id.")
+    const attempt: any = await getAttempt()
+    attempt ? setAttemptNumber(attempt.toString()) : console.log("Error creating attempt number.")
+  }
+
+
+  async function getAttempt(){
+    const attempt: any =  await retrieveAll(testResultsTable)
+    let attempt_num = 0
+    if(attempt.length > 0){ 
+      for(let i=0; i<attempt.length; i++){
+        attempt[i]["test_name"]["S"] == props.TestName && attempt_num < parseInt(attempt[i]["attempt_number"]["S"]) ? attempt_num = parseInt(attempt[i]["attempt_number"]["S"]) : null
+      }
+    }
+    return attempt_num + 1
   }
 
 
@@ -275,7 +264,25 @@ export default function Connect(props: any) {
           console.error("Error querying DynamoDB", err)
         } else {
           console.log("Query column succeeded", data.Items)
-          column == "id" ? resolve((data.Items.length + 1)) : resolve(data.Items[data.Items.length-1][column])
+          column == "id" || column == "attempt_number" ? resolve((data.Items.length + 1)) : resolve(data.Items[data.Items.length-1][column])
+        }
+      })
+    });
+  }
+
+
+  async function retrieveAll(table: any){
+    const params: any = {
+      TableName: table,
+    };
+    
+    return new Promise((resolve) => {
+      dynamoDB.scan(params, (err, data: any) => {
+        if (err) {
+          console.error("Error querying DynamoDB", err)
+        } else {
+          console.log("Query column succeeded", data.Items)
+          resolve(data.Items)
         }
       })
     });
