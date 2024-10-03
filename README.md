@@ -9,7 +9,7 @@ INTRODUCTION:
 The purpose of this app is for users to take a set of 10-15 different cognitive tests. Initially the baseline is determined by taking a test under regular circumstances. 
 <br>
 <br>
-Afterward, various variables pertaining to the CrowdDoing platform are introduced such as use of herbal supplements or walks in nature. Previously attempted tests are to be taken again following the indtroduction of a specific variable. 
+Afterward, various variables pertaining to the CrowdDoing platform are introduced such as use of herbal supplements or walks in nature. Previously attempted tests are to be taken again following the introduction of a specific variable. 
 <br>
 <br>
 A comparison is made with subsequent analysis, based on typically expected results and how the variables affect or have no influence on a particular test.
@@ -44,9 +44,9 @@ Typescript
 <br>
 Tailwind
 <br>
-AWS Dynamo DB
+AWS Dynamo DB -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Slack for further instructions.</i>
 <br>
-AWS Cognito
+AWS Cognito -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Slack for further instructions.</i>
 <br>
 Node.js & npm
 <br>
@@ -58,7 +58,7 @@ Node Version Manager (nvm)
 <br>
 <br>
 <br>
-GETTING STARTED:
+GETTING STARTED (for Windows -- Mac and Linux instructions to be determined):
 <br>
 <br>
 Install git ( https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -66,7 +66,7 @@ Install git ( https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 Install Node (https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 <br>
 <br>1. Use terminal within IDE to navigate to desired folder for project. Use git to clone the project (git clone https://github.com/jgddesigns/cognitive_test)
-<br>2. In cognitive_test directory, run 'npm install' in terminal command line
+<br>2. In cognitive_test directory, run 'npm install' in terminal command line (if scripts are disabled, open Windows Powershell as administrator and enter 'Set-ExecutionPolicy Unrestricted' in the command line)
 <br>3. Next run 'npm run build' in terminal command line
 <br>4. Launch server 'npm run dev' in terminal command line (default local url in broswer is localhost:3000)
 <br>
@@ -91,6 +91,41 @@ https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
 <br>
 CODING DOCUMENTATION FORMAT
 <br>
+<br>
+<br>
+Naming Conventions: 
+<br>
+<br>
+    - snake_case for functions and variables
+    <br>
+    - PascalCase for Components
+    <br>
+    - PascalCase, camelCase for React state variables
+    <br>
+    - UPPER_SNAKECASE for credentials
+<br>
+<br>
+Example:
+    
+    function create_list(){
+        console.log("here is a function")
+    }
+
+    const variable_name = "name"
+
+    export default function ComponentName (props: any) { 
+        //component content
+        return (
+            <div>
+            </div>
+        )
+    }
+
+    const [StateVariable, setStateVariable] = React.useState(false)
+
+    const CREDENTIAL_NAME = "asdf123"
+    
+<br>
 Use the following convention for documenting each function in the code comments:
 
     //Description of function's purpose
@@ -106,16 +141,19 @@ Example:
     const SortHandler = (type) => {
         
         if(type == "Name"){
-        setToggleName(!ToggleName)
+            setToggleName(!ToggleName)
         }
+        
         if(type == "EFIS"){
-        setToggleEFIS(!ToggleEFIS)
+            setToggleEFIS(!ToggleEFIS)
         }
+        
         if(type == "Role"){
-        setToggleRole(!ToggleRole)
+            setToggleRole(!ToggleRole)
         }
+        
         if(type == "District"){
-        setToggleDistrict(!ToggleDistrict)
+            setToggleDistrict(!ToggleDistrict)
         }
 
         setSortBy(type)
@@ -135,8 +173,6 @@ TEST COMPONENETS LOCATION: cognitive_test/src/tests
 <br>
 <br>
 DATABASE COMPONENT LOCATION: cognitive_test/src/database
-<br>
-DATABASE CONNECTION USING AWS DYNAMO DB IN THE CLOUD
 <br>
 <br>
 

@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 
 export default function MemoryScanning (props: any) {
@@ -29,6 +30,11 @@ export default function MemoryScanning (props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const answered_style = ["text-red-400", "text-green-400"]
 
@@ -44,6 +50,59 @@ export default function MemoryScanning (props: any) {
     const time = 6
 
     const total_digits = 18
+
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(0)
+    const [TimeArray, setTimeArray]: any = React.useState([])
+
+    const time_measure = 1.5
+
+    const test_name = "memory_scanning"
+
+    useEffect(() => {
+
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
+
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
+
+
+
+    useEffect(() => {
+        var count
+        while(ShowButtons && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowButtons, ResponseTime])
+
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
+
+
+    function reset_time(missed=false){
+        var arr = TimeArray
+        missed ? arr.push(3) : arr.push(ResponseTime*.001) 
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+        setResponseTime(0)
+    }
 
 
     useEffect(() => {
@@ -102,11 +161,11 @@ export default function MemoryScanning (props: any) {
 
 
                 if(CompareNumbers){
+                    var temp_arr: any = Answers
                     compare_arr = CompareList
 
                     if(CompareDigits % 2 != 0){
                         setAnswered(false)
-                        //setAnsweredString(answers[2])
                         setAnsweredString(answers[2])
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
@@ -115,17 +174,24 @@ export default function MemoryScanning (props: any) {
                         compare_arr.pop(0)
                         setCompareList(compare_arr)
                     }else{
+                        setShowButtons(false)
                         console.log(CompareString)
                         console.log(Answered)
-                        !Answered ? setShowCirclesRed(true) : null
+                        if(!Answered){
+                            setShowCirclesRed(true)
+                            temp_arr.push(0)
+                            setAnswers(temp_arr)
+                            TimeArray.length < total_digits ? reset_time(true) : null
+                        }
                         check_answer(CompareString)
-                        setShowButtons(false)   
                     }
 
                     if(CompareDigits == -1){
                         setShowCompare(false)
                         setCompareNumbers(false)
                         setEndTest(true)
+                        setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+                        setReactionData(analysis["speed"](TimeArray, time_measure))
                     }
                 }
             
@@ -138,6 +204,8 @@ export default function MemoryScanning (props: any) {
         }
 
     }, [Digits, DigitList, CompareDigits, Answered])
+
+
 
 
 
@@ -162,7 +230,6 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function compare_list(list: any){
         var temp_list: any  = []
         temp_list = temp_list.concat(list)
@@ -181,7 +248,6 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function shuffle_list(list: any, size: any){
         var new_list: any = []
 
@@ -196,7 +262,6 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function create_string(){
         var str: any = ""
 
@@ -208,14 +273,12 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function yes_handler(){
         setAnsweredString(answers[3])
         setAnswered(true)
         answer_handler(true)
         setShowButtons(false)
     }
-
 
 
     function no_handler(){
@@ -226,20 +289,26 @@ export default function MemoryScanning (props: any) {
     }
 
 
-
     function answer_handler(answer: any){
         setCompareString("")
 
         var temp_arr: any = StaticList
+        var temp_arr: any = Answers
         if (answer && temp_arr.includes(CompareString) || (!answer && !temp_arr.includes(CompareString))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
-            setShowCirclesGreen(true) 
+            setShowCirclesGreen(true)
+            temp_arr.push(1) 
         }else{
             setShowCirclesRed(true)
+            temp_arr.push(0)
         } 
+        console.log("answers")
+        console.log(temp_arr)
+        setAnswers(temp_arr)
+        setResponseTime(0)
+        TimeArray.length < total_digits ? reset_time() : null
     }
-
 
 
     function start_handler(){
@@ -269,32 +338,33 @@ export default function MemoryScanning (props: any) {
 
 
     function reset_all(){
-        setEndTest(false)
-        setTestStart(false)
-        setAnswerCount(0)
-        setShowPrompt(false)
-        setShowCompare(false)
-        setCompareMessage(false)
-        setCompareNumbers(false)
-        setShowButtons(false)
-        setAnswered(true) 
-        setAnsweredString("")  
-        setCompareDigits(-1)
-        setDigitList([])
-        setStaticList([])
-        setCurrentDigit("4")
-        setCompareList([])
-        setCompareString("")
-        setAnswer("")
-        setDigits(-1)
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false)
+        // setTestStart(false)
+        // setAnswerCount(0)
+        // setShowPrompt(false)
+        // setShowCompare(false)
+        // setCompareMessage(false)
+        // setCompareNumbers(false)
+        // setShowButtons(false)
+        // setAnswered(true) 
+        // setAnsweredString("")  
+        // setCompareDigits(-1)
+        // setDigitList([])
+        // setStaticList([])
+        // setCurrentDigit("4")
+        // setCompareList([])
+        // setCompareString("")
+        // setAnswer("")
+        // setDigits(-1)
+        // setRestart(true)
     }
 
 
   return(
     <div>
         <div className="row">
-            TEST #5: MEMORY SCANNING 
+            MEMORY SCANNING 
         </div>
         <div className="row mt-12 text-sky-400">
             Three digits are presented singly at the rate of one every 2.5 seconds for the player to remember. A series of {total_digits} digits is then presented. For each, the player must press Yes or No according to whether the digit is thought to be one of the three presented initially.
@@ -348,21 +418,24 @@ export default function MemoryScanning (props: any) {
                     </div>    
             : null
         :
-            <div className="grid grid-rows-3 mt-[150px] place-items-center"> 
+            <div className="grid grid-auto-rows mt-[150px] place-items-center"> 
                 <span className="mt-12">
                     The Test is Over.
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {total_digits}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
+                </div>
+                <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>
         }
 
         {ShowCompare || EndTest ?
-            <div className="grid place-items-center ml-[5%]">
+            <div className="grid place-items-center">
                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_digits} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
             </div>
         : null}

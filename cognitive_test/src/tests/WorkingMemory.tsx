@@ -1,6 +1,9 @@
 'use client'
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
+import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
+import { analysis } from '@/helpers/Analysis';
 
 
 export default function WorkingMemory(props: any) {
@@ -23,18 +26,80 @@ export default function WorkingMemory(props: any) {
     const [CurrentMessage, setCurrentMessage] = React.useState<any>("") 
     const [ClockDisplay, setClockDisplay] = React.useState<any>("") 
     const [AverageTime, setAverageTime] = React.useState(0)
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
-    const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32 mt-12 bg-yellow-400", "h-32 w-32 bg-cyan-400"]
+    const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32  bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
 
     const total_rounds = 10
 
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
+    const [TimeArray, setTimeArray]: any = React.useState([])
+
+
+    const proficiency = Math.round(total_rounds * .7)
+    const interval = "sections"
+    const time = 3
+    const time_measure = 25
+    const max_time = 50
+    const test_name = "working_memory"
+
+
+    useEffect(() => {
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
+
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
+
+
+    useEffect(() => {
+        var count
+        while(ShowData && !Delay && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowData, Delay, ResponseTime])
+
+
+    useEffect(() => {
+        Delay ? setResponseTime(response_time) : null
+    }, [Delay])
+
+
+    function reset_time(){
+        var arr = TimeArray
+        CurrentAttempts < 4 ? arr.push(ResponseTime*.001) : arr.push(max_time)
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+        setResponseTime(0)
+    }
+
 
     useEffect(() => {
 
-        if(CurrentRound <= total_rounds){
-            FoundCount == BoxCount ? setNextRound(true) : null
+        if(CurrentRound <= total_rounds && FoundCount == BoxCount){
+            setNextRound(true)
             NextRound ? build_next_round() : null
         } 
 
@@ -76,15 +141,28 @@ export default function WorkingMemory(props: any) {
     }, [CurrentRound, Delay, DelayTime, TestTime, TestStart, EndTest])
 
 
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
+
 
     function build_next_round(){
         setTokensFound(false)
         setFoundCount(0)
-
+        CurrentAttempts < 4 ? setShowCirclesGreen(true) : setShowCirclesRed(true) 
         setRoundCount(RoundCount + 1)
         setBoxCount(BoxCount + 1)
         setNextRound(false)
         add_token(RoundCount + 1)
+    }
+
+    function handle_answers(){
+        var answers = Answers
+        CurrentAttempts < 4 ? answers.push(1) : answers.push(0)
+        setAnswers(answers)
     }
 
 
@@ -174,14 +252,12 @@ export default function WorkingMemory(props: any) {
     }
 
 
-
     function check_token(event: any){
         var grid_arr = BoxGrid
         if(grid_arr[event.target.id] == box_style[0]){
             event.target.id == TokenPattern[FoundCount] ? token_found(true, event) : token_found(false, event) 
         }
     }
-
 
 
     function token_found(found: any, event: any){
@@ -204,14 +280,19 @@ export default function WorkingMemory(props: any) {
                 
                 //pulsing graphics?
                 if(FoundCount + 1 == RoundCount){
+                    handle_answers()
                     round_arr.push(CurrentAttempts)
                     setRoundAttempts(round_arr)
                     console.log("\n\nAll Tokens Found")
                     setTokensFound(true)
+                    reset_time()
                     setCurrentMessage("All Tokens Found")
                     if(CurrentRound + 1 > 10){ 
                         average_time(TestTime)
                         setEndTest(true)
+                        setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+                        setReactionData(analysis["speed"](TimeArray, time_measure))
+
 
                         var num = 0
                         for(var i=0; i<RoundAttempts.length; i++){
@@ -224,6 +305,7 @@ export default function WorkingMemory(props: any) {
                     }
 
                     build_next_round()
+                    TimeArray.length < total_rounds ? reset_time() : null
                     setDelay(true)
                 }
 
@@ -246,33 +328,19 @@ export default function WorkingMemory(props: any) {
 
 
     function reset_all(){
-        setEndTest(false)
-        setTestStart(false)
-        setShowData(false)
-        setNextRound(false)
-        setDelay(false)
-        setTokensFound(false)
-        setTestTime(0)
-        setFoundCount(0)
-        setRoundCount(3) 
-        setCurrentAttempts(0)
-        setTotalAttempts(0)
-        setCurrentRound(1)
-        setDelayTime(0)
-        setRoundAttempts([])
-        setTokenPattern([])
-        setBoxCount(3)
-        setCurrentMessage("") 
-        setClockDisplay("") 
-        setAverageTime(0)
-        setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])  
+        props.setReset(true)
+    }
+
+
+    function get_position(){
+        return RoundAttempts.length > 0 ? Math.abs(RoundAttempts.length - total_rounds) : 0
     }
 
 
   return(
     <div className="h-full">
         <div className="row">
-            TEST #8: SPATIAL WORKING MEMORY
+            SPATIAL WORKING MEMORY
         </div>
         <div className="row mt-12 text-sky-400">
             The test begins with three colored boxes shown on the screen. One box contains a token. When the token is found, it is added to the 'found list' above the play area. The token is then moved to another box for the user to find again. The rate at which this occurs is equal to the amount boxes shown on the screen.
@@ -343,8 +411,10 @@ export default function WorkingMemory(props: any) {
                                     <div id="24" className={BoxGrid[24]} onClick={(event) => check_token(event)}/>
                                 </div>
                             </div>
+
+
                         :   
-                            <div className="grid place-items-center">
+                            <div className="grid place-items-center h-240">
                                 <div>
                                     Next Round:
                                 </div>
@@ -384,7 +454,9 @@ export default function WorkingMemory(props: any) {
 
                 {/* REPLACE WITH MAP? */}
                 <div className="mt-16">
-                    <span className="text-underline">Round Attempts</span>
+                    <span className="text-underline">
+                        Round Attempts
+                    </span>
                 </div>
                 <div className="mt-8 ml-12">
                     Round 1: {RoundAttempts[0]}
@@ -415,12 +487,20 @@ export default function WorkingMemory(props: any) {
                 </div>                
                 <div className="mt-8 ml-12">
                     Round 10: {RoundAttempts[9]}
-                </div>       
+                </div> 
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData}/>
+                </div>      
                 <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>
         }
+        {TestStart && ShowData ?
+            <div className="mt-12 grid place-items-center">
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_rounds} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            </div>
+        : null}
     </div>
   )
 

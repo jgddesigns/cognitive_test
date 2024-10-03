@@ -4,6 +4,7 @@ import {Button} from "@nextui-org/react"
 import "../helpers/shapes.css"
 import { analysis } from '@/helpers/Analysis'
 import ProgressBar from '@/helpers/ProgressBar'
+import ShowAnalysis from '@/helpers/ShowAnalysis'
 
 
 export default function WorkingMemory(props: any) {
@@ -42,7 +43,11 @@ export default function WorkingMemory(props: any) {
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
-    
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
     const shapes = ["circle", "square", "triangle", "heart", "star", "moon", "hexagon", "diamond", "trapezoid"]
     const colors = ["red", "yellow", "green", "blue"]
@@ -51,19 +56,36 @@ export default function WorkingMemory(props: any) {
     const [BoxGrid, setBoxGrid] = React.useState<any[]>(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]) 
     
     //proficient overall score
-    const proficiency = 7
+    
 
-    const interval = "time"
+    const interval = "sections"
 
     //section interval, every 3 digits, 6 sections total
-    const time = 10
+    const time = 3
 
     const total_rounds = 10
+
+    const time_measure = 1.5
+
+    const proficiency = Math.round(total_rounds * .7)
+
+    const test_name = "motor_function"
     
+
+    useEffect(() => {
+
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
+
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
 
 
     useEffect(() => {
-        //END GAME
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
+
+    useEffect(() => {
+        
         FoundTimes.length >= total_rounds ? end_test() : null
 
         while(IsPaused && Pause > -1){
@@ -112,9 +134,9 @@ export default function WorkingMemory(props: any) {
 
     useEffect(() => {
 
-        while(TestTime >= 0 && TestStart && !EndTest){
+        while(TestTime >= 0 && ShowData && !EndTest){
             const timeoutId3 = setTimeout(() => {
-                if(CurrentRound <= 10){ 
+                if(CurrentRound <= total_rounds){ 
                     set_clock(TestTime + 1)
                     setTestTime(TestTime + 1)
                 }else{
@@ -124,10 +146,9 @@ export default function WorkingMemory(props: any) {
             }, 1000 )
     
             return () => clearTimeout(timeoutId3)
-
         }
 
-    }, [TestTime, TestStart, EndTest])
+    }, [TestTime, ShowData, EndTest])
 
 
     useEffect(() => {
@@ -154,6 +175,14 @@ export default function WorkingMemory(props: any) {
     }, [CountDown, CountTimer])
 
 
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
+
+
     function toggle_countdown(condition: any){
         if(condition){
             setCountDown(true)
@@ -170,6 +199,10 @@ export default function WorkingMemory(props: any) {
         setDelay(false)
         setIsPaused(false)
         setEndTest(true) 
+        !AttentionData ? setAttentionData(analysis["attention"](interval, Answers, time, proficiency)) : null
+        // console.log(analysis["attention"](interval, Answers, time, proficiency))
+        !ReactionData ? setReactionData(analysis["speed"](FoundTimes, time_measure)) : null
+        // console.log(analysis["speed"](FoundTimes, time_measure))
     }
 
 
@@ -209,8 +242,8 @@ export default function WorkingMemory(props: any) {
 
 
     function start_handler(){
-        // console.log(analysis["attention"](interval, convert_time([.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4]), time, proficiency))
-        console.log(analysis["attention"](interval, [.29,.5,1.1,.76,.87,.77,1.4,.34,.6,.4], time, proficiency, false))
+        // setAttentionData(analysis["attention"](interval, [1,1,1,0,0,0,1,1,1,1], time, proficiency))
+        // console.log(analysis["attention"](interval, [1,1,1,0,0,0,1,1,1,1], time, proficiency))
         set_clock(0)
         setTestStart(true)
         toggle_countdown(true)
@@ -226,22 +259,28 @@ export default function WorkingMemory(props: any) {
 
     function token_found(found: any, event: any){
         var time_arr = FoundTimes
+        var temp_arr = Answers
+        var time = build_time()
 
         if(found){
             console.log("\n\nSHAPE FOUND")
-            time_arr.push(build_time())
-            setShowCirclesGreen(true)
+            time_arr.push(time)
+            //setShowCirclesGreen(true)
             setFound(true)
         }else{
             console.log(CurrentShape)
             setCurrentShape(null)
             setMissed(true)
-            setShowCirclesRed(true)
+            //setShowCirclesRed(true)
             console.log("\n\nINCORRECT CLICK")
             time_arr.push(0)
             setFound(false)
         }
-
+        time <= time_measure ? temp_arr.push(1) : temp_arr.push(0)
+        time <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true)
+        console.log("answer array")
+        console.log(temp_arr)
+        setAnswers(temp_arr)
         console.log("time array")
         console.log(time_arr)
         clear_grid()
@@ -318,47 +357,48 @@ export default function WorkingMemory(props: any) {
 
 
     function reset_all(){
-        setEndTest(false)
-        setTestStart(false)
-        setShowData(false)
-        setNextRound(false)
-        setDelay(false)
-        setTokensFound(false)
-        setIsPaused(false)
-        setFound(false)
-        setMissed(false)
-        setTestTime(0)
-        setFoundCount(0)
-        setRoundCount(3)
-        setCurrentAttempts(0)
-        setTotalAttempts(0)
-        setCurrentRound(1)
-        setDelayTime(0)
-        setFoundTimes([])
-        setTokenPattern([])
-        setBoxCount(3)
-        setCurrentMessage("")
-        setClockDisplay("")
-        setCurrentShape("")
-        setCountMessage("")
-        setCurrentPosition(0)
-        setPause(-1)
-        setAverageTime(0)
-        setLastTime("")
-        setMissedClicks(0)
-        setNotAttempted(0)
-        setOriginalTime(0)
-        setCountDown(false)
-        setCountTimer(-1)
-        setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false)
+        // setTestStart(false)
+        // setShowData(false)
+        // setNextRound(false)
+        // setDelay(false)
+        // setTokensFound(false)
+        // setIsPaused(false)
+        // setFound(false)
+        // setMissed(false)
+        // setTestTime(0)
+        // setFoundCount(0)
+        // setRoundCount(3)
+        // setCurrentAttempts(0)
+        // setTotalAttempts(0)
+        // setCurrentRound(1)
+        // setDelayTime(0)
+        // setFoundTimes([])
+        // setTokenPattern([])
+        // setBoxCount(3)
+        // setCurrentMessage("")
+        // setClockDisplay("")
+        // setCurrentShape("")
+        // setCountMessage("")
+        // setCurrentPosition(0)
+        // setPause(-1)
+        // setAverageTime(0)
+        // setLastTime("")
+        // setMissedClicks(0)
+        // setNotAttempted(0)
+        // setOriginalTime(0)
+        // setCountDown(false)
+        // setCountTimer(-1)
+        // setBoxGrid(["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])
+        // setRestart(true)
     }
 
 
     return(
         <div className="h-full">
             <div className="row">
-                TEST #9: MOTOR FUNCTION
+                MOTOR FUNCTION
             </div>
             <div className="row mt-12 text-sky-400">
                 A series of individual shapes appear randomly on the screen. The goal is to click each shape as fast as possible.
@@ -505,6 +545,9 @@ export default function WorkingMemory(props: any) {
                     </div>                
                     <div className="mt-8 ml-12">
                         Round 10: {FoundTimes[9]}
+                    </div>
+                    <div className="w-[100%]">
+                        <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
                     </div> 
                     <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                         Reset
@@ -512,7 +555,7 @@ export default function WorkingMemory(props: any) {
                 </div>
             }
             {CountTimer < 0 && TestStart ?
-                <div className="grid place-items-center ml-[30%]">
+                <div className="grid place-items-center">
                     <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={total_rounds} CurrentPosition={total_rounds - FoundTimes.length} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                 </div>
             : null}

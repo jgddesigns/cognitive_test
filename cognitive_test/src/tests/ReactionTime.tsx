@@ -3,6 +3,8 @@
 import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
+import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 
 export default function ReactionTime (props: any) {
@@ -16,14 +18,45 @@ export default function ReactionTime (props: any) {
     const [ResponseTime, setResponseTime] = React.useState(response_time)
     const [PressedCount, setPressedCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
-    const [AvgTime, setAvgTime] = React.useState(0)
+    const [AvgTime, setAvgTime] = React.useState("")
+    const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
+    const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
+    const [Restart, setRestart] = React.useState(false)
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Answers, setAnswers] = React.useState<any>([])
+    const [Inserted, setInserted] = React.useState(false)
 
-    const proficiency = 14
+    const answer_string = ["", "Good!", "Too Slow!"]
+    const [AnswerString, setAnswerString] = React.useState(answer_string[0])
+
+    const answer_class = ["", "text-xl text-green-400 mt-4", "text-xl text-red-400 mt-4"]
+    const [AnswerClass, setAnswerClass] = React.useState(answer_class[0])
+    
     const interval = "sections"
     const time = 5
+    const test_length = 20
+    const proficiency = test_length * .7
+    const time_measure = .5
+    const test_name = "reaction_time"
 
 
+    useEffect(() => {
+
+        AttentionData ? setAvgTime(get_avg_time()) : null
+        !ReactionData && AttentionData  ? setReactionData(analysis["speed"](AttentionData["original_answers"], time_measure)) : null
+        AttentionData ? AttentionData["original_answers"][AttentionData["original_answers"] - 1] <= time_measure ? setShowCirclesGreen(true) : setShowCirclesRed(true) : null
+        !Inserted && AttentionData && ReactionData ? handle_insert() : null
+
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
     
+
     useEffect(() => {
         if(ClickedButton){
             setPressedCount(PressedCount + 1)
@@ -31,17 +64,14 @@ export default function ReactionTime (props: any) {
         }   
     }, [ClickedButton])
 
-
-
+    
     useEffect(() => {
         var count = 1
         while(IntervalTime > 0){
             const timeoutId = setTimeout(() => {
                 setIntervalTime(IntervalTime-.5)
                 count = IntervalTime
-                if(count <= .5){
-                    setShowButton(true)
-                }
+                count <= .5 ? setShowButton(true) : null  
             }, 500 )
 
             return () => clearTimeout(timeoutId)
@@ -56,7 +86,7 @@ export default function ReactionTime (props: any) {
         while(ShowButton && ResponseTime >= 0){
             const timeoutId = setTimeout(() => {
                 count = ResponseTime
-                setResponseTime(ResponseTime+response_time)
+                setResponseTime(ResponseTime + response_time)
             }, response_time )
 
             return () => clearTimeout(timeoutId)
@@ -65,11 +95,12 @@ export default function ReactionTime (props: any) {
     }, [ShowButton, ResponseTime])
 
 
-
-    useEffect(() => {
-        EndTest ? setAvgTime(ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length) : null
-    }, [EndTest])
-
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function set_interval(){
@@ -79,9 +110,7 @@ export default function ReactionTime (props: any) {
     }
 
 
-
     function clicked_button(){
-        console.log(analysis["attention"](interval, [[.3,1.1,.25,.4], [.44,.53,.6,.8], [.5,.3,.75,.45], [.77,.84,.43,.43], [.17,.54,.68,.9]], time, proficiency, true))
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 
@@ -89,42 +118,60 @@ export default function ReactionTime (props: any) {
 
     function toggle_pressed(){
         setResponsePressed(true)
+        var answers_arr = Answers
         var arr = ResponsesArray
-        arr.push(ResponseTime*.001) 
-        setResponseTime(response_time)
+        var current_response = ResponseTime * .001
+        current_response <= time_measure ? answers_arr.push(1) : answers_arr.push(0)
+        arr.push(current_response)
+        setAnswers(answers_arr)
         setResponsesArray(arr)
+        setResponseTime(response_time)
         setShowButton(false)
         set_interval()
-
-        //5 for test length, will be 25 during launch
-        ResponsesArray.length == 5 ? setEndTest(true) : null
+        current_response > time_measure ? answer_handler(false) : answer_handler(true) 
+        
+        if(ResponsesArray.length == test_length && AnswerString.length > 1){
+            setEndTest(true)
+            setAttentionData(analysis["attention"](interval, ResponsesArray, time, proficiency))        
+        } 
     }
 
 
+    function answer_handler(condition: any){
+        if(condition){
+            setShowCirclesGreen(true)
+            setAnswerString(answer_string[1])
+            setAnswerClass(answer_class[1])
+        }else{
+            setShowCirclesRed(true)
+            setAnswerString(answer_string[2])
+            setAnswerClass(answer_class[2])
+        }
+
+    }
+
 
     function get_avg_time(){
-        return ResponsesArray.reduce((a: any, b: any) => a + b, 0)/ResponsesArray.length
+        return (AttentionData["original_answers"].reduce((a: any, b: any) => a + b, 0)/AttentionData["original_answers"].length).toString().slice(0,4)
     }
 
 
 
     function reset_all(){
-        setShowButton(false)
-        setResponsePressed(false) 
-        setResponsesArray([])
-        setClickedButton(false)
-        setEndTest(false)
-        setResponseTime(response_time)
-        setPressedCount(0)
-        setIntervalTime(0)
-        setAvgTime(0)
+        props.setReset(true)
+    }
+
+
+
+    function get_position(){
+        return ResponsesArray.length > 0 ? !EndTest ? test_length - ResponsesArray.length : test_length - 1 : 0
     }
     
 
   return(
     <div>
         <div className="row">
-            TEST #2: VISUAL REACTION TIME
+            VISUAL REACTION TIME
         </div>
         <div className="row mt-12 text-sky-400">
             A button appears at the center of the screen. The user is intended to press it as quickly as possible. There are twenty trials and the button appears randomly between .5 and 2.5 seconds.
@@ -143,40 +190,57 @@ export default function ReactionTime (props: any) {
                     }
                 </div>        
                 {ShowButton ? 
-                    <div className="row mt-12"> 
-                        <Button color="primary" className="bg-blue-400 rounded px-10 h-12 text-white" onClick={toggle_pressed}>
-                            Okay
-                        </Button>
+                    <div className="grid grid-auto-rows gap-8 mt-12">
+                        <div className="row h-24"> 
+                            <Button color="primary" className="bg-blue-400 rounded px-10 h-12 text-white" onClick={toggle_pressed}>
+                                Okay
+                            </Button>
+                        </div>
                     </div>
-                : null}
+                :                     
+                    <div className="row mt-12 h-24"> 
+                        <span className={AnswerClass}>
+                            {AnswerString}
+                        </span>
+                    </div>
+                }
             </div>
         :
-            <div className="grid grid-rows-3 grid-cols-2 mt-[200px]">
-                <div className="mt-12"> 
-                    <span>
-                        The Test is Over.
-                    </span>
-                </div>
-                <div className="grid grid-rows-1 grid-cols-2 mt-12">
-                    <span>
-                        Average Time: 
-                    </span>
-                    {AvgTime > 0 ? 
+            <div className="grid grid-auto-rows mt-[150px] place-items-center">
+                <div className="grid grid-auto-cols gap-24">
+                    <div className="mt-12"> 
                         <span>
-                            {AvgTime}
-                        </span> 
-                    : null}
+                            The Test is Over.
+                        </span>
+                    </div>
+                    <div className="grid grid-rows-1 grid-cols-2 mt-12">
+                        <span>
+                            Average Time: 
+                        </span>
+                        {AvgTime != "0" ? 
+                            <span className="px-4">
+                                {AvgTime} seconds
+                            </span> 
+                        : null}
+                    </div>
+                </div>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
                 </div>
                 <div className="mt-12"> 
-                    <span>
-                        The Test is Over.
-                    </span>
                     <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
-                     Reset
+                        Reset
                     </Button>
                 </div>        
             </div>
         }
+        <div className="grid place-items-center mt-24">
+            {ClickedButton ? 
+            <div>
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={test_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+                </div>
+            : null} 
+        </div>
 
     </div>
   )

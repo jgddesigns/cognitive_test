@@ -4,6 +4,7 @@ import {Button} from "@nextui-org/react"
 import { v4 as uuidv4 } from 'uuid';
 import { analysis } from '@/helpers/Analysis';
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 
 export default function DigitVigilance(props: any) {
@@ -28,20 +29,32 @@ export default function DigitVigilance(props: any) {
     const [Restart, setRestart] = React.useState(false)
     const [TotalFound, setTotalFound] = React.useState<any[]>() 
     const [FoundArray, setFoundArray] = React.useState<any[]>([]) 
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Inserted, setInserted] = React.useState(false)
     
     //proficient overall score
-    const proficiency = 75
+    
 
-    const interval = "minutes"
+    const interval = "time"
 
     //section interval, every 36 seconds, 5 sections total
     const time = 5
 
     const time_value = 180
 
+    const per_minute = 25
+
+    const proficiency = Math.round(time_value/60) * per_minute
+
     const number_value = 25
 
+    const high_level = 100
+
     const row_value = number_value * 2
+
+    const test_name = "digit_vigilance"
 
 
 
@@ -62,7 +75,6 @@ export default function DigitVigilance(props: any) {
                     setFoundArray([])
                 }
 
-                // TotalTime % 20 == 0 && TotalTime > 0 ? setShowCirclesGreen(true) : setShowCirclesGreen(false)
                 if(TotalTime % 20 == 0){
                      setShowCirclesGreen(true) 
                      get_position()
@@ -72,7 +84,7 @@ export default function DigitVigilance(props: any) {
                     set_clock(TotalTime + 1)
                 }else{
                     setClockDisplay("Time's Up!")
-                    setEndDelay(5)
+                    setEndDelay(3)
                 }
             }, 1000 )
 
@@ -86,8 +98,8 @@ export default function DigitVigilance(props: any) {
                 console.log(EndTest)
                 if(EndDelay == 0){
                     setEndTest(true)
-                    console.log(analysis["attention"](interval, TotalFound, time, proficiency))
-                    // console.log(analysis["decisiveness"](TotalFound))
+                    setAttentionData(analysis["attention"](interval, Found, time_value, proficiency, true, high_level))
+                    setReactionData(analysis["speed"](Found, time_value, false, per_minute, high_level))
                 }
 
             }, 1000 )
@@ -98,6 +110,26 @@ export default function DigitVigilance(props: any) {
 
     }, [Numbers, TotalTime, EndDelay])
 
+
+    useEffect(() => {
+
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"], time_value, per_minute, high_level)) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
+
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
+
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
 
 
     function set_clock(time: any){
@@ -111,7 +143,6 @@ export default function DigitVigilance(props: any) {
     }
 
 
-
     function create_number_map(){
         const number_map = Numbers.map((name:any, index:any) => {
             return {
@@ -123,25 +154,25 @@ export default function DigitVigilance(props: any) {
     }
 
 
-
     function check_number(value: any){
         var temp_arr: any = FoundArray
-        if(value.target.className == number_style[0]){
-            if(SearchNumbers.includes(value.target.id)){
-                value.target.className = number_style[1]
-                setCorrectMarks(CorrectMarks + 1)
-                setFound(Found + 1)
-                temp_arr.push(1)
-            }else{
-                value.target.className = number_style[2]
-                setIncorrectMarks(IncorrectMarks + 1)
-                setFound(Found - 1)
-                temp_arr.push(0)
+        if(EndDelay < 0){
+            if(value.target.className == number_style[0]){
+                if(SearchNumbers.includes(value.target.id)){
+                    value.target.className = number_style[1]
+                    setCorrectMarks(CorrectMarks + 1)
+                    setFound(Found + 1)
+                    temp_arr.push(1)
+                }else{
+                    value.target.className = number_style[2]
+                    setIncorrectMarks(IncorrectMarks + 1)
+                    setFound(Found - 1)
+                    temp_arr.push(0)
+                }
             }
         }
         setFoundArray(temp_arr)
     }
-
 
 
     function create_list(){
@@ -217,7 +248,9 @@ export default function DigitVigilance(props: any) {
 
 
     function start_handler(){
-        console.log(analysis["attention"](interval, [[1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1], [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1], [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]], time, proficiency))
+        console.log(analysis["attention"](interval, 92, time_value, proficiency, true, high_level))
+        // setAttentionData(analysis["attention"](interval, 38, time_value, proficiency))
+        // console.log(analysis["speed"](38, time_value, false, per_minute))
         setTestStart(true)
         setShowData(true)
         create_list()
@@ -226,20 +259,21 @@ export default function DigitVigilance(props: any) {
 
     
     function reset_all(){
-        setEndTest(false);
-        setTestStart(false);
-        setShowData(false);
-        setNumbers([]);
-        setSearchNumbers([]);
-        setFound(0);
-        setCorrectMarks(0);
-        setIncorrectMarks(0);
-        setPossibleFound(0);
-        setTotalTime(0);
-        setEndDelay(-1);
-        setClockDisplay("0:00");
-        setNumberMap([]);
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false);
+        // setTestStart(false);
+        // setShowData(false);
+        // setNumbers([]);
+        // setSearchNumbers([]);
+        // setFound(0);
+        // setCorrectMarks(0);
+        // setIncorrectMarks(0);
+        // setPossibleFound(0);
+        // setTotalTime(0);
+        // setEndDelay(-1);
+        // setClockDisplay("0:00");
+        // setNumberMap([]);
+        // setRestart(true)
     }
 
 
@@ -248,10 +282,11 @@ export default function DigitVigilance(props: any) {
         return TotalTime % 20 == 0 ? setCurrentPosition(TotalTime/(time_value/9) + 11) : null
     }
 
+
   return(
     <div className="h-full">
         <div className="row">
-            TEST #7: DIGIT VIGILANCE
+            DIGIT VIGILANCE
         </div>
         <div className="row mt-12 text-sky-400">
             Players are asked to find two specified numbers, which appear randomly within fifty rows of fifty single digits. The goal is to find as many of the numbers as possible.
@@ -295,20 +330,20 @@ export default function DigitVigilance(props: any) {
                             )
                             })}
                         </div>
-                        <div className="grid place-items-center ml-72">
+                        <div className="grid place-items-center">
                             <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={10} CurrentPosition={CurrentPosition} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                         </div>
                     </div>
             : null
         :
-            <div className="grid grid-rows-3 mt-24 place-items-center"> 
+            <div className="grid grid-auto-rows mt-24 place-items-center"> 
                 <span className="mt-4 text-4xl">
                     The Test is Over
                 </span> 
                 <span className="mt-16">
                     {Found} numbers were found in 3 minutes.
                 </span>
-                {CorrectMarks > 0 && IncorrectMarks > 0 ?
+                {CorrectMarks > 0 || IncorrectMarks > 0 ?
                     <div className="mt-12">
                         <span className="text-green-400">
                             {CorrectMarks} Correct Marks
@@ -328,7 +363,10 @@ export default function DigitVigilance(props: any) {
                 <span className="mt-12">
                     {PossibleFound} possible numbers out of {Numbers.length * Numbers[0].length} total digits.
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData}/>
+                </div>
+                <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
             </div>

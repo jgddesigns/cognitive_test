@@ -3,6 +3,7 @@ import React, {useEffect} from 'react';
 import {Button} from "@nextui-org/react"
 import {analysis} from "../helpers/Analysis"
 import ProgressBar from '@/helpers/ProgressBar';
+import ShowAnalysis from '@/helpers/ShowAnalysis';
 
 export default function ChoiceReaction (props: any) {
 
@@ -15,40 +16,21 @@ export default function ChoiceReaction (props: any) {
     const [AnswerCount, setAnswerCount] = React.useState(0)
     const [IntervalTime, setIntervalTime] = React.useState(0)
     const [Answers, setAnswers] = React.useState<any>([])
+    const [Answers2, setAnswers2] = React.useState<any>([])
     const [ShowPrompt, setShowPrompt] = React.useState(false)
     const [ShowCirclesGreen, setShowCirclesGreen] = React.useState(false)
     const [ShowCirclesRed, setShowCirclesRed] = React.useState(false)
     const [Restart, setRestart] = React.useState(false)
-    // const number_class = ["text-2xl bold", "text-2xl bold text-green-400"]
-    // const [NumberClass, setNumberClass] = React.useState(number_class[0])
-
-    // const prompt_list = [
-    //     //TRUE
-    //     "New York is a city in the USA.", //1
-    //     "A dog is an animal.", //2
-    //     "Ice is frozen liquid.", //3
-    //     "7 + 3 = 10", //4
-    //     "Trees have leaves.", //5
-    //     "An apple is a fruit.", //6
-    //     "America has 50 states.", //7
-    //     "Soda is a drink.", //8
-    //     "Bread is a food.", //9
-    //     "Basketball is a sport.", //10
-
-    //     //FALSE
-    //     "Green is not a color.", //11
-    //     "Hamburgers aren't a food.", //12
-    //     "25 is a letter.", //13,
-    //     "America is a planet.", //14
-    //     "Star Wars is not a movie.", //15
-    //     "A person can live without water.", //16
-    //     "1 + 5 = 16", //17
-    //     "There are 180 days in a month.", //18
-    //     "Computers have always existed.", //19
-    //     "9 + 9 = 2" //20
-    // ]
+    const response_time = 100
+    const [ResponseTime, setResponseTime] = React.useState(response_time)
+    const [TimeArray, setTimeArray] = React.useState<any>([])
+    const [AttentionData, setAttentionData]  = React.useState<any>(null)
+    const [DecisionData, setDecisionData] = React.useState<any>(null)
+    const [ReactionData, setReactionData]  = React.useState<any>(null)
+    const [Inserted, setInserted] = React.useState(false)
 
     const prompt_list = [
+        //true questions
         "The sky is blue.",
         "Water freezes at 0 degrees Celsius.",
         "The sun provides energy for plants to grow.",
@@ -100,6 +82,7 @@ export default function ChoiceReaction (props: any) {
         "Butterflies undergo metamorphosis.",
         "Grass is green due to chlorophyll.",
         
+        //false questions
         "The sun rises in the west.",
         "Cows can fly.",
         "The capital of France is Rome.",
@@ -156,6 +139,7 @@ export default function ChoiceReaction (props: any) {
     const [PromptList, setPromptList] = React.useState([])
 
     const list_length = 20
+    const [Position, setPosition] = React.useState(list_length + 1)
 
 
     //proficient overall score
@@ -165,6 +149,10 @@ export default function ChoiceReaction (props: any) {
 
     //section interval, every 4 questions.. 5 sections total
     const time = 5
+
+    const time_measure = .5
+
+    const test_name = "choice_reaction"
 
 
     useEffect(() => {
@@ -191,6 +179,41 @@ export default function ChoiceReaction (props: any) {
     }, [PromptList])
 
 
+    useEffect(() => {
+
+        !DecisionData && AttentionData  ? setDecisionData(analysis["decisiveness"](AttentionData["original_answers"])) : null
+        !Inserted && AttentionData && ReactionData && DecisionData ? handle_insert() : null
+
+    }, [Inserted, AttentionData, ReactionData, DecisionData])
+
+
+    useEffect(() => {
+        Inserted ? props.setInsert(true): null
+    }, [Inserted])
+
+
+    useEffect(() => {
+        var count
+        while(ShowPrompt && ResponseTime >= 0){
+            const timeoutId = setTimeout(() => {
+                count = ResponseTime
+                setResponseTime(ResponseTime + response_time)
+            }, response_time )
+
+            return () => clearTimeout(timeoutId)
+        }
+    
+    }, [ShowPrompt, ResponseTime])
+
+
+    function handle_insert(){
+        console.log("inserting to database")
+        props.setData([AttentionData, DecisionData, ReactionData])
+        props.setTestName(test_name)
+        setInserted(true)
+    }
+
+
     function create_prompts(){
         var temp_list = prompt_list
         var temp_arr: any = []
@@ -203,17 +226,23 @@ export default function ChoiceReaction (props: any) {
                 console.log(temp_list.length)
             }
         }
-
         setPromptList(temp_arr)
     }
 
+    function reset_time(){
+        var arr = TimeArray
+        arr.push(ResponseTime*.001) 
+        console.log("time")
+        console.log(arr)
+        setTimeArray(arr)
+        setResponseTime(response_time)
+    }
 
     function get_prompt(){
         if(PromptList.length < 1){
             setEndTest(true)
-            // console.log(analysis["attention"]("sections", Answers, time, proficiency))
-            console.log(analysis["attention"](interval, Answers, time, proficiency))
-            console.log(analysis["decisiveness"](Answers))
+            setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
+            setReactionData(analysis["speed"](TimeArray, time_measure))
         } 
         PromptList.length < 1 && ShowPrompt ? setEndTest(true) : null
         var temp_arr = PromptList
@@ -229,17 +258,18 @@ export default function ChoiceReaction (props: any) {
         }
         spot < 50 ? setAnswer(true) : setAnswer(false)
         setCurrentPrompt(curr_prompt)
+        setPosition(Position - 1)
         temp_arr.splice(pos, 1)
         setPromptList(temp_arr)
     }
+
 
     function start_handler(){
         create_prompts()
         setTestStart(true)
         setShowPrompt(true)
-        setRestart(true)
-        console.log(analysis["attention"](interval, [1,1,0,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,1], time, proficiency))
     }
+
 
     function yes_handler(){
         setYesCount(YesCount + 1)
@@ -247,14 +277,17 @@ export default function ChoiceReaction (props: any) {
         get_prompt()
     }
 
+
     function no_handler(){
         setNoCount(NoCount + 1)
         answer_handler(false)
         get_prompt()
     }
 
+
     function answer_handler(answer: any){
         var temp_arr = Answers
+        var temp_arr2 = Answers2
         if(answer == Answer){
             temp_arr.push(1)
             setAnswerCount(AnswerCount + 1)
@@ -264,41 +297,47 @@ export default function ChoiceReaction (props: any) {
             setShowCirclesRed(true)
         }
         setAnswers(temp_arr)
+        setAnswers2(temp_arr2)
         setShowPrompt(false)
         set_interval()
+        TimeArray.length < list_length ? reset_time() : null
     }
+
 
     function calculate_ratio(){
         return Math.round((AnswerCount/list_length)*100)
     }
 
+
     function set_interval(){
         setIntervalTime(Math.random() * 2.5)
     }
 
+
     function reset_all(){
-        setEndTest(false);
-        setCurrentPrompt("");
-        setTestStart(false);
-        setAnswer(false);
-        setYesCount(0);
-        setNoCount(0);
-        setAnswerCount(0);
-        setIntervalTime(0);
-        setShowPrompt(false);
-        setShowCirclesGreen(false)
-        setShowCirclesRed(false)
-        setRestart(true)
+        props.setReset(true)
+        // setEndTest(false)
+        // setCurrentPrompt("")
+        // setTestStart(false)
+        // setAnswer(false)
+        // setYesCount(0)
+        // setNoCount(0)
+        // setAnswerCount(0)
+        // setIntervalTime(0)
+        // setShowPrompt(false)
+        // setShowCirclesGreen(false)
+        // setShowCirclesRed(false)
+        // setRestart(true)
+        // setTimeArray([])
+        // setResponseTime(response_time)
     }
 
-    function get_position(){
-        return PromptList.length > 1 ? PromptList.length + 1 : 0
-    }
+
 
   return(
     <div>
         <div className="row">
-            TEST #4: CHOICE REACTION TIME
+            CHOICE REACTION TIME
         </div>
         <div className="row mt-12 text-sky-400">
             Either the word Yes or the word No is presented in the center of the screen. The user is presented a simple question and has to press the button corresponding to the answer as quickly as possible. There are {list_length} trials and the intertrial interval varies randomly between 1 and 2.5 seconds.
@@ -339,22 +378,28 @@ export default function ChoiceReaction (props: any) {
                         </div>
                     </div>   
         :
-            <div className="grid grid-rows-3 mt-[200px]"> 
-                <span className="mt-12">
-                    The Test is Over.
+            <div className="grid grid-auto-rows place-items-center mt-[100px]"> 
+                <span className="mt-12 text-4xl">
+                    The Test is Over
                 </span> 
                 <span className="mt-12">
                     {AnswerCount} answers correct out of {list_length}. ({calculate_ratio()}%)
                 </span>
-                <Button className="mt-12 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
+                <div className="w-[100%]">
+                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
+                </div>
+                <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset
                 </Button>
 
             </div>
         }
 
-
-        <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed} />
+        {TestStart ? 
+            <div className="grid place-items-center">
+                <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={Position} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
+            </div>
+        : null}
     </div>
   )
 

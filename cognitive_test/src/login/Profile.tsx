@@ -1,3 +1,4 @@
+
 'use client'
 import React, {useEffect, useRef} from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,9 +18,9 @@ export default function Profile(this: any, props: any) {
     const [PasswordType, setPasswordType] = React.useState(password_type[1])
     const [Tests, setTests] = React.useState<any>(null)
     const [TestMap, setTestMap] = React.useState<any>(null)
-    const [TestsTaken, setTestsTaken] = React.useState(get_tests_taken())
-    const [RepeatedAmount, setRepeatedAmount] = React.useState(get_repeated_amount())
-    const [TestsRepeated, setTestsRepeated] = React.useState(get_repeated_tests())
+    const [TestsTaken, setTestsTaken] = React.useState(0)
+    const [RepeatedAmount, setRepeatedAmount] = React.useState(0)
+    const [TestsRepeated, setTestsRepeated] = React.useState(0)
 
     const [ShowChoiceReaction, setShowChoiceReaction] = React.useState(false) 
     const [ShowDigitVigilance, setShowDigitVigilance] = React.useState(false) 
@@ -31,8 +32,11 @@ export default function Profile(this: any, props: any) {
     const [ShowVerbalLearning, setShowVerbalLearning] = React.useState(false)
     const [ShowWordRecogntion, setShowWordRecognition] = React.useState(false)
     const [ShowWorkingMemory, setShowWorkingMemory] = React.useState(false)
-
+    const [TestData, setTestData] = React.useState({"choice_reaction": null, "digit_vigilance": null, "memory_scanning": null, "motor_function": null, "number_vigilance": null, "picture_recognition": null, "reaction_time": null, "word_recognition": null, "working_memory": null})
+    const [FoundData, setFoundData] = React.useState(false)
     const tests: any = [[ShowChoiceReaction, setShowChoiceReaction], [ShowDigitVigilance, setShowDigitVigilance], [ShowMemoryScanning, setShowMemoryScanning],  [ShowMotorFunction, setShowMotorFunction], [ShowNumberVigilance, setShowNumberVigilance], [ShowPictureRecognition, setShowPictureRecognition], [ShowReactionTime, setShowReactionTime], [ShowVerbalLearning, setShowVerbalLearning], [ShowWordRecogntion, setShowWordRecognition], [ShowWorkingMemory, setShowWorkingMemory]]
+
+    const tests_string = ["choice_reaction", "digit_vigilance", "memory_scanning", "motor_function", "number_vigilance", "picture_recognition", "reaction_time", "word_recognition", "working_memory"]
 
     //db retrieval data
     const data = null
@@ -52,6 +56,23 @@ export default function Profile(this: any, props: any) {
         }
     }, [PasswordShow])
 
+
+    useEffect(() => {
+        if(props.RetrievedData && !FoundData){
+            for(let i=0; i<9; i++){
+                get_test_data(i)
+            }
+            setFoundData(true)
+            get_tests_taken()
+            get_tests_repeated()
+        }
+
+    }, [props.RetrievedData])
+
+
+    function get_tests_taken(){
+        setTestsTaken(props.RetrievedData.length)
+    }
 
     function username_handler(value: any){
         setUsername(value)
@@ -109,38 +130,117 @@ export default function Profile(this: any, props: any) {
         return "password"
     }
 
-    function get_tests_taken(){
-        return 6
+
+    function get_tests_repeated(){
+        let count = 0
+        let repeated = 0
+        
+        for(let j=0; j<tests_string.length; j++){
+            count = 0 
+            for(let i=0; i<props.RetrievedData.length; i++){
+                props.RetrievedData[i]["test_name"]["S"] == tests_string[j] ? count = count + 1 : null
+            }
+            count > 1 ? repeated += (count-1) : null
+        }
+        setRepeatedAmount(repeated)
     }
 
-    function get_repeated_amount(){
-        return 0
-    }
-
-    function get_repeated_tests(){
+    function get_repeated_string(){
         return "(" + RepeatedAmount + " repeated)"
     }
 
     function get_completion(){
-        return Math.round(TestsTaken/10 * 100) + "%"
+        let count = 0
+        
+        for(let j=0; j<tests_string.length; j++){
+            for(let i=0; i<props.RetrievedData.length; i++){
+                if(props.RetrievedData[i]["test_name"]["S"] == tests_string[j]){
+                    count = count + 1
+                    break 
+                }
+            }
+        }
+
+        return Math.round(count/10 * 100) + "%" 
     }
 
     function get_time(){
-        return "34:29"
+        return "34:29 minutes"
     }
 
     function get_best_score(test: any){
-        //return data["scores"][test]
-        return test
+        let test_data: any = TestData
+        let data: any = ""
+        console.log(test_data[test])
+        if(test_data[test]){
+            test_data[test][0]["score"] > 0 ? data = data + "Attention: Score - " + test_data[test][0]["score"] + ", Rating - " + test_data[test][0]["rating"] : data = data + "Attention: Score - 0,"
+            test_data[test][1]["score"] > 0 ? data = data + " Decisiveness: Score - " + test_data[test][1]["score"] + ", Rating - " + test_data[test][1]["rating"] : data = data + " Decisiveness: Score - 0,"
+            test_data[test][2]["score"] > 0 ? data = data + " Reaction: Score - " + test_data[test][2]["score"] + ", Rating - " + test_data[test][2]["rating"] : data = data + " Reaction: Score - 0"
+        }else{
+            data = null
+        }
+        return data
     }
 
-    function get_test_data(test: any){
-        var data: any = "Test Data"
 
-        //test purposes
-        test % 2 == 0 ? data = null : null
-        //
+    function get_test_data(test: any){  
+        switch(test){
+            case 0:
+                props.RetrievedData ? find_results("choice_reaction") : null
+                break
+            case 1:
+                props.RetrievedData ? find_results("digit_vililance") : null
+                break
+            case 2:
+                props.RetrievedData ? find_results("memory_scanning") : null
+                break
+            case 3:
+                props.RetrievedData ? find_results("motor_function") : null
+                break
+            case 4:
+                props.RetrievedData ? find_results("number_vigilance") : null
+                break
+            case 5:
+                props.RetrievedData ? find_results("picture_recognition") : null
+                break
+            case 6:
+                props.RetrievedData ? find_results("reaction_time") : null
+                break
+            case 7:
+                props.RetrievedData ? find_results("word_recognition") : null
+                break
+            case 8:
+                props.RetrievedData ? find_results("working_memory") : null
+                break
+        }
+    }
 
+
+    function find_results(test: any){
+        let attention: any = {"score": 0, "rating": ""}
+        let decisiveness: any = {"score": 0, "rating": ""}
+        let reaction: any = {"score": 0, "rating": ""}
+        let data: any = []
+        let test_data: any = TestData
+        for(let i=0; i<props.RetrievedData.length; i++){
+            if(props.RetrievedData[i]["test_name"]["S"] == test){
+                props.RetrievedData[i]["attention"]["M"] && attention["score"] < props.RetrievedData[i]["attention"]["M"]["score"]["N"] ? attention["rating"] = props.RetrievedData[i]["attention"]["M"]["rating"]["S"] : null
+                props.RetrievedData[i]["attention"]["M"] && attention["score"] < props.RetrievedData[i]["attention"]["M"]["score"]["N"] ? attention["score"] = props.RetrievedData[i]["attention"]["M"]["score"]["N"] : null
+
+                props.RetrievedData[i]["decisiveness"]["M"] && decisiveness["score"] < props.RetrievedData[i]["decisiveness"]["M"]["percentage"]["N"] ? decisiveness["rating"] = props.RetrievedData[i]["decisiveness"]["M"]["rating"]["S"] : null
+                props.RetrievedData[i]["decisiveness"]["M"] && decisiveness["score"] < props.RetrievedData[i]["decisiveness"]["M"]["percentage"]["N"] ? decisiveness["score"] = props.RetrievedData[i]["decisiveness"]["M"]["percentage"]["N"] : null
+
+                props.RetrievedData[i]["reaction"]["M"] && reaction["score"] < props.RetrievedData[i]["reaction"]["M"]["score"]["N"] ? reaction["rating"] = props.RetrievedData[i]["reaction"]["M"]["rating"]["S"] : null
+                props.RetrievedData[i]["reaction"]["M"] && reaction["score"] < props.RetrievedData[i]["reaction"]["M"]["score"]["N"] ? reaction["score"] = props.RetrievedData[i]["reaction"]["M"]["score"]["N"] : null
+                console.log(test)
+                console.log("reaction")
+                console.log(reaction)
+            }
+        }
+        data = [attention, decisiveness, reaction]
+        test_data[test] = data
+        console.log(test_data)
+        setTestData(test_data)
         return data
     }
 
@@ -190,10 +290,10 @@ export default function Profile(this: any, props: any) {
                         </div> 
                         <div className="grid grid-cols-2">
                             <div>
-                                {TestsTaken}
+                                {props.RetrievedData && TestsTaken ? TestsTaken : null}
                             </div> 
                             <div>
-                                {TestsRepeated} 
+                                {props.RetrievedData && RepeatedAmount ? get_repeated_string() : null} 
                             </div>
                         </div>
                     </div>
@@ -202,7 +302,7 @@ export default function Profile(this: any, props: any) {
                             Completed: 
                         </div> 
                         <div className="grid grid-cols-2">
-                            {get_completion()}
+                            {props.RetrievedData && TestsTaken ? get_completion() : null}
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-12">
@@ -225,15 +325,15 @@ export default function Profile(this: any, props: any) {
                                 {ShowChoiceReaction?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(0)}
+                                            {/* {FoundData ? get_test_data(0) : null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(0) ? 
+                                {FoundData ? 
                                     <div>
-                                        Best Score: {get_best_score(0)}
+                                        Best Score: {get_best_score("choice_reaction")  ? get_best_score("choice_reaction") : <span>N/A</span>}
                                     </div>
                                 : 
                                     <div className="italic">
@@ -250,15 +350,15 @@ export default function Profile(this: any, props: any) {
                                 {ShowDigitVigilance?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(1)}
+                                            {/* {FoundData ? get_test_data(1): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(1) ? 
+                                {FoundData ? 
                                         <div>
-                                            Best Score: {get_best_score(1)}
+                                            Best Score: {get_best_score("digit_vigilance") ? get_best_score("digit_vigilance") : <span>N/A</span>}
                                         </div>
                                     : 
                                         <div className="italic">
@@ -275,15 +375,15 @@ export default function Profile(this: any, props: any) {
                                 {ShowMemoryScanning?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(2)}
+                                            {/* {FoundData ? get_test_data(2): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(2) ? 
+                                {FoundData ?
                                         <div>
-                                            Best Score: {get_best_score(2)}
+                                            Best Score: {get_best_score("memory_scanning") ? get_best_score("memory_scanning") : <span>N/A</span>}
                                         </div>
                                     : 
                                         <div className="italic">
@@ -300,15 +400,15 @@ export default function Profile(this: any, props: any) {
                                 {ShowMotorFunction?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(3)}
+                                            {/* {FoundData ? get_test_data(3): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(3) ? 
+                                {FoundData ?  
                                         <div>
-                                            Best Score: {get_best_score(3)}
+                                            Best Score: {get_best_score("motor_function") ? get_best_score("motor_function") : <span>N/A</span>}
                                         </div>
                                     : 
                                         <div className="italic">
@@ -325,15 +425,15 @@ export default function Profile(this: any, props: any) {
                                 {ShowNumberVigilance?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(4)}
+                                            {/* {FoundData ? get_test_data(4): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(4) ? 
+                                {FoundData ?
                                     <div>
-                                        Best Score: {get_best_score(4)}
+                                        Best Score: {get_best_score("number_vigilance") ? get_best_score("number_vigilance") : <span>N/A</span>}
                                     </div>
                                 : 
                                     <div className="italic">
@@ -350,15 +450,15 @@ export default function Profile(this: any, props: any) {
                                 {ShowPictureRecognition?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(5)}
+                                            {/* {FoundData ? get_test_data(5): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(5) ? 
+                                {FoundData ? 
                                     <div>
-                                        Best Score: {get_best_score(5)}
+                                        Best Score: {get_best_score("picture_recognition") ? get_best_score("picture_recognition") : <span>N/A</span>}
                                     </div>
                                 : 
                                     <div className="italic">
@@ -375,15 +475,15 @@ export default function Profile(this: any, props: any) {
                                 {ShowReactionTime?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(6)}
+                                            {/* {FoundData ? get_test_data(6): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(6) ? 
+                                {FoundData ? 
                                     <div>
-                                        Best Score: {get_best_score(6)}
+                                        Best Score: {get_best_score("reaction_time") ? get_best_score("reaction_time") : <span>N/A</span>}
                                     </div>
                                 : 
                                     <div className="italic">
@@ -392,48 +492,23 @@ export default function Profile(this: any, props: any) {
                                 }
                             </div>
                         </div>
-                        {/* <div className="grid ml-12 mt-8 grid-cols-2"> */}
-                            {/* <div className="grid grid-auto-rows">
-                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(7)}>
-                                    Verbal Learning
-                                </div>
-                                {ShowVerbalLearning?
-                                    <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
-                                        <span className="ml-12 p-[10px]">
-                                            {get_test_data(7)}
-                                        </span>
-                                    </div>
-                                : null}
-                            </div>
-                            <div>
-                                {get_test_data(7) ? 
-                                    <div>
-                                        Best Score: {get_best_score(7)}
-                                    </div>
-                                : 
-                                    <div className="italic">
-                                        Not Attempted
-                                    </div>
-                                }
-                            </div> */}
-                        {/* </div> */}
                         <div className="grid ml-12 mt-8 grid-cols-2">
                             <div className="grid grid-auto-rows">
-                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(8)}>
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(7)}>
                                     <span className="text-blue-600">Word Recognition</span>
                                 </div>
                                 {ShowWordRecogntion?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(8)}
+                                            {/* {FoundData ? get_test_data(7): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(8) ? 
+                                {FoundData ? 
                                     <div>
-                                        Best Score: {get_best_score(8)}
+                                        Best Score: {get_best_score("word_recognition") ? get_best_score("word_recognition") : <span>N/A</span>}
                                     </div>
                                 : 
                                     <div className="italic">
@@ -444,21 +519,21 @@ export default function Profile(this: any, props: any) {
                         </div>
                         <div className="grid ml-12 mt-8 grid-cols-2">
                             <div className="grid grid-auto-rows">
-                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(9)}>
+                                <div className="text-blue-600 cursor-pointer" onClick={e => test_results_handler(8)}>
                                     Working Memory
                                 </div>
                                 {ShowWorkingMemory?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            {get_test_data(9)}
+                                            {/* {FoundData ? get_test_data(8): null} */}
                                         </span>
                                     </div>
                                 : null}
                             </div>
                             <div>
-                                {get_test_data(9) ? 
+                                {FoundData ?  
                                     <div>
-                                        Best Score: {get_best_score(9)}
+                                        Best Score: {get_best_score("working_memory") ? get_best_score("working_memory") : <span>N/A</span>}
                                     </div>
                                 : 
                                     <div className="italic">

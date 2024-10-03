@@ -59,22 +59,16 @@ export default function Tests(props: any) {
                 props.setTestID(test)
                 break
 
-            //VERBAL LEARNING
-            case 8:
-                props.setPopoverMessage("A series of twelve words will be shown on the screen for three seconds each. Afterward, twelve words will be shown again. While each is shown, decide if it was in the original sequence.")
-                props.setTestTitle("VERBAL LEARNING")
-                props.setTestID(test)
-                break
 
             //WORD RECOGNITION
-            case 9:
+            case 8:
                 props.setPopoverMessage("Ten words are displayed, one every 1.5 seconds. The player is told to memorize each word. Afterward, ten more words are shown. This time the word set only contains some of the items from the original display. The player is asked if each word from the second set was in the original set.")
                 props.setTestTitle("WORD RECOGNITION")
                 props.setTestID(test)
                 break
 
             //WORKING MEMORY
-            case 10:
+            case 9:
                 props.setPopoverMessage("The test begins with three colored boxes shown on the screen. One box contains a token. When the token is found, it is added to the 'found list' above the play area. The token is then moved to another box for the user to find again. The rate at which this occurs is equal to the amount boxes shown on the screen.")
                 props.setTestTitle("SPATIAL WORKING MEMORY")
                 props.setTestID(test)
@@ -129,18 +123,13 @@ export default function Tests(props: any) {
                     Reaction Time
                 </div>
             </div>
-            {/* <div>
-                <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(8)}>
-                    Verbal Learning
-                </div>
-            </div> */}
             <div>
-                <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(9)}>
+                <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(8)}>
                     Word Recognition
                 </div>
             </div>
             <div>
-                <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(10)}>
+                <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(9)}>
                     Spatial Working Memory
                 </div>
             </div>
