@@ -2,7 +2,7 @@
 // Creates a divided sub-array of the original array. Used to calculate attention within segments.
 // @param 'answers': The original answers array
 // @param 'segments': The number of segments for the new array
-// @return: A new array where the originally passed array is divided into segmented sub-arrays
+// @return (array): A new array where the originally passed array is divided into segmented sub-arrays
 function create_answers(answers: any, segments: any){
   var temp_answers: any = []
   var temp_arr: any = []
@@ -31,7 +31,7 @@ function create_answers(answers: any, segments: any){
 // @param 'answers': The array of arrays (original array split into sub-arrays)
 // @param 'time_value': If time is a factor, use it to get the average correct answers within the segment
 // @param 'base_level': If time is a factor and varies outside of normal range, then it is set to this level
-// @return: The average of correct answers per segment. Example: [[1,1,0],[0,1,0],[1,1,1]] = [.67, .33, 1] = .67
+// @return (integer): The average of correct answers per segment. Example: [[1,1,0],[0,1,0],[1,1,1]] = [.67, .33, 1] = .67
 function get_average(answers: any, time_value=0, base_level: any = null){
   var total_avg = 0
   var temp_avg = 0
@@ -57,7 +57,7 @@ function get_average(answers: any, time_value=0, base_level: any = null){
 // Creates a duplicate answers array. This keeps the array constant in the case the original values are modified.
 // @param 'answers': The original answers array
 // @param 'interval': If there is an interval, specify true or false
-// @return: The duplicate array 
+// @return (array): The duplicate array 
 function duplicate_answers(answers: any, interval: any = null){
   var temp_data: any = []
   for(var i =0; i<answers.length; i++){
@@ -78,7 +78,7 @@ function duplicate_answers(answers: any, interval: any = null){
 // @param 'proficiency': The score to measure calculations from (70% of possible points, remove and calculated based on answers array length)
 // @param 'greater': If an answer is supposed to be greater of less than the average. If reaction time is a factor, the value is false. Otherwise it is true.
 // @param 'possible': The total amount of points possible. Used when there are no intervals.
-// @return: A json string of values calculated in the function 
+// @return (json): A json string of values calculated in the function 
 function calculate_attention(interval: any, answers: any, time: any, proficiency: any, greater=true, possible: any = null){
   var periods: any = Math.round(answers.length/time)
   var interval_avg: any = null
@@ -189,7 +189,7 @@ function calculate_attention(interval: any, answers: any, time: any, proficiency
 // @param 'time_value': If the test is time based and has no question set, the amount of time given for the test.
 // @param 'per_minute': A boolean value set to true if the test is time based and has no question set.
 // @param 'possible': If the test is time based and has no question set, the total amount of possible points.
-// @return: A json array of values calculated in the function.
+// @return (json): A json array of values calculated in the function.
 function calculate_decisiveness(answers: any, time_value: any = null, per_minute: any = null, possible: any = null){
   var high = .9
   var low = .7
@@ -231,7 +231,7 @@ function calculate_decisiveness(answers: any, time_value: any = null, per_minute
 // @param 'sections': Whether the test has a question set or is based on a running clock.
 // @param 'per_minute': If the test has a running clock, the amount of expected correct answers per minute. 
 // @param 'possible': If the test has a running clock, the total possible amount of points.
-// @return json: Values that were calculated in the function 
+// @return (json): Values that were calculated in the function 
 function calculate_speed(times: any, measure: any, sections=true, per_minute: any = null, possible: any = null){
   console.log(times)
   var score = 0
@@ -277,4 +277,5 @@ function calculate_speed(times: any, measure: any, sections=true, per_minute: an
   return {"answers": times, "bonus": bonus, "bonus_range": bonus_range, "penalty": penalty, "penalty_range": penalty_range, "high": high, "low": low, "score": score, "proficiency": proficiency, "rating": rating, "measure": measure, "possible": possible, "per_minute": per_minute}
 }
 
+// A JSON string containing all callable functions
 export const analysis = {"attention": calculate_attention, "decisiveness": calculate_decisiveness, "speed": calculate_speed}

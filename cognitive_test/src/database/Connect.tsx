@@ -128,7 +128,7 @@ export default function Connect(props: any) {
   // @param 'profileData': Username
   // @param 'id': Unique row id
   // @param 'updatedFields': Object of columns to update
-  // @return json: Updated column values
+  // @return (json): Updated column values
   const updateUserProfile = async (profileData: string, id: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
@@ -189,7 +189,7 @@ export default function Connect(props: any) {
   // @param 'testProfile': Username
   // @param 'testId': Unique row id
   // @param 'updatedFields': The columns to update (needs json string)
-  // @return: Updated data or null when failure
+  // @return (json, null): Updated data or null when failure
   const updateTestResult = async (testProfile: string, testId: number, updatedFields: { [key: string]: any }) => {
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
@@ -223,25 +223,11 @@ export default function Connect(props: any) {
   };
  
 
-  // Retrieve test results for a specific user
-  const fetchTestResults = async () => {
-    const params = {
-      TableName: testResultsTable, // Updated table name
-      KeyConditionExpression: 'test_name = :test_name',
-      ExpressionAttributeValues: {
-        ':test_name': props.TestName
-      }
-    };
-    try {
-      const data = await docClient.query(params).promise();
-      console.log('Test results:', data.Items);
-      return data.Items;
-    } catch (err) {
-      console.error('Error fetching test results:', err);
-      return null;
-    }
-  };
-
+  // Builds the insert payload for user data. Params are passed as props from other components.
+  // @param 'username': The user's username
+  // @param 'name': The user's name/nickname
+  // @param 'email': The user's email address
+  // @return: N/A
   async function handleInsertUser(username: any, name: any, email: any){
     const id: any = await retrieveOne("id", testResultsTable)
     const newUserProfile = {
@@ -259,7 +245,11 @@ export default function Connect(props: any) {
     insertUserProfile(newUserProfile);
   };
 
-
+  // Builds the insert payload for test results. The ID and AttemptNumber are set by the 'createEntries' and 'retrieveAll' functions. Other data is based on props passed from other components.
+  // @param 'username': The user's username
+  // @param 'name': The user's name/nickname
+  // @param 'email': The user's email address
+  // @return: N/A
   async function handleInsertTestResult(){
     console.log("inserting test results id:" + ID + ", attempt number: " + AttemptNumber)
     const newTestResult = {
@@ -276,6 +266,9 @@ export default function Connect(props: any) {
   };
 
 
+  // In combination with the 'retrieveOne' and 'getAttempt' functions, gets the most recent table row id and attempt number relevant to the current test, then increments them by one if needed, or sets them to 1 for the first entry.
+  // @param: N/A
+  // @return: N/A
   async function createEntries(){
     console.log("creating entries")
     const id: any = await retrieveOne("id", testResultsTable)
@@ -287,6 +280,9 @@ export default function Connect(props: any) {
   }
 
 
+  // In combination with the 'retrieveAll' function, gets the most recent attempt number associated with the current test.
+  // @param: N/A
+  // @return (integer): The attempt from the latest inserted row
   async function getAttempt(){
     const attempt: any =  await retrieveAll(testResultsTable)
     let attempt_num = 0
@@ -303,7 +299,7 @@ export default function Connect(props: any) {
   // Retrieves one value from a given table
   // @param 'column': The column to get the data from
   // @param 'table': The table to get the data from
-  // @return: If column is 'id', the new id. Otherwise, data from the given row.
+  // @return (integer, json): If column is 'id', the new id. Otherwise, data from the given row.
   async function retrieveOne(column: any, table: any){
     const params: any = {
       TableName: table,
@@ -321,7 +317,9 @@ export default function Connect(props: any) {
     });
   }
 
-
+  // Gets all rows from a particular table
+  // @param 'table': The name of the table to get the data from
+  // @return (json): An object of all table rows
   async function retrieveAll(table: any){
     const params: any = {
       TableName: table,
@@ -342,7 +340,7 @@ export default function Connect(props: any) {
 
   // Retrieves the current time
   // @param: N/A
-  // @return: The current time
+  // @return (string): The current time
   function getTimestamp(){
     const date = new Date(Date.now())
     return date.toString()

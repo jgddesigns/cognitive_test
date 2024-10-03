@@ -47,7 +47,7 @@ export default function ShowAnalysis (props: any) {
 
     // Retrieves the interval average from the Attention calculations. Cuts off the string if longer than 4 and eliminates trivial decimal values.
     // @param: N/A
-    // @return: N/A
+    // @return (string): The average to display
     function get_average(){
         return props.AttentionData ? props.AttentionData["interval_avg"].toString().length > 4 ? props.AttentionData["interval_avg"].toString().slice(0, 4) : props.AttentionData["interval_avg"] : null
     }

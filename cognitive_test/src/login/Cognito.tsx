@@ -3,21 +3,15 @@ import {test_credentials} from '../credentials/Credentials'
 import { CognitoIdentityProviderClient, SignUpCommand, InitiateAuthCommand, AuthFlowType} from '@aws-sdk/client-cognito-identity-provider'
 import {CognitoUserPool, CognitoUser, AuthenticationDetails} from 'amazon-cognito-identity-js'
 
-//MOSTLY FROM CHAT GPT
+//PARTLY FROM CHAT GPT
 const client = new CognitoIdentityProviderClient({ region: test_credentials.REGION });
 
 const login_message = ["User login successful!", "Invalid login credentials. Try again.", "Error authenticating user. Please contact support."]
 
 const login_class = ["text-green-400 text-base mt-12 ml-24 grid place-items-center", "text-red-400 text-base mt-24 ml-24 grid place-items-center"]
 
-// const pool_data = {
-//     UserPoolId: credentials.user_pool_id, // Replace with your User Pool ID
-//     ClientId: credentials.client_id, // Replace with your App Client ID
-//     SecretHash: get_hash()
-// };
-// const user_pool = new CognitoUserPool(pool_data);
 
-
+// Handles the user signup and login functionality. Needs AWS credentials located in 'src/credentials/Credentials.tsx' (stored off of Github). 
 export default function Cognito(props: any) {
 
     useEffect(() => {
@@ -35,19 +29,17 @@ export default function Cognito(props: any) {
     }, [props.Logout])
 
     
+    // Processes the user sign up data. Requires props passed from signup component located in 'src/login/Signup.tsx'.
+    // @param: N/A
+    // @return (json): A response from the AWS server
     async function sign_up(){
         console.log("INITIATE SIGN UP")
         console.log("Username: " + props.Username)
-        //console.log("Email: " + props.Email)
         console.log("Password: " + props.Password)
         const data = {
             ClientId: test_credentials.CLIENT_ID,
-            // SecretHash: get_hash(),
             Username: props.Username,
             Password: props.Password,
-            // test values
-            // Username: "jdunn7008@gmail.com",
-            // Password: "111aaaAAA!!!",
             UserAttributes: [
                 {
                     Name: "email",
@@ -65,16 +57,19 @@ export default function Cognito(props: any) {
             console.log("Sign up success")
             props.setUserInserted(false)
             props.setSignupSuccess(true)
-            //props.handleInsertUser(props.Username, props.Name, props.Password)
             return response
         }catch(err){
             props.setUserInserted(false)
             props.setSignupSuccess(false)
             console.log("Sign up fail")
             console.log(err)
+            return false
         }
     }
 
+    // After the first step in the sign up process, the user needs to confirm their registration with a code sent via email. This function processes all needed logic to confirm the user.
+    // @param: N/A
+    // @return: N/A
     function confirm_user(){
         console.log("confirming user")
         console.log(props.Username)
@@ -101,8 +96,6 @@ export default function Cognito(props: any) {
         cognito_user.confirmRegistration(props.ConfirmCode, true, (err, result) => {
             if (err) {
                 console.log(`Error confirming user: ${err.message}`);
-                
-                return;
             }
             console.log('User confirmed successfully!');
             props.handleInsertUser(props.Username, props.Name, props.Password)
@@ -111,6 +104,10 @@ export default function Cognito(props: any) {
         });
     }
 
+
+    // After an attempted sign in, or if previous profile cookies exist, user data is retrieved from AWS with this function.
+    // @param: N/A
+    // @return: N/A
     function retrieve_user(){
         const pool_data = {
             UserPoolId: test_credentials.USER_POOL_ID, 
@@ -126,7 +123,6 @@ export default function Cognito(props: any) {
             cognito_user.getUserAttributes((err, attributes) => {
                 if (err) {
                   console.error('Error getting user attributes:', err)
-                  return;
                 }
           
                 if (attributes) {
@@ -140,8 +136,10 @@ export default function Cognito(props: any) {
     }
 
 
-
-    
+    // After an attempted login, checks the cognito user pool for matching login credentials.
+    // @param 'Username': The username for the attempted login. Entered on the 'Login' page.
+    // @param 'Password': The password for the attempted login. Entered on the 'Login' page.
+    // @return: N/A
     async function login(Username: any, Password: any) {
         console.log("login attempt")
   
@@ -179,7 +177,8 @@ export default function Cognito(props: any) {
         }
     }
 
-
+    // After the user is confirmed via the emailed code, a modified login is performed. This is not based on the login text fields, but is a redirect after the user is confirmed. 
+    // REFACTOR: COMBINE WITH REGULAR 'login' FUNCTION?
     async function first_login(Username: any, Password: any) {
         console.log("login attempt")
       
@@ -210,6 +209,9 @@ export default function Cognito(props: any) {
         }
     }
     
+    // DEPRECATED. If a secret hash is necessary, use this function.
+    // @param: N/A
+    // @return (string): A string of the generated hash
     function get_hash(){
         const crypto = require('crypto')
         const message = `${props.Username}${test_credentials.CLIENT_ID}`
@@ -220,6 +222,7 @@ export default function Cognito(props: any) {
         return secret_hash
     }
 
+    //
     function get_test_data(){
         var data = [""]
         return data
@@ -234,8 +237,14 @@ export default function Cognito(props: any) {
             document.cookie = "Username=" + props.Username + "; expires=" + utc + "; path=/"
             document.cookie = "Email=" + props.Username + "; expires=" + utc + "; path=/"
 
-            //security concern? pull directly from cognito?
+            // SECURITY CONCERN
+            // DON'T STORE PASSWORD AS A REGULAR TEXT COOKIE. 
+            // Use encryption or pull directly from cognito?
+            // Needed for display on profile and for change password functionality
             document.cookie = "Password=" + props.Password + "; expires=" + utc + "; path=/"
+            //
+            //
+            
             document.cookie = "TestData=" + get_test_data() + "; expires=" + utc + "; path=/"
         }else{
             date.setTime(date.getTime() - (24 * 60 * 60 * 1000))

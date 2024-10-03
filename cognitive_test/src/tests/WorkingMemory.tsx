@@ -249,11 +249,6 @@ export default function WorkingMemory(props: any) {
         setTestStart(true)
         setShowData(true)
         setCurrentMessage("Click Boxes to Find Tokens")
-
-
-        setEndTest(true)
-        setAttentionData(analysis["attention"](interval, [1,1,1,0,0,0,1,1,0,0], time, proficiency))
-        setReactionData(analysis["speed"]([.7,.7,.5,.6,.5,1,1.2,.3,.8,1.6], time_measure))
     }
 
 

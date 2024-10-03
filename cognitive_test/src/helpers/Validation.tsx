@@ -48,7 +48,9 @@ function validate_password(value: any){
   return [letter, num, value.length]
 }
 
-
+// Checks the confirm password field for a match with the initial password entry
+// @param 'value': The confirm password field value
+// @return (boolean): True if the password matches the initial entry, false otherwise.
 function validate_confirm(value: any){
   if(value.length != 6){
     return false
@@ -58,6 +60,6 @@ function validate_confirm(value: any){
 
 
 
-
+// A JSON string containing all callable functions
 export const validate = {"username": validate_username, "name": validate_name, "email": validate_email, "password": validate_password, "confirm": validate_confirm}
 
