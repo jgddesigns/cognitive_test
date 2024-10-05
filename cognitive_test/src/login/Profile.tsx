@@ -3,7 +3,7 @@
 import React, {useEffect, useRef} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-
+// Profile page and related functions
 export default function Profile(this: any, props: any) {
     const classes = ["cursor-not-allowed"]
     const [Username, setUsername] = React.useState("")
@@ -34,17 +34,12 @@ export default function Profile(this: any, props: any) {
     const [ShowWorkingMemory, setShowWorkingMemory] = React.useState(false)
     const [TestData, setTestData] = React.useState({"choice_reaction": null, "digit_vigilance": null, "memory_scanning": null, "motor_function": null, "number_vigilance": null, "picture_recognition": null, "reaction_time": null, "word_recognition": null, "working_memory": null})
     const [FoundData, setFoundData] = React.useState(false)
-    const tests: any = [[ShowChoiceReaction, setShowChoiceReaction], [ShowDigitVigilance, setShowDigitVigilance], [ShowMemoryScanning, setShowMemoryScanning],  [ShowMotorFunction, setShowMotorFunction], [ShowNumberVigilance, setShowNumberVigilance], [ShowPictureRecognition, setShowPictureRecognition], [ShowReactionTime, setShowReactionTime], [ShowVerbalLearning, setShowVerbalLearning], [ShowWordRecogntion, setShowWordRecognition], [ShowWorkingMemory, setShowWorkingMemory]]
+    const tests: any = [[ShowChoiceReaction, setShowChoiceReaction], [ShowDigitVigilance, setShowDigitVigilance], [ShowMemoryScanning, setShowMemoryScanning],  [ShowMotorFunction, setShowMotorFunction], [ShowNumberVigilance, setShowNumberVigilance], [ShowPictureRecognition, setShowPictureRecognition], [ShowReactionTime, setShowReactionTime],  [ShowWordRecogntion, setShowWordRecognition], [ShowWorkingMemory, setShowWorkingMemory]]
 
     const tests_string = ["choice_reaction", "digit_vigilance", "memory_scanning", "motor_function", "number_vigilance", "picture_recognition", "reaction_time", "word_recognition", "working_memory"]
 
-    //db retrieval data
-    const data = null
 
     useEffect(() => {
-        // if(props.LoggedIn){
-        //     username_handler()
-        // }
         if(PasswordShow){
             setPasswordType(password_type[1])
             setPasswordShow(true)
@@ -70,18 +65,30 @@ export default function Profile(this: any, props: any) {
     }, [props.RetrievedData])
 
 
+    // Sets the 'TestsTaken' variable to the length of retrieved data (number of rows in the 'Test_Results' table)
+    // @param: N/A
+    // @return: N/A
     function get_tests_taken(){
         setTestsTaken(props.RetrievedData.length)
     }
 
+    // Sets the 'Username' variable based on the text entry field
+    // @param 'value': The text input 
+    // @return: N/A
     function username_handler(value: any){
         setUsername(value)
     }
 
+    // Sets the 'Email' variable based on the text entry field
+    // @param 'value': The text input 
+    // @return: N/A
     function email_handler(value: any){
         setEmail(value)
     }
 
+    // Sets the 'Password' variable based on the text entry field
+    // @param 'value': The text input 
+    // @return: N/A
     function password_handler(value: any){
         setPassword(value)
     }
@@ -98,6 +105,9 @@ export default function Profile(this: any, props: any) {
 
     }
 
+   // Expands the display of test results and analysis data 
+   // @param 'test': The place in the tests array that initiates the display of a particular set of data
+   // @return: N/A
     function test_results_handler(test: any){
         tests[test][1](!tests[test][0])
     }
@@ -325,6 +335,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowChoiceReaction?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(0) : null} */}
                                         </span>
                                     </div>
@@ -350,6 +361,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowDigitVigilance?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(1): null} */}
                                         </span>
                                     </div>
@@ -375,6 +387,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowMemoryScanning?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(2): null} */}
                                         </span>
                                     </div>
@@ -400,6 +413,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowMotorFunction?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(3): null} */}
                                         </span>
                                     </div>
@@ -425,6 +439,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowNumberVigilance?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(4): null} */}
                                         </span>
                                     </div>
@@ -450,6 +465,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowPictureRecognition?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(5): null} */}
                                         </span>
                                     </div>
@@ -475,6 +491,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowReactionTime?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(6): null} */}
                                         </span>
                                     </div>
@@ -500,6 +517,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowWordRecogntion?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            placeholder data
                                             {/* {FoundData ? get_test_data(7): null} */}
                                         </span>
                                     </div>
@@ -525,6 +543,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowWorkingMemory?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
+                                            working memory placeholder data
                                             {/* {FoundData ? get_test_data(8): null} */}
                                         </span>
                                     </div>
