@@ -152,11 +152,17 @@ export default function NumberVigilance (props: any) {
     }, [Inserted])
 
 
+    // Sets the interval between prompts
+    // @param: N/A
+    // @return: N/A
     function set_interval(){
         setIntervalTime(1)
     }
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -164,21 +170,26 @@ export default function NumberVigilance (props: any) {
         setInserted(true)
     }
 
-
+    // When the buttons is clicked, handles necessary functions and state variables
+    // @param: N/A
+    // @return: N/A
     function clicked_button(){
-        // setAttentionData(analysis["attention"](interval, 16, shown_value, proficiency, true, 20))
         setReactionData(null)
         setTestNumber(Math.ceil(Math.random()*10))
         setShowNumber(true)
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 
-
+    // Checks if a button has been pressed correctly or not (if it is pressed when the target number is displayed).
+    // @param: N/A
+    // @return: N/A
     function toggle_pressed(){
         TestNumber == CurrentNumber ? correct_press() : incorrect_press()                     
     }
 
-
+    // If there is a correct response, handles necessary functions and state variables
+    // @param: N/A
+    // @return: N/A
     function correct_press(){
         var temp_arr = SectionAnswers
         temp_arr.push(1)
@@ -188,7 +199,9 @@ export default function NumberVigilance (props: any) {
         setCorrectCount(CorrectCount + 1)
     }
 
-
+    // If there is an incorrect response, handles necessary functions and state variables
+    // @param: N/A
+    // @return: N/A
     function incorrect_press(){
         var temp_arr = SectionAnswers
         temp_arr.push(0)
@@ -198,7 +211,9 @@ export default function NumberVigilance (props: any) {
         setIncorrectCount(IncorrectCount + 1)
     }
 
-
+    // Based on the response, sets the popup text and color.
+    // @param 'condition': True if a correct response, false otherwise.
+    // @return: N/A
     function toggle_popup(condition: any){
         if(condition){
             setPopupClass(popup_class[0])
@@ -210,7 +225,9 @@ export default function NumberVigilance (props: any) {
         setPopupTimer(popup_time)
     }
 
-
+    // Sets the display timer based on the running clock.
+    // @param: N/A
+    // @return: N/A
     function get_time(){
         var seconds = 0
         var minutes = 0
@@ -227,7 +244,9 @@ export default function NumberVigilance (props: any) {
         setTimerDisplay(display)
     }
 
-
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
         // setShowNumber(false)
@@ -250,7 +269,10 @@ export default function NumberVigilance (props: any) {
         // setCorrectClass(correct_class[0])
     }
 
-
+    
+    // For the progress bar display. Determines how much of the test is completed.
+    // @param: N/A
+    // @return: N/A 
     function get_position(){
         return ShownCount > 0 && ShownCount % 12 == 0 ? (ShownCount / 12) + 9 : ShownCount == 0 ? 0 : null 
     }

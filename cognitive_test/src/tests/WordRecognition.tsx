@@ -79,6 +79,9 @@ export default function WordRecognition (props: any) {
     }, [Inserted])
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -223,6 +226,9 @@ export default function WordRecognition (props: any) {
     }
 
 
+    // If an answer is correct, calls the functions and sets the variables accordingly
+    // @param: N/A
+    // @return: N/A
     function yes_handler(){
         setAnsweredString("You answered: Yes")
         setAnswered(true)
@@ -231,6 +237,9 @@ export default function WordRecognition (props: any) {
     }
 
 
+    // If an answer is wrong, calls the functions and sets the variables accordingly
+    // @param: N/A
+    // @return: N/A
     function no_handler(){
         setAnsweredString("You answered: No")
         setAnswered(true)
@@ -239,6 +248,9 @@ export default function WordRecognition (props: any) {
     }
 
 
+    // Once a prompt is answered, takes the answer and determines if it is correct or not. Logs the response time.
+    // @param 'answer': N/A
+    // @return: N/A
     function answer_handler(answer: any){
         setCurrentWord("")
         var temp_arr: any = StaticArray
@@ -258,6 +270,9 @@ export default function WordRecognition (props: any) {
     }
 
 
+    // Calls the functions and sets the variables needed to start the test
+    // @param: N/A
+    // @return: N/A
     function start_handler(){
         build_array()
         setDigits(start_digits)
@@ -267,11 +282,16 @@ export default function WordRecognition (props: any) {
     }
 
 
+    // Calculates the user's test score based on correct answers and list count
+    // @param: N/A
+    // @return 'integer': The correct percentage
     function calculate_ratio(){
         return Math.round((AnswerCount/list_length)*100)
     }
 
-
+    // Compares the given answer to the expected answer
+    // @param 'compare': The given answer
+    // @return: N/A
     function check_answer(compare: any){
         var temp_arr: any = StaticArray
         var time_arr: any = TimeArray
@@ -290,6 +310,9 @@ export default function WordRecognition (props: any) {
     }
 
 
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
         // setEndTest(false)
@@ -315,6 +338,9 @@ export default function WordRecognition (props: any) {
     }
 
 
+    // For the progress bar display. Determines how much of the test is completed.
+    // @param: N/A
+    // @return: N/A 
     function get_position(){
         return CompareArray.length != 10 ? CompareArray.length : list_length + 1
     }

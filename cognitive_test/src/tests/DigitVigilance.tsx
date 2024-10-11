@@ -124,6 +124,9 @@ export default function DigitVigilance(props: any) {
     }, [Inserted])
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -131,7 +134,9 @@ export default function DigitVigilance(props: any) {
         setInserted(true)
     }
 
-
+    // Sets the clock display based on the test timer
+    // @param 'time': The time from the countdown
+    // @return: N/A
     function set_clock(time: any){
         var minutes: any = Math.floor(time/60)
         var seconds: any = Math.floor(time % 60)
@@ -142,7 +147,9 @@ export default function DigitVigilance(props: any) {
         setClockDisplay(display)
     }
 
-
+    // Sets the map of numbers to display based on the values created in the 'create_list' function
+    // @param: N/A
+    // @return: N/A
     function create_number_map(){
         const number_map = Numbers.map((name:any, index:any) => {
             return {
@@ -153,7 +160,9 @@ export default function DigitVigilance(props: any) {
         setNumberMap(number_map)
     }
 
-
+    // Checks if a clicked number is one of the numbers to search for
+    // @param 'value': The number to check
+    // @return: N/A
     function check_number(value: any){
         var temp_arr: any = FoundArray
         if(EndDelay < 0){
@@ -174,7 +183,9 @@ export default function DigitVigilance(props: any) {
         setFoundArray(temp_arr)
     }
 
-
+    // Creates the list of random numbers to display
+    // @param: N/A
+    // @return: N/A
     function create_list(){
         var number_array = []
         var row_array: any = []
@@ -201,7 +212,9 @@ export default function DigitVigilance(props: any) {
         setNumbers(number_array)
     }
 
-
+    // Retrieves the total amount of possible found numbers
+    // @param: N/A
+    // @return: N/A
     function get_possible_found(numbers: any, find: any){
         var count = 0
         for(var i=0; i<numbers.length; i++){
@@ -212,7 +225,9 @@ export default function DigitVigilance(props: any) {
         setPossibleFound(count)
     }
 
-
+    // Creates a row of random numbers to display. This is called for each row in the total display (created in the create_list function).
+    // @param: N/A
+    // @return : N/A
     function create_row(numbers: any){
         var chance = Math.floor(Math.random() * 20)
         var random = Math.floor(Math.random() * 7)
@@ -225,7 +240,9 @@ export default function DigitVigilance(props: any) {
         return numbers[1][random]
     }
 
-
+    // Determines what numbers will be searchable
+    // @param: N/A
+    // @return 'array': [The numbers to search for, the set of possible numbers]
     function get_search_numbers(){
         var search = []
         var place = null
@@ -247,10 +264,11 @@ export default function DigitVigilance(props: any) {
 
 
 
+    // Calls the functions and sets the variables needed to start the test
+    // @param: N/A
+    // @return: N/A
     function start_handler(){
         console.log(analysis["attention"](interval, 92, time_value, proficiency, true, high_level))
-        // setAttentionData(analysis["attention"](interval, 38, time_value, proficiency))
-        // console.log(analysis["speed"](38, time_value, false, per_minute))
         setTestStart(true)
         setShowData(true)
         create_list()
@@ -258,6 +276,9 @@ export default function DigitVigilance(props: any) {
     }
 
     
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
         // setEndTest(false);
@@ -276,9 +297,13 @@ export default function DigitVigilance(props: any) {
         // setRestart(true)
     }
 
-
+    // For the progress bar graphic. Gets the position based on the elapsed time vs total time.
+    // @param: N/A
+    // @return: N/A
+    // For the progress bar display. Determines how much of the test is completed.
+    // @param: N/A
+    // @return: N/A 
     function get_position(){
-        console.log(TotalTime % 20 == 0 ? TotalTime/(time_value/9) + 11 : null)
         return TotalTime % 20 == 0 ? setCurrentPosition(TotalTime/(time_value/9) + 11) : null
     }
 
