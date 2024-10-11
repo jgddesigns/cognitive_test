@@ -95,6 +95,9 @@ export default function ReactionTime (props: any) {
     }, [ShowButton, ResponseTime])
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -103,6 +106,9 @@ export default function ReactionTime (props: any) {
     }
 
 
+    // Sets the interval between prompts
+    // @param: N/A
+    // @return: N/A
     function set_interval(){
         var time = Math.abs((3.5 - (Math.ceil(Math.random() * 4))))
         console.log(ResponsesArray)
@@ -110,12 +116,17 @@ export default function ReactionTime (props: any) {
     }
 
 
+    // Toggles the 'ClickedButton' state variable based on if it is clicked or not.
+    // @param: N/A
+    // @return: N/A
     function clicked_button(){
         !ClickedButton ? setClickedButton(true) : setClickedButton(false)
     }
 
 
-
+    // After a response, calls necessary functions and sets necessary variables.
+    // @param: N/A
+    // @return: N/A
     function toggle_pressed(){
         setResponsePressed(true)
         var answers_arr = Answers
@@ -137,6 +148,9 @@ export default function ReactionTime (props: any) {
     }
 
 
+    // After a response is given, calls necessary functions and sets necessary variables based on the decision. 
+    // @param 'condition': True if correct, false otherwise
+    // @return: N/A
     function answer_handler(condition: any){
         if(condition){
             setShowCirclesGreen(true)
@@ -147,22 +161,29 @@ export default function ReactionTime (props: any) {
             setAnswerString(answer_string[2])
             setAnswerClass(answer_class[2])
         }
-
     }
 
 
+    // Gets the average response timw
+    // @param: N/A
+    // @return (string): The average time
     function get_avg_time(){
         return (AttentionData["original_answers"].reduce((a: any, b: any) => a + b, 0)/AttentionData["original_answers"].length).toString().slice(0,4)
     }
 
 
-
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
     }
 
 
 
+    // For the progress bar display. Determines how much of the test is completed.
+    // @param: N/A
+    // @return: N/A 
     function get_position(){
         return ResponsesArray.length > 0 ? !EndTest ? test_length - ResponsesArray.length : test_length - 1 : 0
     }

@@ -199,7 +199,9 @@ export default function Signup(props: any) {
         return message
     }
 
-
+    // Checks the confirm code entry and sets the displayed message and style accordingly
+    // @param 'text': The text from the confirm field
+    // @return: N/A
     function confirm_handler(text: any){
         setConfirmCode(text)
 
@@ -215,7 +217,9 @@ export default function Signup(props: any) {
         console.log(text)
     }
 
-
+    // Checks the validation for the confirm password field and sets the displayed message and style accordingly.
+    // @param 'text': The text from the confirm field
+    // @return: N/A
     function password_match(text: any){
         setPasswordMatch(text)
         var message: any = ""
@@ -229,16 +233,17 @@ export default function Signup(props: any) {
             setMatchClass(classes[0])
             setMatchClass(classes[3])
         }
-
     }
 
-
+    // Once pressed, sets the Submit state variable to true
+    // @param: N/A
+    // @return: N/A
     function submit_handler(){
         console.log("SUBMIT")
         setSubmit(true) 
     }
 
-
+    // Once the confirm code button has been pressed, sets the related state variable to true and starts the signup timer transition. 
     function submit_confirm(){
         console.log("CONFIRM")
         setCheckConfirm(true) 

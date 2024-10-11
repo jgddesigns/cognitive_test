@@ -4,6 +4,9 @@ import React, {useEffect, useRef} from 'react';
 
 export default function Tests(props: any) {
 
+    // Shows the popup display information
+    // @param 'test': A numbere that stands for what test is to be displayed
+    // @return: N/A
     function show_info(test: any){
         props.setMainClass(props.main_class[1])
         props.setShowPopover(true)

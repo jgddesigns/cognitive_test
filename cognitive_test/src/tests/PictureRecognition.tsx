@@ -96,6 +96,9 @@ export default function PictureRecognition (props: any) {
     }, [ShowButtons])
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -284,6 +287,9 @@ export default function PictureRecognition (props: any) {
     }
 
 
+    // If an answer is correct, calls the functions and sets the variables accordingly
+    // @param: N/A
+    // @return: N/A
     function yes_handler(){
         setAnsweredString("You answered: Yes")
         setAnswered(true)
@@ -292,6 +298,9 @@ export default function PictureRecognition (props: any) {
     }
 
 
+    // If an answer is wrong, calls the functions and sets the variables accordingly
+    // @param: N/A
+    // @return: N/A
     function no_handler(){
         setAnsweredString("You answered: No")
         setAnswered(true)
@@ -300,6 +309,9 @@ export default function PictureRecognition (props: any) {
     }
 
 
+    // Once a prompt is answered, takes the answer and determines if it is correct or not. Logs the response time.
+    // @param 'answer': N/A
+    // @return: N/A
     function answer_handler(answer: any){
         setCurrentPicture("")
         var temp_arr: any = StaticArray
@@ -320,6 +332,9 @@ export default function PictureRecognition (props: any) {
     }
 
 
+    // Calls the functions and sets the variables needed to start the test
+    // @param: N/A
+    // @return: N/A
     function start_handler(){
         build_array()
         setDigits(digits_value + 2)
@@ -329,6 +344,9 @@ export default function PictureRecognition (props: any) {
     }
     
  
+    // Calculates the user's test score based on correct answers and list count
+    // @param: N/A
+    // @return 'integer': The correct percentage
     function calculate_ratio(){
         return Math.round((AnswerCount/pictures_value)*100)
     }
@@ -355,6 +373,9 @@ export default function PictureRecognition (props: any) {
     }
 
 
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
         // setEndTest(false)

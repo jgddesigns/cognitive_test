@@ -581,6 +581,7 @@ export default function Profile(this: any, props: any) {
 
 
                 <div>
+                    {/* PLACEHOLDER. More efficient way to display the tests. Is it needed? */}
                     {/* {TestMap.map(result => {         
                     return (
                         <div className="max-w-[4rem]" key={result.key}>{result.row.map((result2: {
