@@ -8,7 +8,7 @@ export default function Profile(this: any, props: any) {
     const classes = ["cursor-not-allowed"]
     const [Username, setUsername] = React.useState("")
     const [UsernameClass, setUsernameClass] = React.useState(classes[0])
-    const [Email, setEmail] = React.useState(get_email())
+    const [Email, setEmail] = React.useState("")
     const [EmailClass, setEmailClass] = React.useState(classes[0])
     const [Password, setPassword] = React.useState("")
     const [PasswordShow, setPasswordShow] = React.useState(false)
@@ -21,7 +21,6 @@ export default function Profile(this: any, props: any) {
     const [TestsTaken, setTestsTaken] = React.useState(0)
     const [RepeatedAmount, setRepeatedAmount] = React.useState(0)
     const [TestsRepeated, setTestsRepeated] = React.useState(0)
-
     const [ShowChoiceReaction, setShowChoiceReaction] = React.useState(false) 
     const [ShowDigitVigilance, setShowDigitVigilance] = React.useState(false) 
     const [ShowMemoryScanning, setShowMemoryScanning] = React.useState(false)  
@@ -29,7 +28,6 @@ export default function Profile(this: any, props: any) {
     const [ShowNumberVigilance, setShowNumberVigilance] = React.useState(false)
     const [ShowPictureRecognition, setShowPictureRecognition] = React.useState(false)
     const [ShowReactionTime, setShowReactionTime] = React.useState(false)
-    const [ShowVerbalLearning, setShowVerbalLearning] = React.useState(false)
     const [ShowWordRecogntion, setShowWordRecognition] = React.useState(false)
     const [ShowWorkingMemory, setShowWorkingMemory] = React.useState(false)
     const [TestData, setTestData] = React.useState({"choice_reaction": null, "digit_vigilance": null, "memory_scanning": null, "motor_function": null, "number_vigilance": null, "picture_recognition": null, "reaction_time": null, "word_recognition": null, "working_memory": null})
@@ -112,11 +110,16 @@ export default function Profile(this: any, props: any) {
         tests[test][1](!tests[test][0])
     }
 
-
+    // Sets the visibility of the password field.
+    // @param: N/A
+    // @return: N/A
     function toggle_password(){
         setPasswordShow(!PasswordShow)
     }
 
+    // PLACEHOLDER. More efficient way to display the test results? Is it needed?
+    // @param: N/A
+    // @return: N/A
     function create_test_map(){
         const test_map = Tests.map((name:any, index:any) => {
             return {
@@ -128,19 +131,9 @@ export default function Profile(this: any, props: any) {
         setTestMap(test_map)
     }
 
-    function get_username(){
-        return "Username"
-    }
-
-    function get_email(){
-        return "username@example.com"
-    }
-
-    function get_password(){
-        return "password"
-    }
-
-
+    // Calculates and sets the number of tests that were repeated. First, the database rows for the tests are retrieved, then each test that was taken is determined. Once the tests are determined, the additional attempt counter is incremented based on the number of rows relating to the same test. The total of all repeated attempts is then assigned to the state variable 'RepeatedAmount'.
+    // @param: N/A
+    // @return: N/A
     function get_tests_repeated(){
         let count = 0
         let repeated = 0
@@ -155,10 +148,18 @@ export default function Profile(this: any, props: any) {
         setRepeatedAmount(repeated)
     }
 
+
+    // Returns the string to display which includes the amount of repeated tests
+    // @param: N/A
+    // @return (string): The display string including the amount of repeated tests
     function get_repeated_string(){
         return "(" + RepeatedAmount + " repeated)"
     }
 
+
+    // Returns the completion percentage string to display. This is based on the number off tests (9). Multiple attempts are not considered, only if the particular test has been completed. 
+    // @param: N/A
+    // @return: The displayed percentage
     function get_completion(){
         let count = 0
         
@@ -174,10 +175,19 @@ export default function Profile(this: any, props: any) {
         return Math.round(count/10 * 100) + "%" 
     }
 
+
+    // NEEDS MODIFICATION 
+    // Returns the total time spent on all tests
+    // @param: N/A
+    // @return: N/A
     function get_time(){
         return "34:29 minutes"
     }
 
+
+    // Accesses the analysis data (from /src/app/page.tsx)
+    // @param 'test': The test number within the array
+    // @return (string): The displayed data
     function get_best_score(test: any){
         let test_data: any = TestData
         let data: any = ""
@@ -192,7 +202,9 @@ export default function Profile(this: any, props: any) {
         return data
     }
 
-
+    // Retrieves the data for a particular test from the RetrievedData json (from /src/app/page.tsx)
+    // @param 'test': A number corresponding to the switch within the function
+    // @return: N/A
     function get_test_data(test: any){  
         switch(test){
             case 0:
@@ -226,6 +238,9 @@ export default function Profile(this: any, props: any) {
     }
 
 
+    // Retrieves the analysis and results for a particular test
+    // @param 'test': The test the analysis is for
+    // @return (array): An array containing the data for each area of analysis [attention, decisiveness, reaction]
     function find_results(test: any){
         let attention: any = {"score": 0, "rating": ""}
         let decisiveness: any = {"score": 0, "rating": ""}
