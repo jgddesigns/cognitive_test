@@ -136,8 +136,8 @@ Use the following convention for documenting each function in the code comments:
 Example:
 
     //Based on the column header clicked, sort the results by that column.
-    //@param type: The string of the column name that was clicked.
-    //@return: Void.
+    //@param 'name': The string of the column name that was clicked.
+    //@return (type): Void.
     const SortHandler = (type) => {
         
         if(type == "Name"){
