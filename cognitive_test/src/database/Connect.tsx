@@ -35,16 +35,16 @@ export default function Connect(props: any) {
 
 
   // Fetch AWS credentials and region from environment variables
-  const AWS_KEY = test_credentials.ACCESS_KEY;
-  const AWS_SECRET = test_credentials.ACCESS_SECRET;
+  const AWS_KEY = test_credentials.AWS_KEY;
+  const AWS_SECRET = test_credentials.AWS_SECRET;
   const AWS_REGION = test_credentials.REGION;
 
-
+  
   //Check if credentials are defined
-  if (!AWS_KEY || !AWS_SECRET || !AWS_REGION) {
-    console.error('AWS credentials or region are not defined.');
-    return null;
-  }
+  // if (!AWS_KEY || !AWS_SECRET || !AWS_REGION) {
+  //   console.error('AWS credentials or region are not defined.');
+  //   return null;
+  // }
   
 
   // Connect credentials to AWS instance
