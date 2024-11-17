@@ -117,7 +117,7 @@ export default function WorkingMemory(props: any) {
                 }else{
                     setDelayTime(0)
                     if(!Found){
-                        token_found(false, null)
+                        token_found(false)
                         setNotAttempted(NotAttempted + 1)
                     }
                     setDelay(false)
@@ -175,6 +175,9 @@ export default function WorkingMemory(props: any) {
     }, [CountDown, CountTimer])
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -182,7 +185,9 @@ export default function WorkingMemory(props: any) {
         setInserted(true)
     }
 
-
+    // Sets the countdown based on the condition. If true, starts the countdown. If false stops the countdown.
+    // @param 'condition': A boolean of true or false. Determines if countdown should be started.
+    // @return: N/A
     function toggle_countdown(condition: any){
         if(condition){
             setCountDown(true)
@@ -193,19 +198,22 @@ export default function WorkingMemory(props: any) {
         }
     }
 
-
+    // Calls the functions and sets the state variables needed to end the test.
+    // @param: N/A
+    // @return: N/A
     function end_test(){
         average_time()
         setDelay(false)
         setIsPaused(false)
         setEndTest(true) 
         !AttentionData ? setAttentionData(analysis["attention"](interval, Answers, time, proficiency)) : null
-        // console.log(analysis["attention"](interval, Answers, time, proficiency))
         !ReactionData ? setReactionData(analysis["speed"](FoundTimes, time_measure)) : null
-        // console.log(analysis["speed"](FoundTimes, time_measure))
     }
 
 
+    // Sets the clock display based on the test timer
+    // @param 'time': The time from the countdown
+    // @return: N/A
     function set_clock(time: any){
         var minutes: any = Math.floor(time / 60)
         var seconds: any = Math.floor(time % 60)
@@ -216,7 +224,9 @@ export default function WorkingMemory(props: any) {
         setClockDisplay(display)
     }
 
-
+    // Calculates the average response time from each round of the test
+    // @param: N/A
+    // @return: N/A
     function average_time(){
         var time_arr = FoundTimes
         var total: any = 0
@@ -241,9 +251,10 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    // Calls the functions and sets the variables needed to start the test
+    // @param: N/A
+    // @return: N/A
     function start_handler(){
-        // setAttentionData(analysis["attention"](interval, [1,1,1,0,0,0,1,1,1,1], time, proficiency))
-        // console.log(analysis["attention"](interval, [1,1,1,0,0,0,1,1,1,1], time, proficiency))
         set_clock(0)
         setTestStart(true)
         toggle_countdown(true)
@@ -251,13 +262,19 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    // Checks if a shape has been clicked on
+    // @param 'event': The click event based on the grid area
+    // @retUrn: N/A
     function check_token(event: any){
-        Delay ? event.target.className != "" ? token_found(true, event) : token_found(false, event) : null
+        Delay ? event.target.className != "" ? token_found(true) : token_found(false) : null
         setShowCirclesGreen(true)
     }
 
 
-    function token_found(found: any, event: any){
+    // Once the 'check_token' function determines if a shape has been clicked or not, calls the appropriate functions and sets the state variables.
+    // @param 'found': Boolean regarding if the shape is found or not
+    // @return: N/A
+    function token_found(found: any){
         var time_arr = FoundTimes
         var temp_arr = Answers
         var time = build_time()
@@ -265,13 +282,11 @@ export default function WorkingMemory(props: any) {
         if(found){
             console.log("\n\nSHAPE FOUND")
             time_arr.push(time)
-            //setShowCirclesGreen(true)
             setFound(true)
         }else{
             console.log(CurrentShape)
             setCurrentShape(null)
             setMissed(true)
-            //setShowCirclesRed(true)
             console.log("\n\nINCORRECT CLICK")
             time_arr.push(0)
             setFound(false)
@@ -290,7 +305,9 @@ export default function WorkingMemory(props: any) {
         setDelay(false)
     }
 
-
+    // Sets the display time
+    // @param: N/A
+    // @return: N/A
     function build_time(){
         var time: any = OriginalTime - DelayTime
         
@@ -310,7 +327,9 @@ export default function WorkingMemory(props: any) {
         return parseFloat(time)
     }
 
-
+    // Clears the grid of all displayed shapes
+    // @param: N/A
+    // @return: N/A
     function clear_grid(){
         var temp_arr = BoxGrid
         for(var i=0; i<temp_arr.length; i++){
@@ -321,7 +340,9 @@ export default function WorkingMemory(props: any) {
         setBoxGrid(temp_arr)
     }
 
-
+    // Creates a shape to display. Uses '/src/helpers/shapes.css'.
+    // @param: N/A
+    // @return: N/A
     function create_item(){
         var box_arr = BoxGrid
         var position = Math.floor(Math.random() * BoxGrid.length)
@@ -340,7 +361,9 @@ export default function WorkingMemory(props: any) {
         setDelay(true)
     }
 
-
+    // Randomizes the size and color of a shape
+    // @param: N/A
+    // @return (string): A Tailwind CSS string to set the shape's style to
     function random_style(){
         var shape = Math.floor(Math.random() * shapes.length)
         var color = Math.floor(Math.random() * colors.length)
@@ -356,6 +379,9 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
         // setEndTest(false)

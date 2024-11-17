@@ -1,12 +1,10 @@
 'use client'
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
-import { v4 as uuidv4 } from 'uuid';
 import Cognito from './Cognito'
 import {validate} from '../helpers/Validation'
-import {analysis} from '../helpers/Analysis'
 
-
+// Login form and related functions 
 export default function Login(props: any) {
     const [Username, setUsername] = React.useState("")
     const [Password, setPassword] = React.useState("")
@@ -22,10 +20,7 @@ export default function Login(props: any) {
     const [UsernameMessage, setUsernameMessage] = React.useState("")
     const [UsernameClass, setUsernameClass] = React.useState(classes[0])
     const [PasswordClass, setPasswordClass] = React.useState(classes[0])
-
     const [MatchClass, setMatchClass] = React.useState(classes[4])
-
-    
 
     const pw_messages = ["", "Password must contain at least 1 number.", "Password must contain at least 1 letter.", "Password must have at least 8 digits.", "Passwords don't match.", "Confirmation code must be 6 digits."]
 
@@ -57,7 +52,10 @@ export default function Login(props: any) {
         }  
     }, [Username, Password, UsernameMessage, PasswordMessage])
 
-    
+
+    // Sets the 'Username' state variable based on the input from the text field. Uses validation from 'src/helpers/Validation.tsx'
+    // @param 'text': The text input from the username field
+    // @return: N/A
     function username_handler(text: any){
         props.setUsername(text)
         setUsername(text)
@@ -74,6 +72,10 @@ export default function Login(props: any) {
         console.log(text)
     }
 
+
+    // Sets the 'Password' state variable based on the input from the text field. Uses validation from 'src/helpers/Validation.tsx'
+    // @param 'text': The text input from the password field
+    // @return 'string': A validation based message regarding correctness of input
     function password_handler(text: any){
         console.log(text)
         var message: any = ""
@@ -95,8 +97,6 @@ export default function Login(props: any) {
             message = message + "\n" + pw_messages[3]
         }
 
-        console.log(message)
-
         setPasswordMessage(message)
         if(!message.includes(pw_messages[1]) && !message.includes(pw_messages[2]) && !message.includes(pw_messages[3])){
             console.log(message)
@@ -106,6 +106,9 @@ export default function Login(props: any) {
         return message
     }
 
+    // Sets the 'LoginAttempt' state variable after an attempted login
+    // @param: N/A
+    // @return: N/A
     function submit_handler(){
         setLoginAttempt(true) 
     }

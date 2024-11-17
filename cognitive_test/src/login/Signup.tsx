@@ -63,7 +63,6 @@ export default function Signup(props: any) {
                 setSignupTimer(SignupTimer - 1)
                 if(SignupTimer <= 0){
                     setConfirmSuccess(false)
-                    //needs to actually login
                     props.setLoggedIn(true)
                 } 
             }, 1000 )
@@ -75,8 +74,7 @@ export default function Signup(props: any) {
 
 
     useEffect(() => {
-        // if(Username != "" && Name != "" && Email != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && EmailMessage.length < 1 && PasswordMessage.length < 1){
-            if(Username != "" && Name != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && PasswordMessage.length < 1){
+        if(Username != "" && Name != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && PasswordMessage.length < 1){
             setSubmitClass(classes[5])
             setSubmitDisable(false)
         }else{
@@ -101,7 +99,9 @@ export default function Signup(props: any) {
     }, [ConfirmCode])
 
 
-    //cognito needs it to be an email. change?
+    // When a username is changed, this function handles the text input
+    // @param 'text': The text in the input field
+    // @return: N/A
     function username_handler(text: any){
         props.setUsername(text)
         setUsername(text)
@@ -119,6 +119,9 @@ export default function Signup(props: any) {
     }
 
 
+    // When a name is changed, this function handles the text input
+    // @param 'text': The text in the input field
+    // @return: N/A
     function name_handler(text: any){
         setName(text)
 
@@ -135,6 +138,9 @@ export default function Signup(props: any) {
     }
 
 
+    // When a email is changed, this function handles the text input
+    // @param 'text': The text in the input field
+    // @return: N/A
     function email_handler(text: any){
         setEmail(text)
         if(!validate["email"](text)){
@@ -150,6 +156,9 @@ export default function Signup(props: any) {
     }
 
 
+    // When a password is changed, this function handles the text input
+    // @param 'text': The text in the input field
+    // @return: N/A
     function password_handler(text: any){
         console.log(text)
         var message: any = ""
@@ -190,7 +199,9 @@ export default function Signup(props: any) {
         return message
     }
 
-
+    // Checks the confirm code entry and sets the displayed message and style accordingly
+    // @param 'text': The text from the confirm field
+    // @return: N/A
     function confirm_handler(text: any){
         setConfirmCode(text)
 
@@ -206,7 +217,9 @@ export default function Signup(props: any) {
         console.log(text)
     }
 
-
+    // Checks the validation for the confirm password field and sets the displayed message and style accordingly.
+    // @param 'text': The text from the confirm field
+    // @return: N/A
     function password_match(text: any){
         setPasswordMatch(text)
         var message: any = ""
@@ -220,16 +233,17 @@ export default function Signup(props: any) {
             setMatchClass(classes[0])
             setMatchClass(classes[3])
         }
-
     }
 
-
+    // Once pressed, sets the Submit state variable to true
+    // @param: N/A
+    // @return: N/A
     function submit_handler(){
         console.log("SUBMIT")
         setSubmit(true) 
     }
 
-
+    // Once the confirm code button has been pressed, sets the related state variable to true and starts the signup timer transition. 
     function submit_confirm(){
         console.log("CONFIRM")
         setCheckConfirm(true) 

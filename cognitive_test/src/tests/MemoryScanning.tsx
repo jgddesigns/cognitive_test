@@ -87,6 +87,9 @@ export default function MemoryScanning (props: any) {
     }, [ShowButtons, ResponseTime])
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -94,7 +97,9 @@ export default function MemoryScanning (props: any) {
         setInserted(true)
     }
 
-
+    // Pushes the most recent reaction time to the TimeArray state variable and sets the response time variable back to 0. 
+    // @param: N/A
+    // @return: N/A
     function reset_time(missed=false){
         var arr = TimeArray
         missed ? arr.push(3) : arr.push(ResponseTime*.001) 
@@ -206,10 +211,9 @@ export default function MemoryScanning (props: any) {
     }, [Digits, DigitList, CompareDigits, Answered])
 
 
-
-
-
-    //partially from chat gpt
+    // Creates the list of initial digits to memorize
+    // @param: N/A
+    // @return: N/A
     function create_list(){
         var temp_list: any = []
         var static_list: any = []
@@ -229,7 +233,9 @@ export default function MemoryScanning (props: any) {
         compare_list(static_list)
     }
 
-
+    // Creates the list of digits to compare against the initial set
+    // @param: N/A
+    // @return: N/A
     function compare_list(list: any){
         var temp_list: any  = []
         temp_list = temp_list.concat(list)
@@ -247,7 +253,10 @@ export default function MemoryScanning (props: any) {
         setCompareList(temp_list)
     }
 
-
+    // Randomizes the compare list
+    // @param 'list': The compare list
+    // @param 'size': The size of the desired list
+    // @return: N/A
     function shuffle_list(list: any, size: any){
         var new_list: any = []
 
@@ -261,7 +270,9 @@ export default function MemoryScanning (props: any) {
         return new_list
     }
 
-
+    // Creates the string to display of numbers to compare against the originals
+    // @param: N/A
+    // @return: N/A
     function create_string(){
         var str: any = ""
 
@@ -273,6 +284,9 @@ export default function MemoryScanning (props: any) {
     }
 
 
+    // If an answer is correct, calls the functions and sets the variables accordingly
+    // @param: N/A
+    // @return: N/A
     function yes_handler(){
         setAnsweredString(answers[3])
         setAnswered(true)
@@ -281,6 +295,9 @@ export default function MemoryScanning (props: any) {
     }
 
 
+    // If an answer is wrong, calls the functions and sets the variables accordingly
+    // @param: N/A
+    // @return: N/A
     function no_handler(){
         setAnsweredString(answers[4])
         setAnswered(true)
@@ -289,6 +306,9 @@ export default function MemoryScanning (props: any) {
     }
 
 
+    // Once a prompt is answered, takes the answer and determines if it is correct or not. Logs the response time.
+    // @param 'answer': N/A
+    // @return: N/A
     function answer_handler(answer: any){
         setCompareString("")
 
@@ -311,6 +331,9 @@ export default function MemoryScanning (props: any) {
     }
 
 
+    // Calls the functions and sets the variables needed to start the test
+    // @param: N/A
+    // @return: N/A
     function start_handler(){
         console.log(analysis["attention"](interval, [[1,1,1], [1,1,1], [1,1,1], [1,1,1], [1,0,0], [0,0,0]], time, proficiency))
         create_list()
@@ -321,6 +344,9 @@ export default function MemoryScanning (props: any) {
     }
 
 
+    // Calculates the user's test score based on correct answers and list count
+    // @param: N/A
+    // @return 'integer': The correct percentage
     function calculate_ratio(){
         return Math.round((AnswerCount/total_digits)*100)
     }
@@ -337,6 +363,9 @@ export default function MemoryScanning (props: any) {
     }
 
 
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
         // setEndTest(false)

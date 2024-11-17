@@ -86,6 +86,9 @@ export default function WorkingMemory(props: any) {
     }, [Delay])
 
 
+    // Resets the response time clock
+    // @param: N/A
+    // @return: N/A
     function reset_time(){
         var arr = TimeArray
         CurrentAttempts < 4 ? arr.push(ResponseTime*.001) : arr.push(max_time)
@@ -141,6 +144,9 @@ export default function WorkingMemory(props: any) {
     }, [CurrentRound, Delay, DelayTime, TestTime, TestStart, EndTest])
 
 
+    // Sets the state variable from /src/app/page.tsx to the an array containing the post-test analysis and sets the test name to the current test.
+    // @param: N/A
+    // @return: N/A
     function handle_insert(){
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
@@ -148,7 +154,9 @@ export default function WorkingMemory(props: any) {
         setInserted(true)
     }
 
-
+    // Adds an additional box to the display for the next round
+    // @param: N/A
+    // @return: N/A
     function build_next_round(){
         setTokensFound(false)
         setFoundCount(0)
@@ -156,16 +164,21 @@ export default function WorkingMemory(props: any) {
         setRoundCount(RoundCount + 1)
         setBoxCount(BoxCount + 1)
         setNextRound(false)
-        add_token(RoundCount + 1)
+        add_token()
     }
 
+    // If an answer is correct and there are less than 4 attempts, pushes a 1 to the answer array. This indicates success for the current round. A 0 is push otherwise.
+    // @param: N/A
+    // @return: N/A
     function handle_answers(){
         var answers = Answers
         CurrentAttempts < 4 ? answers.push(1) : answers.push(0)
         setAnswers(answers)
     }
 
-
+    // Empties the display grid
+    // @param 'token_arr': The array of current boxrs displayed
+    // @return: N/A
     function reset_grid(token_arr: any){
         var grid_arr = BoxGrid
 
@@ -175,7 +188,10 @@ export default function WorkingMemory(props: any) {
     }
 
 
-    function add_token(count: any){
+    // Adds another box to be found in the next round
+    // @param: N/A
+    // @return: N/A
+    function add_token(){
         var box_grid = BoxGrid
         var token_arr = TokenPattern
         var num: any = null
@@ -196,7 +212,9 @@ export default function WorkingMemory(props: any) {
         setTokenPattern(token_arr)        
     }
 
-
+    // Sets the clock display based on the test timer
+    // @param 'time': The time from the countdown
+    // @return: N/A
     function set_clock(time: any){
         var minutes: any = Math.floor(time/60)
         var seconds: any = Math.floor(time % 60)
@@ -207,7 +225,9 @@ export default function WorkingMemory(props: any) {
         setClockDisplay(display)
     }
 
-
+    // Creates the display of average response times
+    // @param 'time': The total amount of response time
+    // @return: N/A
     function average_time(time: any){
         time = time/total_rounds
         var minutes: any = Math.floor(time/60)
@@ -219,7 +239,9 @@ export default function WorkingMemory(props: any) {
         setAverageTime(display)
     }
 
-
+    // Randomizes the display layout of boxes
+    // @param 'box_count': The amount of boxes to be displayed
+    // @return: N/A
     function randomize_layout(box_count: any = null){
         var token_arr: any = []
         var temp_arr = BoxGrid 
@@ -243,6 +265,9 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    // Calls the functions and sets the variables needed to start the test
+    // @param: N/A
+    // @return: N/A
     function start_handler(){
         set_clock(0)
         randomize_layout()
@@ -252,6 +277,9 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    // Checks if a response is correct or not
+    // @param 'event': The click event from the response
+    // @return: N/A
     function check_token(event: any){
         var grid_arr = BoxGrid
         if(grid_arr[event.target.id] == box_style[0]){
@@ -260,6 +288,10 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    // Once a box is found, calls the necessary functions and sets the state variables according to the answer. Also builds the next round, builds the next round, and logs/resets the response time.
+    // @param 'found': A boolean variable signifying if a correct response was given
+    // @param 'event': The click event from the response
+    // @return: N/A
     function token_found(found: any, event: any){
         var grid_arr = BoxGrid
         var pattern_arr = TokenPattern
@@ -292,7 +324,6 @@ export default function WorkingMemory(props: any) {
                         setEndTest(true)
                         setAttentionData(analysis["attention"](interval, Answers, time, proficiency))
                         setReactionData(analysis["speed"](TimeArray, time_measure))
-
 
                         var num = 0
                         for(var i=0; i<RoundAttempts.length; i++){
@@ -327,11 +358,17 @@ export default function WorkingMemory(props: any) {
     }
 
 
+    // Resets the test based on its state within /src/app/page.tsx'
+    // @param: N/A
+    // @return: N/A
     function reset_all(){
         props.setReset(true)
     }
 
 
+    // For the progress bar display. Determines how much of the test is completed.
+    // @param: N/A
+    // @return: N/A 
     function get_position(){
         return RoundAttempts.length > 0 ? Math.abs(RoundAttempts.length - total_rounds) : 0
     }

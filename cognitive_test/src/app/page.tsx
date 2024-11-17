@@ -17,7 +17,7 @@ import MainPage from './MainPage'
 import Profile from '@/login/Profile'
 import Connect from '@/database/Connect'
 import Cognito from '@/login/Cognito'
-
+import MongoDB from '@/database/MongoDB'
 
 
 export default function Home() {
@@ -444,8 +444,9 @@ export default function Home() {
 
 
       
-      <Cognito Logout={Logout} />
+      {/* <Cognito Logout={Logout} /> */}
 
+      <MongoDB Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
     </main>
 
   )
