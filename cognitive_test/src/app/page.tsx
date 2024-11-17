@@ -444,9 +444,9 @@ export default function Home() {
 
 
       
-      <Cognito Logout={Logout} />
+      {/* <Cognito Logout={Logout} /> */}
 
-      <MongoDB />
+      <MongoDB Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
     </main>
 
   )
