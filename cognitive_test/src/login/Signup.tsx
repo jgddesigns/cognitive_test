@@ -2,21 +2,23 @@
 import React, {useEffect, useRef} from 'react';
 import {Button} from "@nextui-org/react"
 import Cognito from './Cognito'
-import Connect from '../database/Connect'
+// import Connect from '../database/Connect'
 import {validate} from '../helpers/Validation'
+import MongoDB from '@/database/MongoDB';
 
 
 export default function Signup(props: any) {
-    const [Username, setUsername] = React.useState("")
-    const [Name, setName] = React.useState("")
-    const [Password, setPassword] = React.useState("")
+    // const [Username, setUsername] = React.useState("")
+    // const [Name, setName] = React.useState("")
+    // const [Password, setPassword] = React.useState("")
+    // const [Email, setEmail] = React.useState("")
     const [PasswordMatch, setPasswordMatch] = React.useState("")
-    const [Email, setEmail] = React.useState("")
-    const [ConfirmCode, setConfirmCode] = React.useState("")
-    const [Submit, setSubmit] = React.useState(false)
+
+    // const [ConfirmCode, setConfirmCode] = React.useState("")
+    // const [Submit, setSubmit] = React.useState(false)
+    // const [ShowConfirm, setShowConfirm] = React.useState(false) 
+    // const [ConfirmSuccess, setConfirmSuccess] = React.useState(false)
     const [SignupSuccess, setSignupSuccess] = React.useState(false)
-    const [ShowConfirm, setShowConfirm] = React.useState(false) 
-    const [ConfirmSuccess, setConfirmSuccess] = React.useState(false)
     const [SignupTimer, setSignupTimer] = React.useState<any>(5)
 
     const classes = ["", "bg-gray-400 cursor-none", "bg-red-400", "bg-green-400", "bg-gray-400 rounded px-10 h-12 text-white cursor-none", "bg-blue-400 rounded px-10 h-12 text-white cursor-pointer"]
@@ -42,27 +44,31 @@ export default function Signup(props: any) {
     const [ConfirmMessage, setConfirmMessage] = React.useState("")
     const [ConfirmClass, setConfirmClass] = React.useState(classes[0])
 
-    const [CheckConfirm, setCheckConfirm] = React.useState(false)
+    // const [CheckConfirm, setCheckConfirm] = React.useState(false)
 
-    const pw_messages = ["", "Password must contain at least 1 number.", "Password must contain at least 1 letter.", "Password must have at least 8 digits.", "Passwords don't match.", "Confirmation code must be 6 digits."]
+    const pw_messages = ["", "Password must contain at least 1 letter.", "Password must contain at least 1 number.", "Password must have at least 8 digits.", "Passwords don't match.", "Confirmation code must be 6 digits."]
 
     const [PasswordMessage, setPasswordMessage] = React.useState("")
 
+    const table = "users"
+
     useEffect(() => {
-        while(SignupSuccess && !ConfirmSuccess && SignupTimer >= 0 ){
+        props.setTable(table)
+
+        while(SignupSuccess && !props.ConfirmSuccess && SignupTimer >= 0 ){
             const timeoutId = setTimeout(() => {
                 setSignupTimer(SignupTimer - 1)
-                SignupTimer <= 0 ? setShowConfirm(true) : null
+                SignupTimer <= 0 ? props.setShowConfirm(true) : null
             }, 1000 )
 
             return () => clearTimeout(timeoutId)
         }
         
-        while(ConfirmSuccess && SignupTimer >= 0 ){
+        while(props.ConfirmSuccess && SignupTimer >= 0 ){
             const timeoutId = setTimeout(() => {
                 setSignupTimer(SignupTimer - 1)
                 if(SignupTimer <= 0){
-                    setConfirmSuccess(false)
+                    props.setConfirmSuccess(false)
                     props.setLoggedIn(true)
                 } 
             }, 1000 )
@@ -70,23 +76,23 @@ export default function Signup(props: any) {
             return () => clearTimeout(timeoutId)
         }
         
-    }, [SignupSuccess, SignupTimer, ConfirmSuccess])
+    }, [SignupSuccess, SignupTimer, props.ConfirmSuccess])
 
 
     useEffect(() => {
-        if(Username != "" && Name != "" && Password != "" && UsernameMessage.length < 1 && NameMessage.length < 1 && PasswordMessage.length < 1){
+        if(props.Email != "" && props.Name != "" && props.Password != "" && EmailMessage.length < 1 && NameMessage.length < 1 && PasswordMessage.length < 1){
             setSubmitClass(classes[5])
             setSubmitDisable(false)
         }else{
             setSubmitClass(classes[4])
             setSubmitDisable(true)
         }
-    }, [Username, Name, Password, UsernameMessage, NameMessage, EmailMessage, PasswordMessage])
+    }, [props.Username, props.Name, props.Password, UsernameMessage, NameMessage, EmailMessage, PasswordMessage])
 
 
     useEffect(() => {
-        if(ConfirmCode.length > 0){
-            if(ConfirmCode.length < 6){
+        if(props.ConfirmCode.length > 0){
+            if(props.ConfirmCode.length < 6){
                 setConfirmClass(classes[2])
                 setSubmitConfirmClass(classes[4])
                 setConfirmDisable(true)
@@ -96,7 +102,7 @@ export default function Signup(props: any) {
                 setConfirmDisable(false)
             }
         }
-    }, [ConfirmCode])
+    }, [props.ConfirmCode])
 
 
     // When a username is changed, this function handles the text input
@@ -104,7 +110,6 @@ export default function Signup(props: any) {
     // @return: N/A
     function username_handler(text: any){
         props.setUsername(text)
-        setUsername(text)
 
         if(!validate["username"](text)){
             setUsernameMessage("Username must have at least 4 digits.")
@@ -123,7 +128,7 @@ export default function Signup(props: any) {
     // @param 'text': The text in the input field
     // @return: N/A
     function name_handler(text: any){
-        setName(text)
+        props.setName(text)
 
         if(!validate["name"](text)){
             setNameMessage("Name must have at least 2 digits.")
@@ -142,7 +147,8 @@ export default function Signup(props: any) {
     // @param 'text': The text in the input field
     // @return: N/A
     function email_handler(text: any){
-        setEmail(text)
+        console.log(text)
+        props.setEmail(text)
         if(!validate["email"](text)){
             setEmailClass(classes[2])
             setEmailMessage("Email has an invalid format. Example: email@example.com")
@@ -163,7 +169,6 @@ export default function Signup(props: any) {
         console.log(text)
         var message: any = ""
         props.setPassword(text)
-        setPassword(text)
 
         if(!validate["password"](text)[0]){
             setPasswordClass(classes[2])
@@ -203,7 +208,7 @@ export default function Signup(props: any) {
     // @param 'text': The text from the confirm field
     // @return: N/A
     function confirm_handler(text: any){
-        setConfirmCode(text)
+        props.setConfirmCode(text)
 
         if(!validate["confirm"](text)){
             setConfirmMessage(pw_messages[5])
@@ -223,8 +228,8 @@ export default function Signup(props: any) {
     function password_match(text: any){
         setPasswordMatch(text)
         var message: any = ""
-        message = password_handler(Password)
-        if(text != Password){
+        message = password_handler(props.Password)
+        if(text != props.Password){
             !message.includes(pw_messages[4]) ? message = message + "\n" + pw_messages[4] : null
             setPasswordMessage(message)
             setMatchClass(classes[2])
@@ -240,13 +245,14 @@ export default function Signup(props: any) {
     // @return: N/A
     function submit_handler(){
         console.log("SUBMIT")
-        setSubmit(true) 
+        props.setSubmit(true) 
     }
 
     // Once the confirm code button has been pressed, sets the related state variable to true and starts the signup timer transition. 
     function submit_confirm(){
         console.log("CONFIRM")
-        setCheckConfirm(true) 
+        props.setCheckConfirm(true) 
+        props.setTable(table)
         setSignupTimer(5) 
     }
 
@@ -263,7 +269,7 @@ export default function Signup(props: any) {
                             <span>
                                 Email 
                             </span>
-                            <textarea className={UsernameClass} onChange={e => username_handler(e.target.value)}/>
+                            <textarea className={EmailClass} onChange={e => email_handler(e.target.value)}/>
                         </div>
                         <div className="grid grid-cols-2 gap-12">
                             <span>
@@ -294,21 +300,21 @@ export default function Signup(props: any) {
                                 Submit
                             </Button>     
                         </div>
-                        {UsernameMessage.length > 0 ?
+                        {/* {UsernameMessage.length > 0 ?
                             <div className="text-red-400">
                                 {UsernameMessage}
                             </div>
-                        : null}
+                        : null} */}
                         {NameMessage.length > 0 ?
                             <div className="text-red-400">
                                 {NameMessage}
                             </div>
                         : null}
-                        {/* {EmailMessage.length > 0 ?
+                        {EmailMessage.length > 0 ?
                             <div className="text-red-400">
                                 {EmailMessage}
                             </div>
-                        : null} */}
+                        : null}
                         {PasswordMessage.length > 0 ?
                             <div className="text-red-400" style={{ whiteSpace: 'pre-wrap' }}>
                                 {PasswordMessage}
@@ -317,7 +323,7 @@ export default function Signup(props: any) {
                     </div>
                 :
                     <div>
-                        {!ShowConfirm ? 
+                        {!props.ShowConfirm ? 
                             <div className="mt-24 grid grid-rows-2 gap-12 place-items-center">
                                 <div className="mt-12">
                                     Awaiting Confirmation...
@@ -335,7 +341,7 @@ export default function Signup(props: any) {
                                 </div>
                             </div>
                         :   <div>
-                                {!ConfirmSuccess ? 
+                                {!props.ConfirmSuccess ? 
                                     <div className="mt-24 grid grid-auto-rows place-items-center gap-12">
                                         <div className="grid grid-cols-2 gap-12">
                                             <span>
@@ -386,8 +392,7 @@ export default function Signup(props: any) {
                 }
             </div>
 
-            <Connect setSubmit={setSubmit} Submit={Submit} setLoggedIn={props.setLoggedIn} setSignupSuccess={setSignupSuccess} setConfirmSuccess={setConfirmSuccess} ConfirmSuccess={ConfirmSuccess} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} Username={Username} Name={Name} Email={Email} Password={Password}/>
-
+            {/* <MongoDB Submit={Submit} setSubmit={setSubmit} setSignupSuccess={setSignupSuccess} setConfirmSuccess={setConfirmSuccess} ConfirmSuccess={ConfirmSuccess} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} setConfirmCode={setConfirmCode} Username={Username} Name={Name} Email={Email} Password={Password}/> */}
         </div>
     )
 

@@ -14,21 +14,24 @@ const client = new MongoClient(uri, {
 
 export async function GET(request: Request){
   try {
+    var table = null
+
     await client.connect()
-    console.log('1')
     await client.db("admin").command({ ping: 1 })
-    console.log('2')
     console.log("Successfully connected to MongoDB for insertion...")
 
-    const database = client.db("cognitivetest")
-    const collection = database.collection("users")
     const url: any = new URL(request.url)
+
     var data = url.searchParams.get('data')
     data = JSON.parse(data)
+    table = url.searchParams.get('table')
+
+    const database = client.db("cognitivetest")
+    const collection = database.collection(table)
 
     console.log("Data to insert:")
     console.log(data)
-    const result = await collection.insertOne({ attempt_num: data["attempt_num"], attention: data["attention"], decisiveness: data["decisiveness"], reaction:["reaction"], test_name: data["test_name"], timestamp: data["timestamp"], user_id: data["user_id"]})
+    const result = await collection.insertOne(data)
 
     console.log(`Inserted data: ${result}`)
     return new Response(JSON.stringify({ message: 'MongoDB insert success! Data: ' + JSON.stringify(result)}), {

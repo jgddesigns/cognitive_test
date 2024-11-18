@@ -35,7 +35,7 @@ export default function WorkingMemory(props: any) {
     const [Answers, setAnswers] = React.useState<any>([])
     const [Inserted, setInserted] = React.useState(false)
     
-    const test_table = "test_results"
+    const table = "test_results"
 
     const box_style = ["h-32 w-32 bg-gray-400 cursor-pointer", "h-32 w-32  bg-yellow-400", "h-32 w-32 bg-cyan-400"]
 
@@ -153,7 +153,7 @@ export default function WorkingMemory(props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
-        props.setTable(test_table)
+        props.setTable(table)
         setInserted(true)
     }
 

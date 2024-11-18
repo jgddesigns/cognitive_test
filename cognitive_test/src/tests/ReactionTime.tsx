@@ -28,7 +28,7 @@ export default function ReactionTime (props: any) {
     const [Answers, setAnswers] = React.useState<any>([])
     const [Inserted, setInserted] = React.useState(false)
     
-    const test_table = "test_results"
+    const table = "test_results"
 
     const answer_string = ["", "Good!", "Too Slow!"]
     const [AnswerString, setAnswerString] = React.useState(answer_string[0])
@@ -104,7 +104,7 @@ export default function ReactionTime (props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
-        props.setTable(test_table)
+        props.setTable(table)
         setInserted(true)
     }
 

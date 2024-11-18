@@ -18,11 +18,14 @@ export default function MongoDB(props: any) {
     useEffect(() => {
         if(InsertSuccess){
             console.log("insert success. resetting variables.")
+            props.setSubmit(false)
+            props.setTestName(null)
             props.setTable(null)
             setInsertSuccess(false)
         }
+        // handle_insert()
         // !RetrieveOneSuccess ? retrieve_one() : console.log("Retrieve one success!") 
-        !InsertSuccess ? handle_insert() : null
+        // !InsertSuccess ? handle_insert() : null
         // !RetrieveAllSuccess ? retrieve_all() : console.log("Retrieve all success!") 
     }, [InsertSuccess, RetrieveOneSuccess, RetrieveAllSuccess])
 
@@ -34,62 +37,62 @@ export default function MongoDB(props: any) {
     
     //insert for test results table
     useEffect(() => {
-        props.Table ? handle_insert() : null
+        props.Table && props.TestName ? handle_insert() : null
     }, [props.Table])
     
 
     async function handle_insert(){
         console.log("starting insert to: " + props.Table)
 
-        setInsertSuccess(false)
         var data = null
-        const test_results = {
-            user_id: props.Username,  
-            attempt_num: 5688,
-            test_name: props.TestName,
-            attention: props.Data[0],
-            decisiveness: props.Data[1],
-            reaction: props.Data[2],
-            timestamp: get_timestamp()
-        } 
-        const user_data = {
-
+        var test_results = null
+        var user_data
+        try{
+            test_results = {
+                user_id: props.Username,  
+                attempt_num: 5688,
+                test_name: props.TestName,
+                attention: props.Data[0],
+                decisiveness: props.Data[1],
+                reaction: props.Data[2],
+                timestamp: get_timestamp()
+            } 
+        }catch{
+            test_results = null
         }
-        // props.Table == test_table ? data = test_results : data = 
-        // user_data 
-        data = test_results
+        try{
+            user_data = {
+                profile_data: null, 
+                username: props.Email,
+                // email_address: props.Email,
+                name: props.Name,
+                tests_completed: '0',
+                total_test_time: '0',
+                variables_used:  null,
+                mind_type: null,
+                timestamp: get_timestamp()
+            }
+        }catch{
+            user_data = null
+        }
+        console.log(props.Table)
+        props.Table == test_table ? data = test_results : data = 
+        user_data 
         console.log("data to insert:")
         console.log(data)
-        data ? insert(data) : console.log("Error building insert test data.")
+        data ? insert(data, props.Table) : console.log("Error building insert test data.")
       }
 
 
-    async function insert(data: any = null){
+    async function insert(data: any = null, table: any = null){
         console.log("Inserting to MongoDB")
-        const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data), { method: 'GET' })
-        // const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data) + "?table=" + test_table, { method: 'GET' })
-        const insert = await response.json().then((data) => console.log("Inserted data: " + data))
-        response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
+        // const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data), { method: 'GET' })
+        const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data) + "&table=" + table, { method: 'GET' })
+        const insert = await response.json().then((data) => 
+            console.log("Inserted data: " + data))
+        // response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
     }
     
-
-    // async function insert(){
-    //     console.log("Inserting to MongoDB table " + props.table + "...")
-    //     const response = await fetch('../api/mongo_db/insert?table=' + props.table + '?data=' + JSON.stringify(props.payload), { method: 'GET' });
-    //     const data = await response.json();
-    //     response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
-    // }
-
-
-    // async function retrieve_one(){
-    //     console.log("Retrieving from MongoDB table " + props.table + "...")
-    //     const response = await fetch('../api/mongo_db/retrieve?table=' + props.table + '?data=' + JSON.stringify(props.payload), { method: 'GET' });
-    //     const data = await response.json()
-    //     console.log("Retrieved data:")
-    //     console.log(data)
-    //     response.status === 200 ? setRetrieveOneSuccess(true) : setRetrieveOneSuccess(false)
-    // }
-
 
     async function retrieve_one(){
         console.log("Retrieving from MongoDB table " + props.table + "...")
@@ -100,6 +103,7 @@ export default function MongoDB(props: any) {
         const retrieve = await response.json().then((data) => console.log("Retrieved data: " + JSON.stringify(data)))
         response.status === 200 ? setRetrieveOneSuccess(true) : setRetrieveOneSuccess(false)
     }
+
 
     async function retrieve_all(){
         console.log("Retrieving from MongoDB table " + props.table + "...")

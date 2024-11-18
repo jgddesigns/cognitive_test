@@ -37,7 +37,7 @@ export default function NumberVigilance (props: any) {
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Inserted, setInserted] = React.useState(false)
     
-    const test_table = "test_results"
+    const table = "test_results"
 
     const correct_class = ["bg-blue-400 rounded px-10 h-12 text-white outline-0", "bg-green-400 rounded px-10 h-12 text-white outline-0", "bg-red-400 rounded px-10 h-12 text-white outline-0"]
     const [CorrectClass, setCorrectClass] = React.useState(correct_class[0])
@@ -169,7 +169,7 @@ export default function NumberVigilance (props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
-        props.setTable(test_table)
+        props.setTable(table)
         setInserted(true)
     }
 

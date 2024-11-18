@@ -34,7 +34,7 @@ export default function DigitVigilance(props: any) {
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Inserted, setInserted] = React.useState(false)
     
-    const test_table = "test_results"
+    const table = "test_results"
     
     //proficient overall score
     
@@ -133,7 +133,7 @@ export default function DigitVigilance(props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
-        props.setTable(test_table)
+        props.setTable(table)
         setInserted(true)
     }
 

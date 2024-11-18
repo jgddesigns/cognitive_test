@@ -35,7 +35,7 @@ export default function PictureRecognition (props: any) {
     const [Answers, setAnswers] = React.useState<any>([])
     const [Inserted, setInserted] = React.useState(false)
     
-    const test_table = "test_results"
+    const table = "test_results"
 
     const answered_style = ["text-red-400", "text-green-400"]
 
@@ -105,7 +105,7 @@ export default function PictureRecognition (props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
-        props.setTable(test_table)
+        props.setTable(table)
         setInserted(true)
     }
 

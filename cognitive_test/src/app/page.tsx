@@ -74,6 +74,12 @@ export default function Home() {
   const [ShowWordRecognition, setShowWordRecognition] = React.useState(false)
   const [ShowWorkingMemory, setShowWorkingMemory,] = React.useState(false)
 
+  const [ConfirmCode, setConfirmCode] = React.useState("")
+  const [Submit, setSubmit] = React.useState(false)
+  const [ShowConfirm, setShowConfirm] = React.useState(false) 
+  const [ConfirmSuccess, setConfirmSuccess] = React.useState(false)
+  const [CheckConfirm, setCheckConfirm] = React.useState(false)
+
   // Holds the above state variables for looping in 'set_screens' function. 
   const test_types = [        
     setShowChoiceReaction, setShowDigitVigilance, setShowMemoryScanning, setShowMotorFunction, setShowNumberVigilance, setShowPictureRecognition,setShowReactionTime, setShowWordRecognition,setShowWorkingMemory
@@ -96,6 +102,7 @@ export default function Home() {
   // Used locally in: 'check_cookies' and 'toggle_login' functions.
   // Passes to: 'src/login/Login' and 'src/login/Signup'.
   const [Username, setUsername] = React.useState("")
+  const [Name, setName] = React.useState("")
   const [Email, setEmail] = React.useState("")
   
   // String state variable that stores a user's entered password. 
@@ -386,7 +393,7 @@ export default function Home() {
           :null}
 
           {ShowSignup ?
-            <Signup link_handler={link_handler} toggle_login={toggle_login} setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword}/>
+            <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ConfirmCode={ConfirmCode} setSubmit={setSubmit}/>
           : null}
 
           {ShowLogin ?
@@ -447,7 +454,7 @@ export default function Home() {
       
       {/* <Cognito Logout={Logout} /> */}
 
-      <MongoDB Table={Table} setTable={setTable} Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
+      <MongoDB Table={Table} setTable={setTable} Insert={Insert} setInsert={setInsert} setData={setData} setTestName={setTestName} Data={Data} Username={Username} Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve} Submit={Submit} setSubmit={setSubmit}/>
     </main>
 
   )
