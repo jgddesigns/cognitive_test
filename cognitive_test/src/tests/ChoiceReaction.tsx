@@ -28,6 +28,8 @@ export default function ChoiceReaction (props: any) {
     const [DecisionData, setDecisionData] = React.useState<any>(null)
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Inserted, setInserted] = React.useState(false)
+    
+    const test_table = "test_results"
 
     const prompt_list = [
         //true questions
@@ -212,6 +214,7 @@ export default function ChoiceReaction (props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
+        props.setTable(test_table)
         setInserted(true)
     }
 

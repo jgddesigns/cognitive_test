@@ -7,55 +7,67 @@ export default function MongoDB(props: any) {
     const [InsertSuccess, setInsertSuccess] = React.useState(false)
     const [RetrieveAllSuccess, setRetrieveAllSuccess] = React.useState(false)
     const [RetrieveOneSuccess, setRetrieveOneSuccess] = React.useState(false)
-    const [UserInserted, setUserInserted] = React.useState(false);
-    const [ID, setID] = React.useState(null)
+    const [UserInserted, setUserInserted] = React.useState(false)
     const [AttemptNumber, setAttemptNumber] = React.useState(null)
+
+    const user_table = "users"
+     
+    const test_table = "test_results"
 
 
     useEffect(() => {
-        // !InsertSuccess ? handle_insert() : console.log("Insert success!") 
-        !RetrieveOneSuccess ? retrieve_one() : console.log("Retrieve one success!") 
+        if(InsertSuccess){
+            console.log("insert success. resetting variables.")
+            props.setTable(null)
+            setInsertSuccess(false)
+        }
+        // !RetrieveOneSuccess ? retrieve_one() : console.log("Retrieve one success!") 
+        !InsertSuccess ? handle_insert() : null
         // !RetrieveAllSuccess ? retrieve_all() : console.log("Retrieve all success!") 
     }, [InsertSuccess, RetrieveOneSuccess, RetrieveAllSuccess])
 
 
-    // real insert
-    // useEffect(() => {
-    //     props.Submit ? insert() : null
-    //   }, [props.Submit, props.CheckConfirm])
+    // insert for user signup
+    useEffect(() => {
+        props.Submit ? handle_insert() : null
+    }, [props.Submit])
     
-    // used to create attempt number
-    //   useEffect(() => {
-    //     props.Insert && props.Data && props.TestName ? createEntries() :null 
-    //   }, [props.Insert, props.Data, props.TestName])
-    
-    
-      useEffect(() => {
-        ID && AttemptNumber ? handle_insert() : null
-      }, [ID, AttemptNumber])
+    //insert for test results table
+    useEffect(() => {
+        props.Table ? handle_insert() : null
+    }, [props.Table])
     
 
     async function handle_insert(){
-        console.log("Inserting test results id:" + ID + ", attempt number: " + AttemptNumber)
-        const newTestResult = {
-          user_id: props.Username,  
+        console.log("starting insert to: " + props.Table)
+
+        setInsertSuccess(false)
+        var data = null
+        const test_results = {
+            user_id: props.Username,  
             attempt_num: 5688,
-          test_name: props.TestName,
-          attention: props.Data[0],
-          decisiveness: props.Data[1],
-          reaction: props.Data[2],
-          timestamp: get_timestamp()
+            test_name: props.TestName,
+            attention: props.Data[0],
+            decisiveness: props.Data[1],
+            reaction: props.Data[2],
+            timestamp: get_timestamp()
         } 
-        newTestResult ? insert(newTestResult) : console.log("Error building insert test data.")
+        const user_data = {
+
+        }
+        // props.Table == test_table ? data = test_results : data = 
+        // user_data 
+        data = test_results
+        console.log("data to insert:")
+        console.log(data)
+        data ? insert(data) : console.log("Error building insert test data.")
       }
 
 
-    async function insert(data:any = null){
+    async function insert(data: any = null){
         console.log("Inserting to MongoDB")
-        const payload = {
-            "attempt_num": 5688
-        }
         const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data), { method: 'GET' })
+        // const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data) + "?table=" + test_table, { method: 'GET' })
         const insert = await response.json().then((data) => console.log("Inserted data: " + data))
         response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
     }
@@ -77,6 +89,8 @@ export default function MongoDB(props: any) {
     //     console.log(data)
     //     response.status === 200 ? setRetrieveOneSuccess(true) : setRetrieveOneSuccess(false)
     // }
+
+
     async function retrieve_one(){
         console.log("Retrieving from MongoDB table " + props.table + "...")
         const payload = {

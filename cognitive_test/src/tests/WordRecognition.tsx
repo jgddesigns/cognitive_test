@@ -33,6 +33,8 @@ export default function WordRecognition (props: any) {
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState<any>([])
     const [Inserted, setInserted] = React.useState(false)
+    
+    const test_table = "test_results"
 
     const answered_style = ["text-red-400", "text-green-400"]
     const [AnsweredStyle, setAnsweredStyle] = React.useState(answered_style[0])
@@ -86,6 +88,7 @@ export default function WordRecognition (props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
+        props.setTable(test_table)
         setInserted(true)
     }
 

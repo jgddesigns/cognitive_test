@@ -48,6 +48,8 @@ export default function WorkingMemory(props: any) {
     const [ReactionData, setReactionData]  = React.useState<any>(null)
     const [Answers, setAnswers] = React.useState<any>([])
     const [Inserted, setInserted] = React.useState(false)
+    
+    const test_table = "test_results"
 
     const shapes = ["circle", "square", "triangle", "heart", "star", "moon", "hexagon", "diamond", "trapezoid"]
     const colors = ["red", "yellow", "green", "blue"]
@@ -182,6 +184,7 @@ export default function WorkingMemory(props: any) {
         console.log("inserting to database")
         props.setData([AttentionData, DecisionData, ReactionData])
         props.setTestName(test_name)
+        props.setTable(test_table)
         setInserted(true)
     }
 

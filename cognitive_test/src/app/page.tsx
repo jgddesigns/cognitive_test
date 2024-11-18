@@ -15,7 +15,7 @@ import Login from '@/login/Login'
 import Signup from '@/login/Signup'
 import MainPage from './MainPage'
 import Profile from '@/login/Profile'
-import Connect from '@/database/Connect'
+// import Connect from '@/database/Connect'
 import Cognito from '@/login/Cognito'
 import MongoDB from '@/database/MongoDB'
 
@@ -122,6 +122,7 @@ export default function Home() {
   const [Insert, setInsert] = React.useState(false)
   const [Data, setData] = React.useState([])
   const [TestName, setTestName] = React.useState("")
+  const [Table, setTable] = React.useState(null)
 
   const [Retrieve, setRetrieve] = React.useState(false)
   const [RetrievedData, setRetrievedData] = React.useState(null)
@@ -335,9 +336,9 @@ export default function Home() {
           }
         </div>
 
-        <div>
+        {/* <div>
           <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
-        </div>
+        </div> */}
 
         <div className="mt-24">
           {ShowHome && !Logout ? 
@@ -345,43 +346,43 @@ export default function Home() {
           : null}
 
           {ShowTestInfo ?
-            <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID}/>
+            <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID} setTable={setTable}/>
           : null}
 
           {ShowChoiceReaction ?
-            <ChoiceReaction setInsert={setInsert} setData={setData} setTestName={setTestName} setReset={setReset} key={StateKey}/>
+            <ChoiceReaction setInsert={setInsert} setData={setData} setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
 
           {ShowDigitVigilance ?
-            <DigitVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>
+            <DigitVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
 
           {ShowMemoryScanning ?
-            <MemoryScanning setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>
+            <MemoryScanning setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
         
           {ShowMotorFunction ?
-            <MotorFunction setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>
+            <MotorFunction setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
 
           {ShowNumberVigilance ?
-            <NumberVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
+            <NumberVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
           {ShowPictureRecognition ?
-            <PictureRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
+            <PictureRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
           {ShowReactionTime ?
-            <ReactionTime setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
+            <ReactionTime setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
           {ShowWordRecognition ?
-            <WordRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
+            <WordRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
           {ShowWorkingMemory ?
-            <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey}/>        
+            <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
           {ShowSignup ?
@@ -446,7 +447,7 @@ export default function Home() {
       
       {/* <Cognito Logout={Logout} /> */}
 
-      <MongoDB Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
+      <MongoDB Table={Table} setTable={setTable} Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
     </main>
 
   )

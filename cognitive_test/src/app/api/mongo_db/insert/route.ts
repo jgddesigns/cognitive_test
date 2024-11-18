@@ -15,7 +15,9 @@ const client = new MongoClient(uri, {
 export async function GET(request: Request){
   try {
     await client.connect()
+    console.log('1')
     await client.db("admin").command({ ping: 1 })
+    console.log('2')
     console.log("Successfully connected to MongoDB for insertion...")
 
     const database = client.db("cognitivetest")
