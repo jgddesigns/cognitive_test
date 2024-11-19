@@ -348,7 +348,7 @@ export default function DigitVigilance(props: any) {
                             return (
                                 <div className="max-w-[4rem]" key={result.key}>{result.row.map((result2: {
                                     key: null | undefined; number: any | string | number | 
-                                      null | undefined; }) => {
+                                    null | undefined; }) => {
                                     return(
                                         <span className="ml-[10px] cursor-pointer" onClick={(e) => check_number(e)} id={result2.number} key={result2.key}>
                                             {result2.number}
@@ -395,11 +395,11 @@ export default function DigitVigilance(props: any) {
                     <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData}/>
                 </div>
                 <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
-                     Reset
+                    Reset
                 </Button>
             </div>
         } 
-         
+        
     </div>
   )
 

@@ -43,7 +43,7 @@ export default function Tests(props: any) {
 
             //NUMBER VIGILANCE
             case 5:
-                props.setPopoverMessage("A number appears at the top of the screen. When the test is started, random numbers are shown a quick rate for 3 minutes. Click the 'Okay' button when the two numbers match to test your reaction time.")
+                props.setPopoverMessage('A number appears at the top of the screen. When the test is started, random numbers are shown a quick rate for 3 minutes. Click the &apos;Okay&apos; button when the two numbers match to test your reaction time.')
                 props.setTestTitle("NUMBER VIGILANCE")
                 props.setTestID(test)
                 break
@@ -72,7 +72,7 @@ export default function Tests(props: any) {
 
             //WORKING MEMORY
             case 9:
-                props.setPopoverMessage("The test begins with three colored boxes shown on the screen. One box contains a token. When the token is found, it is added to the 'found list' above the play area. The token is then moved to another box for the user to find again. The rate at which this occurs is equal to the amount boxes shown on the screen.")
+                props.setPopoverMessage("The test begins with three colored boxes shown on the screen. One box contains a token. When the token is found, it is added to the &apos;found list&apos; above the play area. The token is then moved to another box for the user to find again. The rate at which this occurs is equal to the amount boxes shown on the screen.")
                 props.setTestTitle("SPATIAL WORKING MEMORY")
                 props.setTestID(test)
                 break
@@ -88,7 +88,7 @@ export default function Tests(props: any) {
             FLOURISH SCIENCE COGNITIVE TESTS
         </div>
         <div className="row mt-12 text-sky-400">
-            A list of the various cognitive tests. Click the test name to show its description. Click the 'Start Test' button below a given test name to start the test. 
+            A list of the various cognitive tests. Click the test name to show its description. Click the &apos;Start Test&apos; button below a given test name to start the test. 
         </div>
         <div className="grid grid-auto-rows place-items-center auto-rows mt-24">
             <div>

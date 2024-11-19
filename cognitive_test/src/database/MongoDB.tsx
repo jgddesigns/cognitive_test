@@ -16,6 +16,8 @@ export default function MongoDB(props: any) {
 
 
     useEffect(() => {
+        retrieve_specific("attempt_num", 1, "test_table", null)
+        // create_attempt(test_table, "choice_reaction")
         if(InsertSuccess){
             console.log("insert success. resetting variables.")
             props.setSubmit(false)
@@ -44,13 +46,13 @@ export default function MongoDB(props: any) {
     async function handle_insert(){
         console.log("starting insert to: " + props.Table)
 
-        var data = null
+        var data: any = null
         var test_results = null
         var user_data
         try{
             test_results = {
                 user_id: props.Username,  
-                attempt_num: 5688,
+                attempt_num: await increment_attempt(props.Table, props.TestName),
                 test_name: props.TestName,
                 attention: props.Data[0],
                 decisiveness: props.Data[1],
@@ -66,7 +68,7 @@ export default function MongoDB(props: any) {
                 username: props.Email,
                 // email_address: props.Email,
                 name: props.Name,
-                tests_completed: '0',
+                tests_completed: await retrieve_all("tests_table"),
                 total_test_time: '0',
                 variables_used:  null,
                 mind_type: null,
@@ -94,22 +96,39 @@ export default function MongoDB(props: any) {
     }
     
 
-    async function retrieve_one(){
-        console.log("Retrieving from MongoDB table " + props.table + "...")
-        const payload = {
-            "attempt_num": 5688
+    async function retrieve_specific(column: any, value: any, table: any, condition: any){
+        var asdf = '{"' + column + '": ' + value + '}'
+        console.log(JSON.parse(asdf))
+        var multiple_rows = false
+        var with_condition = false 
+        var response = null
+        var retrieve = null
+        var retrieved = null
+
+        !value ? multiple_rows = true : multiple_rows = false
+        condition ? with_condition = true : null 
+
+        console.log(multiple_rows)
+        console.log(with_condition)
+
+        if(multiple_rows){
+            
         }
-        const response = await fetch('../api/mongo_db/retrieve?data=' + JSON.stringify(payload), { method: 'GET' });
-        const retrieve = await response.json().then((data) => console.log("Retrieved data: " + JSON.stringify(data)))
-        response.status === 200 ? setRetrieveOneSuccess(true) : setRetrieveOneSuccess(false)
+
+        response = await fetch('../api/mongo_db/retrieve?table=' + table, { method: 'GET' });
+        retrieve = await response.json().then((data) => retrieved = data)
+        console.log(retrieved)
+        return retrieved
     }
 
 
-    async function retrieve_all(){
-        console.log("Retrieving from MongoDB table " + props.table + "...")
-        const response = await fetch('../api/mongo_db/retrieve', { method: 'GET' });
-        const retrieve = await response.json().then((data) => console.log("Retrieved data: " + JSON.stringify(data)))
-        response.status === 200 ? setRetrieveAllSuccess(true) : setRetrieveAllSuccess(false)
+    async function retrieve_all(table: any){
+        var retrieved = null
+        console.log("Retrieving from MongoDB table " + table + "...")
+        const response = await fetch('../api/mongo_db/retrieve?table=' + table, { method: 'GET' });
+        const retrieve = await response.json().then((data) => retrieved = data)
+        console.log(retrieved)
+        return retrieved
     }
 
 
@@ -125,9 +144,18 @@ export default function MongoDB(props: any) {
     // Retrieves the past attempt and increments the attempt number for the current test.
     // @param: N/A
     // @return: N/A
-    function create_attempt(){
-        const date = new Date(Date.now())
-        return date.toString()
+    async function increment_attempt(table: any, test_name: any){
+        try{
+        let rows: any = await retrieve_all(table)
+        let greatest = 0
+        for (let i=0; i<rows.length; i++){
+            rows[i]["test_name"] === test_name ? greatest = rows[i]["attempt_num"] : null
+        }
+        console.log(greatest + 1)
+        return greatest + 1
+        }catch{
+            console.log("Error scanning database for attempt number(s).")
+        }
     }
 
 

@@ -287,7 +287,7 @@ export default function NumberVigilance (props: any) {
             NUMBER VIGILANCE
         </div>
         <div className="row mt-12 text-sky-400">
-            A number appears at the top of the screen. When the test is started, random numbers are shown a quick rate for one minute. Click the 'Okay' button when the two numbers match to test your reaction time.
+            A number appears at the top of the screen. When the test is started, random numbers are shown a quick rate for one minute. Click the &apos;Okay&apos; button when the two numbers match to test your reaction time.
         </div>
         {!EndTest ?
             <div>          
