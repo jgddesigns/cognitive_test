@@ -20,32 +20,35 @@ export async function GET(request: Request){
     console.log("Successfully connected to MongoDB for retrieval...")
 
     const database = client.db("cognitivetest")
-    const collection = database.collection("users")
-    const url: any = new URL(request.url)
+    const url = new URL(request.url)
+    var data = null
 
     try{
-      var data = url.searchParams.get('data')
+      data = url.searchParams.get('data')
       data ? data  = JSON.parse(data) : null
     }catch{ 
       console.log("No data set to retrieve. Getting all table rows...")
     }
 
-    var result: any = null
-    var find_rows: any = null
+    var table = url.searchParams.get('table')
+    var result = null
+    var find_rows = null
 
+    const collection = database.collection(table)
     if(!data){
       find_rows = collection.find({})
       result  = await find_rows.toArray()
     }else{
       result = await collection.find(data).toArray()
     }
+
     if (!result) {
       return NextResponse.json({ error: "Document not found" }, { status: 404 })
     }
 
     console.log(`Retrieved data: ${result}`)
 
-    return new Response(JSON.stringify({ message: 'MongoDB retrieval success! Data: ' + JSON.stringify(result)}), {
+    return new Response(JSON.stringify((result)), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })

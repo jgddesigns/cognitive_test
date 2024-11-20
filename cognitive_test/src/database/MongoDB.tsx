@@ -8,7 +8,6 @@ export default function MongoDB(props: any) {
     const [RetrieveAllSuccess, setRetrieveAllSuccess] = React.useState(false)
     const [RetrieveOneSuccess, setRetrieveOneSuccess] = React.useState(false)
     const [UserInserted, setUserInserted] = React.useState(false)
-    const [AttemptNumber, setAttemptNumber] = React.useState(null)
 
     const user_table = "users"
      
@@ -16,8 +15,7 @@ export default function MongoDB(props: any) {
 
 
     useEffect(() => {
-        retrieve_specific("attempt_num", 1, "test_table", null)
-        // create_attempt(test_table, "choice_reaction")
+        // test()
         if(InsertSuccess){
             console.log("insert success. resetting variables.")
             props.setSubmit(false)
@@ -25,10 +23,6 @@ export default function MongoDB(props: any) {
             props.setTable(null)
             setInsertSuccess(false)
         }
-        // handle_insert()
-        // !RetrieveOneSuccess ? retrieve_one() : console.log("Retrieve one success!") 
-        // !InsertSuccess ? handle_insert() : null
-        // !RetrieveAllSuccess ? retrieve_all() : console.log("Retrieve all success!") 
     }, [InsertSuccess, RetrieveOneSuccess, RetrieveAllSuccess])
 
 
@@ -37,11 +31,17 @@ export default function MongoDB(props: any) {
         props.Submit ? handle_insert() : null
     }, [props.Submit])
     
+
     //insert for test results table
     useEffect(() => {
         props.Table && props.TestName ? handle_insert() : null
     }, [props.Table])
     
+
+    async function test(){
+        console.log(await retrieve_specific("attempt_num", test_table, [null, 500]))
+    }
+
 
     async function handle_insert(){
         console.log("starting insert to: " + props.Table)
@@ -83,42 +83,60 @@ export default function MongoDB(props: any) {
         console.log("data to insert:")
         console.log(data)
         data ? insert(data, props.Table) : console.log("Error building insert test data.")
-      }
+    }
 
 
     async function insert(data: any = null, table: any = null){
         console.log("Inserting to MongoDB")
-        // const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data), { method: 'GET' })
         const response = await fetch('../api/mongo_db/insert?data=' + JSON.stringify(data) + "&table=" + table, { method: 'GET' })
         const insert = await response.json().then((data) => 
             console.log("Inserted data: " + data))
-        // response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
+        response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
     }
+
     
+    // if condition exists (greater, lesser, within range) return all rows that fit the condition. otherwise, return 
+    // add bool as condition and...???
+    async function retrieve_specific(column: any, table: any, condition: any){
+        let rows: any = await retrieve_all(table)
+        console.log(rows)
+        let data_arr: any = []
 
-    async function retrieve_specific(column: any, value: any, table: any, condition: any){
-        var asdf = '{"' + column + '": ' + value + '}'
-        console.log(JSON.parse(asdf))
-        var multiple_rows = false
-        var with_condition = false 
-        var response = null
-        var retrieve = null
-        var retrieved = null
-
-        !value ? multiple_rows = true : multiple_rows = false
-        condition ? with_condition = true : null 
-
-        console.log(multiple_rows)
-        console.log(with_condition)
-
-        if(multiple_rows){
-            
+        for(let i=0; i<rows.length; i++){
+            check_condition(condition, rows[i][column]) ? data_arr.push(rows[i]) : null
         }
 
-        response = await fetch('../api/mongo_db/retrieve?table=' + table, { method: 'GET' });
-        retrieve = await response.json().then((data) => retrieved = data)
-        console.log(retrieved)
-        return retrieved
+        return data_arr
+    }
+
+
+    function check_condition(condition: any, value: any){
+        if(!Array.isArray(condition)){
+            return false
+        }
+
+        if((typeof condition[0] === "number" && typeof condition[1] === "number") && value > condition[0] && value < condition[1]){
+            console.log("CONDITION: greater than/lesser than range")
+            return true
+        }
+
+        if((typeof condition[0] === "number" && !condition[1]) && (value > condition[0])){
+            console.log("CONDITION: greater than")
+            return true
+        }
+            
+        if((!condition[0] && typeof condition[1] === "number") && value < condition[1]){
+            console.log("CONDITION: lesser than")
+            return true
+        }
+
+
+        if(condition[0] == condition[1] == value){
+            console.log("CONDITION: equal")
+            return true
+        }
+
+        return false
     }
 
 
