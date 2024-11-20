@@ -2,12 +2,13 @@
 'use client'
 import React, {useEffect, useRef} from 'react';
 import Cognito from '@/login/Cognito';
+import { Prosto_One } from 'next/font/google';
 
 export default function MongoDB(props: any) {
     const [InsertSuccess, setInsertSuccess] = React.useState(false)
     const [RetrieveAllSuccess, setRetrieveAllSuccess] = React.useState(false)
     const [RetrieveOneSuccess, setRetrieveOneSuccess] = React.useState(false)
-    const [UserInserted, setUserInserted] = React.useState(false)
+
 
     const user_table = "users"
      
@@ -18,9 +19,10 @@ export default function MongoDB(props: any) {
         // test()
         if(InsertSuccess){
             console.log("insert success. resetting variables.")
-            props.setSubmit(false)
+            // props.setSubmit(false)
             props.setTestName(null)
             props.setTable(null)
+            props.setUsernameVerified(false)
             setInsertSuccess(false)
         }
     }, [InsertSuccess, RetrieveOneSuccess, RetrieveAllSuccess])
@@ -28,8 +30,18 @@ export default function MongoDB(props: any) {
 
     // insert for user signup
     useEffect(() => {
-        props.Submit ? handle_insert() : null
-    }, [props.Submit])
+        props.UsernameCheck && !props.UsernameVerified ? username_check() : null
+    }, [props.UsernameCheck, props.UsernameVerified])
+
+    useEffect(() => {
+        console.log(props.Submit)
+        console.log(props.UsernameVerified)
+        props.UsernameVerified && props.Submit ? props.setUserInserted(true) : null 
+    }, [props.Submit, props.UsernameVerified])
+
+    useEffect(() => {
+        props.TriggerInsert ? handle_insert() : null
+    }, [props.TriggerInsert])
     
 
     //insert for test results table
@@ -39,7 +51,17 @@ export default function MongoDB(props: any) {
     
 
     async function test(){
-        console.log(await retrieve_specific("attempt_num", test_table, [null, 500]))
+        console.log(await retrieve_specific("attempt_num", test_table, "", [null, 500]))
+    }
+
+
+    async function username_check(){
+        props.setUsernameCheck(false)
+        props.setUsernameVerified(false)
+        console.log("username check: " + props.Username)
+        let name: any = await retrieve_specific("username", user_table, props.Username, null)
+        console.log(name)
+        name.length > 0 ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
     }
 
 
@@ -48,7 +70,7 @@ export default function MongoDB(props: any) {
 
         var data: any = null
         var test_results = null
-        var user_data
+        var user_data = null
         try{
             test_results = {
                 user_id: props.Username,  
@@ -65,7 +87,7 @@ export default function MongoDB(props: any) {
         try{
             user_data = {
                 profile_data: null, 
-                username: props.Email,
+                username: props.Username,
                 // email_address: props.Email,
                 name: props.Name,
                 tests_completed: await retrieve_all("tests_table"),
@@ -83,6 +105,8 @@ export default function MongoDB(props: any) {
         console.log("data to insert:")
         console.log(data)
         data ? insert(data, props.Table) : console.log("Error building insert test data.")
+        props.setUsernameVerified(false)
+        props.setTriggerInsert(false)
     }
 
 
@@ -97,20 +121,27 @@ export default function MongoDB(props: any) {
     
     // if condition exists (greater, lesser, within range) return all rows that fit the condition. otherwise, return 
     // add bool as condition and...???
-    async function retrieve_specific(column: any, table: any, condition: any){
+    async function retrieve_specific(column: any, table: any, value: any, condition: any){
+        console.log("retrieve specific column: " + column)
+        console.log("retrieve specific table: " + table)
+        console.log("retrieve specific value: " + value)
+        console.log("retrieve specific condition: " + condition)
+
         let rows: any = await retrieve_all(table)
-        console.log(rows)
         let data_arr: any = []
 
         for(let i=0; i<rows.length; i++){
-            check_condition(condition, rows[i][column]) ? data_arr.push(rows[i]) : null
+            check_condition(condition, value) ? data_arr.push(rows[i]) : isNaN(value) && value === rows[i][column] ? data_arr.push(rows[i]) : null
         }
 
+        console.log("retrieved specific data:")
+        console.log(data_arr)
         return data_arr
     }
 
 
     function check_condition(condition: any, value: any){
+
         if(!Array.isArray(condition)){
             return false
         }
@@ -178,7 +209,8 @@ export default function MongoDB(props: any) {
 
 
     return(
-        <Cognito handleInsertUser={handle_insert} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} setCheckConfirm={props.setCheckConfirm} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setLoggedIn={props.setLoggedIn} setConfirmSuccess={props.setConfirmSuccess}/> 
+        null
+        // <Cognito handleInsertUser={handle_insert} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} setCheckConfirm={props.setCheckConfirm} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setLoggedIn={props.setLoggedIn} setConfirmSuccess={props.setConfirmSuccess}/> 
     )
 }
 

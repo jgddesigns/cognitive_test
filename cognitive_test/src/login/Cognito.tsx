@@ -79,7 +79,7 @@ export default function Cognito(props: any) {
         const pool_data = {
             UserPoolId: test_credentials.USER_POOL_ID, // Replace with your User Pool ID
             ClientId: test_credentials.CLIENT_ID, // Replace with your App Client ID
-            ClientSecret: test_credentials.CLIENT_SECRET,
+            // ClientSecret: test_credentials.CLIENT_SECRET,
             // SecretHash: get_hash()
         };
         const user_pool = new CognitoUserPool(pool_data);
@@ -98,7 +98,7 @@ export default function Cognito(props: any) {
                 console.log(`Error confirming user: ${err.message}`);
             }
             console.log('User confirmed successfully!');
-            props.handleInsertUser(props.Username, props.Name, props.Password)
+            props.setTriggerInsert(true)
             first_login(props.Username, props.Password)
             props.setConfirmSuccess(true)
         });

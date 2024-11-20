@@ -131,8 +131,14 @@ export default function Home() {
   const [TestName, setTestName] = React.useState("")
   const [Table, setTable] = React.useState(null)
 
+  const [UsernameMatch, setUsernameMatch] = React.useState(false)
+  const [UsernameCheck, setUsernameCheck] = React.useState(false)
   const [Retrieve, setRetrieve] = React.useState(false)
   const [RetrievedData, setRetrievedData] = React.useState(null)
+  const [SignupSuccess, setSignupSuccess] = React.useState(false)
+  const [UserInserted, setUserInserted] = React.useState(false)
+  const [UsernameVerified, setUsernameVerified] = React.useState(false)
+  const [TriggerInsert, setTriggerInsert] = React.useState(false)
 
   // Active only when the home page is first displayed. Checks if user login cookies currently exist.
   useEffect(() => {
@@ -393,7 +399,7 @@ export default function Home() {
           :null}
 
           {ShowSignup ?
-            <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ConfirmCode={ConfirmCode} setSubmit={setSubmit}/>
+            <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified}/>
           : null}
 
           {ShowLogin ?
@@ -454,7 +460,9 @@ export default function Home() {
       
       {/* <Cognito Logout={Logout} /> */}
 
-      <MongoDB Table={Table} setTable={setTable} Insert={Insert} setInsert={setInsert} setData={setData} setTestName={setTestName} Data={Data} Username={Username} Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve} Submit={Submit} setSubmit={setSubmit}/>
+      <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} Insert={Insert} setInsert={setInsert} setData={setData} setTestName={setTestName} Data={Data} Username={Username} Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve} Submit={Submit} setSubmit={setSubmit} setUsernameMatch={setUsernameMatch} setSignupSuccess={setSignupSuccess} UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert}/>
+
+      <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/> 
     </main>
 
   )
