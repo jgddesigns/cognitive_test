@@ -50,6 +50,15 @@ export default function MongoDB(props: any) {
     }, [props.Table])
     
 
+    useEffect(() => {
+        if(props.Retrieve){
+          console.log("retrieve in mongodb")
+          retrieve_handler()
+        }
+      }, [props.Retrieve])
+
+
+
     async function test(){
         console.log(await retrieve_specific("attempt_num", test_table, "", [null, 500]))
     }
@@ -170,6 +179,14 @@ export default function MongoDB(props: any) {
         return false
     }
 
+    async function retrieve_handler(){
+        const data = await retrieve_all(test_table)
+        console.log("data retrieved")
+        console.log(data)
+        props.setRetrievedData(data)
+        props.setRetrieve(false)
+        return data
+      }
 
     async function retrieve_all(table: any){
         var retrieved = null

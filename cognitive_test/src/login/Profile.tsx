@@ -191,7 +191,9 @@ export default function Profile(this: any, props: any) {
     function get_best_score(test: any){
         let test_data: any = TestData
         let data: any = ""
-        console.log(test_data[test])
+        console.log(JSON.stringify(test_data))
+        console.log(test)
+        console.log(JSON.stringify(test_data[test]))
         if(test_data[test]){
             test_data[test][0]["score"] > 0 ? data = data + "Attention: Score - " + test_data[test][0]["score"] + ", Rating - " + test_data[test][0]["rating"] : data = data + "Attention: Score - 0,"
             test_data[test][1]["score"] > 0 ? data = data + " Decisiveness: Score - " + test_data[test][1]["score"] + ", Rating - " + test_data[test][1]["rating"] : data = data + " Decisiveness: Score - 0,"

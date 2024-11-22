@@ -349,9 +349,12 @@ export default function Home() {
           }
         </div>
 
-        {/* <div>
-          <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
-        </div> */}
+        {/* 
+          FOR AWS DATABASE. IF USED, NEEDS MODIFICATION FOR NEWER FUNCTIONS CREATED WHEN MONGO DB WAS IMPLEMENTED. 
+          <div> 
+            <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
+          </div> 
+        */}
 
         <div className="mt-24">
           {ShowHome && !Logout ? 
@@ -457,13 +460,11 @@ export default function Home() {
       : null}
 
 
-      
-      {/* <Cognito Logout={Logout} /> */}
-
       <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} Insert={Insert} setInsert={setInsert} setData={setData} setTestName={setTestName} Data={Data} Username={Username} Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve} Submit={Submit} setSubmit={setSubmit} setUsernameMatch={setUsernameMatch} setSignupSuccess={setSignupSuccess} UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert}/>
 
       <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/> 
-    </main>
 
+      
+    </main>
   )
 }
