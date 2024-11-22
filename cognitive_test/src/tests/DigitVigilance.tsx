@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { analysis } from '@/helpers/Analysis';
 import ProgressBar from '@/helpers/ProgressBar';
 import ShowAnalysis from '@/helpers/ShowAnalysis';
+import {descriptions} from '../helpers/test_descriptions'
 
 
 export default function DigitVigilance(props: any) {
@@ -317,7 +318,7 @@ export default function DigitVigilance(props: any) {
             DIGIT VIGILANCE
         </div>
         <div className="row mt-12 text-sky-400">
-            Players are asked to find two specified numbers, which appear randomly within fifty rows of fifty single digits. The goal is to find as many of the numbers as possible.
+            {descriptions["digit_vigilance"]}
         </div>
         {!EndTest ?
             !TestStart ? 

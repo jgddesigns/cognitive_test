@@ -4,7 +4,7 @@ import {Button} from "@nextui-org/react"
 import ProgressBar from '@/helpers/ProgressBar';
 import ShowAnalysis from '@/helpers/ShowAnalysis';
 import { analysis } from '@/helpers/Analysis';
-
+import {descriptions} from '../helpers/test_descriptions'
 
 export default function WorkingMemory(props: any) {
     const [EndTest, setEndTest] = React.useState(false)
@@ -383,7 +383,7 @@ export default function WorkingMemory(props: any) {
             SPATIAL WORKING MEMORY
         </div>
         <div className="row mt-12 text-sky-400">
-            The test begins with three colored boxes shown on the screen. One box contains a token. When the token is found, it is added to the &apos;found list&apos; above the play area. The token is then moved to another box for the user to find again. The rate at which this occurs is equal to the amount boxes shown on the screen.
+            {descriptions["working_memory"]}
         </div>
         {!EndTest ?
             !TestStart ? 

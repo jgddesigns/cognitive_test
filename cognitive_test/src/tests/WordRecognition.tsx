@@ -5,6 +5,7 @@ import {words} from "../helpers/words"
 import { analysis } from '@/helpers/Analysis'
 import ProgressBar from '@/helpers/ProgressBar'
 import ShowAnalysis from '@/helpers/ShowAnalysis'
+import {descriptions} from '../helpers/test_descriptions'
 
 export default function WordRecognition (props: any) {
 
@@ -356,7 +357,7 @@ export default function WordRecognition (props: any) {
             WORD RECOGNITION
         </div>
         <div className="row mt-12 text-sky-400">
-            {list_length} words are displayed, one every 1.5 seconds. The player is told to memorize each word. Afterward, {list_length} more words are shown. This time the word set only contains some of the items from the original display. The player is asked if each word from the second set was in the original set.
+            {descriptions["word_recognition"]}
         </div>
         {!EndTest ?
             !TestStart ? 

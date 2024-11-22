@@ -2,6 +2,7 @@
 'use client'
 import React, {useEffect, useRef} from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import {descriptions} from '../helpers/test_descriptions'
 
 // Profile page and related functions
 export default function Profile(this: any, props: any) {
@@ -141,7 +142,7 @@ export default function Profile(this: any, props: any) {
         for(let j=0; j<tests_string.length; j++){
             count = 0 
             for(let i=0; i<props.RetrievedData.length; i++){
-                props.RetrievedData[i]["test_name"]["S"] == tests_string[j] ? count = count + 1 : null
+                props.RetrievedData[i]["test_name"] == tests_string[j] ? count = count + 1 : null
             }
             count > 1 ? repeated += (count-1) : null
         }
@@ -165,7 +166,7 @@ export default function Profile(this: any, props: any) {
         
         for(let j=0; j<tests_string.length; j++){
             for(let i=0; i<props.RetrievedData.length; i++){
-                if(props.RetrievedData[i]["test_name"]["S"] == tests_string[j]){
+                if(props.RetrievedData[i]["test_name"] == tests_string[j]){
                     count = count + 1
                     break 
                 }
@@ -191,13 +192,13 @@ export default function Profile(this: any, props: any) {
     function get_best_score(test: any){
         let test_data: any = TestData
         let data: any = ""
-        console.log(JSON.stringify(test_data))
-        console.log(test)
-        console.log(JSON.stringify(test_data[test]))
+        // console.log(JSON.stringify(test_data))
+        // console.log(test)
+        // console.log(JSON.stringify(test_data[test]))
         if(test_data[test]){
-            test_data[test][0]["score"] > 0 ? data = data + "Attention: Score - " + test_data[test][0]["score"] + ", Rating - " + test_data[test][0]["rating"] : data = data + "Attention: Score - 0,"
-            test_data[test][1]["score"] > 0 ? data = data + " Decisiveness: Score - " + test_data[test][1]["score"] + ", Rating - " + test_data[test][1]["rating"] : data = data + " Decisiveness: Score - 0,"
-            test_data[test][2]["score"] > 0 ? data = data + " Reaction: Score - " + test_data[test][2]["score"] + ", Rating - " + test_data[test][2]["rating"] : data = data + " Reaction: Score - 0"
+            data = data + "Attention: Score - " + test_data[test][0]["score"] + ", Rating - " + test_data[test][0]["rating"] 
+            data = data + " Decisiveness: Score - " + test_data[test][1]["score"] + ", Rating - " + test_data[test][1]["rating"] 
+            data = data + " Reaction: Score - " + test_data[test][2]["score"] + ", Rating - " + test_data[test][2]["rating"]
         }else{
             data = null
         }
@@ -213,7 +214,7 @@ export default function Profile(this: any, props: any) {
                 props.RetrievedData ? find_results("choice_reaction") : null
                 break
             case 1:
-                props.RetrievedData ? find_results("digit_vililance") : null
+                props.RetrievedData ? find_results("digit_vigilance") : null
                 break
             case 2:
                 props.RetrievedData ? find_results("memory_scanning") : null
@@ -244,30 +245,39 @@ export default function Profile(this: any, props: any) {
     // @param 'test': The test the analysis is for
     // @return (array): An array containing the data for each area of analysis [attention, decisiveness, reaction]
     function find_results(test: any){
-        let attention: any = {"score": 0, "rating": ""}
-        let decisiveness: any = {"score": 0, "rating": ""}
-        let reaction: any = {"score": 0, "rating": ""}
-        let data: any = []
+        let attention: any = {"score": null, "rating": ""}
+        let decisiveness: any = {"score": null, "rating": ""}
+        let reaction: any = {"score": null, "rating": ""}
+        let data: any = null
         let test_data: any = TestData
+        let found = false
         for(let i=0; i<props.RetrievedData.length; i++){
-            if(props.RetrievedData[i]["test_name"]["S"] == test){
-                props.RetrievedData[i]["attention"]["M"] && attention["score"] < props.RetrievedData[i]["attention"]["M"]["score"]["N"] ? attention["rating"] = props.RetrievedData[i]["attention"]["M"]["rating"]["S"] : null
-                props.RetrievedData[i]["attention"]["M"] && attention["score"] < props.RetrievedData[i]["attention"]["M"]["score"]["N"] ? attention["score"] = props.RetrievedData[i]["attention"]["M"]["score"]["N"] : null
-
-                props.RetrievedData[i]["decisiveness"]["M"] && decisiveness["score"] < props.RetrievedData[i]["decisiveness"]["M"]["percentage"]["N"] ? decisiveness["rating"] = props.RetrievedData[i]["decisiveness"]["M"]["rating"]["S"] : null
-                props.RetrievedData[i]["decisiveness"]["M"] && decisiveness["score"] < props.RetrievedData[i]["decisiveness"]["M"]["percentage"]["N"] ? decisiveness["score"] = props.RetrievedData[i]["decisiveness"]["M"]["percentage"]["N"] : null
-
-                props.RetrievedData[i]["reaction"]["M"] && reaction["score"] < props.RetrievedData[i]["reaction"]["M"]["score"]["N"] ? reaction["rating"] = props.RetrievedData[i]["reaction"]["M"]["rating"]["S"] : null
-                props.RetrievedData[i]["reaction"]["M"] && reaction["score"] < props.RetrievedData[i]["reaction"]["M"]["score"]["N"] ? reaction["score"] = props.RetrievedData[i]["reaction"]["M"]["score"]["N"] : null
+            if(props.RetrievedData[i]["test_name"] == test){
+                props.RetrievedData[i]["attention"] && !attention["score"] || attention["score"] < props.RetrievedData[i]["attention"]["score"] ? attention["rating"] = props.RetrievedData[i]["attention"]["rating"] : null
+                props.RetrievedData[i]["attention"] && !attention["score"] || attention["score"] < props.RetrievedData[i]["attention"]["score"] ? attention["score"] = props.RetrievedData[i]["attention"]["score"] : null
                 console.log(test)
+                console.log("attention")
+                console.log(attention)
+
+                props.RetrievedData[i]["decisiveness"] && !decisiveness["score"] || decisiveness["score"] <  props.RetrievedData[i]["decisiveness"]["percentage"] ? decisiveness["rating"] = props.RetrievedData[i]["decisiveness"]["rating"] : null
+                props.RetrievedData[i]["decisiveness"] && !decisiveness["score"] || decisiveness["score"] < props.RetrievedData[i]["decisiveness"]["percentage"] ? decisiveness["score"] = props.RetrievedData[i]["decisiveness"]["percentage"] : null
+                console.log("decisiveness")
+                console.log(decisiveness)
+
+                props.RetrievedData[i]["reaction"] && !reaction["score"] || reaction["score"] < props.RetrievedData[i]["reaction"]["score"] ? reaction["rating"] = props.RetrievedData[i]["reaction"]["rating"] : null
+                props.RetrievedData[i]["reaction"] && !reaction["score"] || reaction["score"] < props.RetrievedData[i]["reaction"]["score"] ? reaction["score"] = props.RetrievedData[i]["reaction"]["score"] : null
                 console.log("reaction")
                 console.log(reaction)
+                found = true
             }
         }
-        data = [attention, decisiveness, reaction]
+
+        found ? data = [attention, decisiveness, reaction] : null
         test_data[test] = data
-        console.log(test_data)
-        setTestData(test_data)
+        // console.log(test_data)
+        // // setTestData(test_data)
+        // console.log("Test Data")
+        // setTestData(props.RetrievedData)
         return data
     }
 
@@ -352,8 +362,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowChoiceReaction?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(0) : null} */}
+                                            {descriptions["choice_reaction"]}
                                         </span>
                                     </div>
                                 : null}
@@ -378,8 +387,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowDigitVigilance?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(1): null} */}
+                                            {descriptions["digit_vigilance"]}
                                         </span>
                                     </div>
                                 : null}
@@ -404,8 +412,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowMemoryScanning?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(2): null} */}
+                                            {descriptions["memory_scanning"]}
                                         </span>
                                     </div>
                                 : null}
@@ -430,8 +437,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowMotorFunction?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(3): null} */}
+                                            {descriptions["motor_function"]}
                                         </span>
                                     </div>
                                 : null}
@@ -456,8 +462,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowNumberVigilance?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(4): null} */}
+                                            {descriptions["number_vigilance"]}
                                         </span>
                                     </div>
                                 : null}
@@ -482,8 +487,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowPictureRecognition?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(5): null} */}
+                                            {descriptions["picture_recognition"]}
                                         </span>
                                     </div>
                                 : null}
@@ -508,8 +512,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowReactionTime?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(6): null} */}
+                                            {descriptions["reaction_time"]}
                                         </span>
                                     </div>
                                 : null}
@@ -534,8 +537,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowWordRecogntion?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            placeholder data
-                                            {/* {FoundData ? get_test_data(7): null} */}
+                                            {descriptions["word_recognition"]}
                                         </span>
                                     </div>
                                 : null}
@@ -560,8 +562,7 @@ export default function Profile(this: any, props: any) {
                                 {ShowWorkingMemory?
                                     <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
                                         <span className="ml-12 p-[10px]">
-                                            working memory placeholder data
-                                            {/* {FoundData ? get_test_data(8): null} */}
+                                            {descriptions["working_memory"]}
                                         </span>
                                     </div>
                                 : null}

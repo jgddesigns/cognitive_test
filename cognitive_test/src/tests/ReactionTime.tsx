@@ -5,6 +5,7 @@ import {Button} from "@nextui-org/react"
 import { analysis } from '@/helpers/Analysis';
 import ProgressBar from '@/helpers/ProgressBar';
 import ShowAnalysis from '@/helpers/ShowAnalysis';
+import {descriptions} from '../helpers/test_descriptions'
 
 
 export default function ReactionTime (props: any) {
@@ -198,7 +199,7 @@ export default function ReactionTime (props: any) {
             VISUAL REACTION TIME
         </div>
         <div className="row mt-12 text-sky-400">
-            A button appears at the center of the screen. The user is intended to press it as quickly as possible. There are twenty trials and the button appears randomly between .5 and 2.5 seconds.
+            {descriptions["reaction_time"]}
         </div>
         {!EndTest ?
             <div className="mt-[200px]">
