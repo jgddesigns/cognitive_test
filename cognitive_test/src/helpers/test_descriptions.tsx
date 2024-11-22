@@ -17,4 +17,5 @@ export const descriptions = {
     "word_recognition": "Ten words are displayed, one every 1.5 seconds. The player is told to memorize each word. Afterward, ten more words are shown. This time the word set only contains some of the items from the original display. The player is asked if each word from the second set was in the original set.",
 
     "working_memory": "The test begins with three colored boxes shown on the screen. One box contains a token. When the token is found, the token is then moved to another box for the user to find again. After all boxes are found, another round starts using the same pattern, but with one additional box. The rate at which this occurs is equal to the amount boxes shown on the screen."
+    
 }
