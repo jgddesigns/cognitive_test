@@ -342,14 +342,14 @@ export default function Profile(this: any, props: any) {
                             {props.RetrievedData && TestsTaken ? get_completion() : null}
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-12">
+                    {/* <div className="grid grid-cols-2 gap-12">
                         <div>
                             Total Testing Time: 
                         </div> 
                         <div className="grid grid-cols-2">
                             {get_time()}
                         </div>
-                    </div>
+                    </div> */}
                     <div className="grid grid-auto-rows"  id="parent">
                         <div>
                             Tests: 

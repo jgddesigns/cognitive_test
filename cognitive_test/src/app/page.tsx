@@ -161,7 +161,6 @@ export default function Home() {
     Reset ? reset_handler() : null
   }, [Reset])
 
-
   useEffect(() => {
     !RetrievedData ? setRetrieve(true) : null
   }, [RetrievedData])
