@@ -5,6 +5,7 @@ import "../helpers/shapes.css"
 import { analysis } from '@/helpers/Analysis'
 import ProgressBar from '@/helpers/ProgressBar'
 import ShowAnalysis from '@/helpers/ShowAnalysis'
+import {descriptions} from '../helpers/test_descriptions'
 
 
 export default function WorkingMemory(props: any) {
@@ -430,7 +431,7 @@ export default function WorkingMemory(props: any) {
                 MOTOR FUNCTION
             </div>
             <div className="row mt-12 text-sky-400">
-                A series of individual shapes appear randomly on the screen. The goal is to click each shape as fast as possible.
+                {descriptions["motor_function"]}
             </div>
             {!EndTest ?
                 !TestStart ? 

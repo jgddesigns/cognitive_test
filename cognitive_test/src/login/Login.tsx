@@ -10,7 +10,6 @@ export default function Login(props: any) {
     const [Password, setPassword] = React.useState("")
     const [LoginMessage, setLoginMessage] = React.useState("")
     const [LoginClass, setLoginClass] = React.useState("")
-    const [LoginTimer, setLoginTimer] = React.useState<any>(null)
     const [LoginAttempt, setLoginAttempt] = React.useState(false)
     const [LoginSuccess, setLoginSuccess] = React.useState(false)
     const [DisabledStatus, setDisabledStatus] = React.useState(true)
@@ -28,21 +27,21 @@ export default function Login(props: any) {
 
 
     useEffect(() => {
-        LoginSuccess ? setLoginTimer(5) : setLoginTimer(null)
+        LoginSuccess ? props.setLoginTimer(5) : props.setLoginTimer(null)
     }, [LoginSuccess])
 
 
     useEffect(() => {
-        while(LoginSuccess && LoginTimer >= 0 ){
+        while(LoginSuccess && props.LoginTimer >= 0 ){
             const timeoutId = setTimeout(() => {
-                setLoginTimer(LoginTimer - 1)
-                LoginTimer < 1 ? props.setLoggedIn(true) : null
+                props.setLoginTimer(props.LoginTimer - 1)
+                props.LoginTimer < 1 ? props.setLoggedIn(true) : null
             }, 1000 )
 
             return () => clearTimeout(timeoutId)
         }
         
-    }, [LoginTimer])
+    }, [props.LoginTimer])
 
 
     useEffect(() => {
@@ -148,9 +147,9 @@ export default function Login(props: any) {
                         Logging in...
                     </div>
                     <div>
-                    {LoginTimer > 0 ? 
+                    {props.LoginTimer > 0 ? 
                         <div>
-                            {LoginTimer} 
+                            {props.LoginTimer} 
                         </div>
                     : 
                         <div>

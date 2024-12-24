@@ -18,7 +18,7 @@ export default function Signup(props: any) {
     // const [Submit, setSubmit] = React.useState(false)
     // const [ShowConfirm, setShowConfirm] = React.useState(false) 
     // const [ConfirmSuccess, setConfirmSuccess] = React.useState(false)
-    const [SignupTimer, setSignupTimer] = React.useState<any>(5)
+    // const [SignupTimer, setSignupTimer] = React.useState<any>(5)
 
     const classes = ["", "bg-gray-400 cursor-none", "bg-red-400", "bg-green-400", "bg-gray-400 rounded px-10 h-12 text-white cursor-none", "bg-blue-400 rounded px-10 h-12 text-white cursor-pointer"]
 
@@ -52,33 +52,38 @@ export default function Signup(props: any) {
     const table = "users"
 
     useEffect(() => {
-        console.log(SignupTimer)
-        props.setTable(table)
+        (props.SignupSuccess && !props.ShowConfirm) && props.SignupTimer == null ? props.setSignupTimer(5) : null
 
-        while(props.SignupSuccess && !props.ConfirmSuccess && SignupTimer >= 0 ){
+        props.ConfirmSuccess && props.SignupTimer == null ? props.setSignupTimer(5) : null
+
+        while(props.SignupSuccess && !props.ConfirmSuccess && props.SignupTimer >= 0 ){
             const timeoutId = setTimeout(() => {
-                setSignupTimer(SignupTimer - 1)
-                console.log(SignupTimer)
+                props.setSignupTimer(props.SignupTimer - 1)
+                console.log(props.SignupTimer)
                 console.log(props.ShowConfirm)
-                SignupTimer <= 0 ? props.setShowConfirm(true) : null
+                if(props.SignupTimer <= 0){
+                    props.setShowConfirm(true)
+                }
+                  
             }, 1000 )
 
             return () => clearTimeout(timeoutId)
         }
         
-        while(props.ConfirmSuccess && SignupTimer >= 0 ){
+        while(props.ConfirmSuccess && props.SignupTimer >= 0 ){
             const timeoutId = setTimeout(() => {
-                setSignupTimer(SignupTimer - 1)
-                if(SignupTimer <= 0){
+                props.setSignupTimer(props.SignupTimer - 1)
+                if(props.SignupTimer <= 0){
                     props.setConfirmSuccess(false)
                     props.setLoggedIn(true)
+                    props.setSignupTimer(null)
                 } 
             }, 1000 )
 
             return () => clearTimeout(timeoutId)
         }
         
-    }, [props.SignupSuccess, SignupTimer, props.ConfirmSuccess])
+    }, [props.SignupSuccess, props.SignupTimer, props.ConfirmSuccess])
 
 
     useEffect(() => {
@@ -296,7 +301,7 @@ export default function Signup(props: any) {
         console.log("CONFIRM")
         props.setCheckConfirm(true) 
         // props.setTable(table)
-        setSignupTimer(5) 
+        props.setSignupTimer(5) 
     }
 
     
@@ -372,9 +377,9 @@ export default function Signup(props: any) {
                                     Awaiting Confirmation...
                                 </div>
                                 <div>
-                                    {SignupTimer > 0 ? 
+                                    {props.SignupTimer > 0 ? 
                                         <div>
-                                            {SignupTimer} 
+                                            {props.SignupTimer} 
                                         </div>
                                     : 
                                         <div>
@@ -414,9 +419,9 @@ export default function Signup(props: any) {
                                             Confirmation Success! 
                                         </div>
                                         <div>
-                                            {SignupTimer > 0 ? 
+                                            {props.SignupTimer > 0 ? 
                                                 <div>
-                                                    {SignupTimer} 
+                                                    {props.SignupTimer} 
                                                 </div>
                                             : 
                                                 <div>

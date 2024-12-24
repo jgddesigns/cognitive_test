@@ -18,14 +18,15 @@ import Profile from '@/login/Profile'
 // import Connect from '@/database/Connect'
 import Cognito from '@/login/Cognito'
 import MongoDB from '@/database/MongoDB'
+import HerbSelector from '@/helpers/HerbSelector'
+import { noSSR } from 'next/dynamic'
 
 
 export default function Home() {
   // Includes classes for the main div.
   // 0 - Default view
   // 1 - Test popover view
-  const main_class = ["flex min-h-screen flex-col items-center justify-between p-24"
-, "flex min-h-screen flex-col items-center justify-between p-24 h-[100%] w-[100%]  relative"]
+  const main_class = ["flex min-h-screen flex-col items-center justify-between p-24", "flex min-h-screen flex-col items-center justify-between p-24 h-[100%] w-[100%]  relative"]
 
   // Assigned to the main div. For use with above 'main_class' variable.
   const [MainClass, setMainClass] = React.useState(main_class[0])
@@ -34,7 +35,7 @@ export default function Home() {
   // 0 - Default view
   // 1 - Visited view
   // 2 - Visited view (disabled)
-  const link_class = ["text-blue-600 cursor-pointer", "text-gray-600 font-bold underline cursor-pointer", "text-gray-400"]
+  const link_class = ["text-blue-600 cursor-pointer", "text-gray-600 font-bold underline cursor-pointer", "text-gray-400 disabled"]
 
   // Assigned to the header links. For use with abov 'link_class' variable.
   const [HomeClass, setHomeClass] = React.useState(link_class[1])
@@ -113,7 +114,8 @@ export default function Home() {
 
   // Number state variable holding the value for the logout timer. Used in a useEffect hook that controls the logout timer. 
   // Used locally in: 'toggle_login' function.
-  const [LogoutTimer, setLogoutTimer] = React.useState<any>(5)
+  const [LogoutTimer, setLogoutTimer] = React.useState<any>(null)
+  const [LoginTimer, setLoginTimer] = React.useState<any>(null)
 
   // A Number state variable that is used as a key for each current test iteration. Increments when a test is reset to clear all variable values.
   const [TestID, setTestID] = React.useState(0)
@@ -136,9 +138,13 @@ export default function Home() {
   const [Retrieve, setRetrieve] = React.useState(false)
   const [RetrievedData, setRetrievedData] = React.useState(null)
   const [SignupSuccess, setSignupSuccess] = React.useState(false)
+  const [SignupTimer, setSignupTimer] = React.useState<any>(null)
   const [UserInserted, setUserInserted] = React.useState(false)
   const [UsernameVerified, setUsernameVerified] = React.useState(false)
   const [TriggerInsert, setTriggerInsert] = React.useState(false)
+
+  const [ShowSelector, setShowSelector] = React.useState(false)
+  const [Herb, setHerb] = React.useState<any>(null)
 
   // Active only when the home page is first displayed. Checks if user login cookies currently exist.
   useEffect(() => {
@@ -160,18 +166,38 @@ export default function Home() {
     Reset ? reset_handler() : null
   }, [Reset])
 
-
   useEffect(() => {
     !RetrievedData ? setRetrieve(true) : null
   }, [RetrievedData])
 
+  useEffect(() => {
+    // (Logout && LogoutTimer == 5) ? disable_links(true) : null
+    LoginTimer == 5 ? disable_links(true) : null
+    LoginTimer == null ? disable_links(false) : null
+  }, [LoginTimer])
+
+  useEffect(() => {
+    // (Logout && LogoutTimer == 5) ? disable_links(true) : null
+    LogoutTimer == 5 ? disable_links(true) : null
+    LogoutTimer == null ? disable_links(false) : null
+  }, [Logout, LogoutTimer])
+
+  useEffect(() => {
+    SignupTimer == 5 ? disable_links(true) : null
+    SignupTimer == null ? disable_links(false) : null
+  }, [SignupTimer])
 
   // Controls the logout timer and its associated display.
   useEffect(() => {
+    Logout && LogoutTimer == null ? setLogoutTimer(5) : null
+
     while(Logout && LogoutTimer >= 0){
         const timeoutId = setTimeout(() => {
             setLogoutTimer(LogoutTimer - 1)
-            LogoutTimer <= 0 ? setLogout(false) : null
+            if(LogoutTimer <= 0){
+              setLogout(false) 
+              setLogoutTimer(null)
+            }
         }, 1000 )
 
         return () => clearTimeout(timeoutId)
@@ -184,6 +210,8 @@ export default function Home() {
   function reset_handler(){
     setStateKey(StateKey + 1)
     setReset(false)
+    setShowSelector(false)
+    setHerb(null)
   }
 
   // Checks if login cookies currently exist. 
@@ -229,6 +257,8 @@ export default function Home() {
     setTestID(0)
     set_classes(place)
     set_screens(place)
+    setHerb(null)
+    setShowSelector(false)
   }
 
   // Clears associated variables when a user exists the test popover.
@@ -309,6 +339,24 @@ export default function Home() {
     }
   }
 
+  // Toggles the links between disabled/enabled during screen transition.
+  // @param 'condition': Boolean. If true, sets all links to disabled, otherwise all enabled.
+  // @return: N/A
+  function disable_links(condition: any){
+    if(condition){
+      console.log("disabled links true")
+      for(let i=0; i<classes.length; i++){
+        classes[i](link_class[2])
+      }
+      return true
+    }else{
+      console.log("disabled links false")
+      for(let i=0; i<classes.length; i++){
+        classes[i](link_class[0])
+      }   
+    }
+  }
+
   return (
     <main className={MainClass}>
       <div className="z-1 max-w-5xl w-full font-mono text-lg grid grid-auto-rows place-items-center">
@@ -349,61 +397,74 @@ export default function Home() {
           }
         </div>
 
-        {/* <div>
-          <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
-        </div> */}
+        {/* 
+          FOR AWS DATABASE. IF USED, NEEDS MODIFICATION FOR NEWER FUNCTIONS CREATED WHEN MONGO DB WAS IMPLEMENTED. 
+          <div> 
+            <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
+          </div> 
+        */}
 
         <div className="mt-24">
           {ShowHome && !Logout ? 
             <MainPage/>  
           : null}
 
-          {ShowTestInfo ?
-            <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID} setTable={setTable}/>
+          {ShowSelector ? 
+            <HerbSelector setShowSelector={setShowSelector} setHerb={setHerb} Herb={Herb} TestTitle={TestTitle}/>
           : null}
 
-          {ShowChoiceReaction ?
+          {Herb && !ShowSelector ?
+            <div className="mb-12">
+              Chosen Herb: {Herb}
+            </div>
+          : null}
+
+          {ShowTestInfo && !ShowSelector ?
+            <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID} setTable={setTable} setShowSelector={setShowSelector}/>
+          : null}
+
+          {!ShowSelector && ShowChoiceReaction ?
             <ChoiceReaction setInsert={setInsert} setData={setData} setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
 
-          {ShowDigitVigilance ?
+          {!ShowSelector && ShowDigitVigilance ?
             <DigitVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
 
-          {ShowMemoryScanning ?
+          {!ShowSelector && ShowMemoryScanning ?
             <MemoryScanning setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
         
-          {ShowMotorFunction ?
+          {!ShowSelector && ShowMotorFunction ?
             <MotorFunction setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
           : null}
 
-          {ShowNumberVigilance ?
+          {!ShowSelector && ShowNumberVigilance ?
             <NumberVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
-          {ShowPictureRecognition ?
+          {!ShowSelector && ShowPictureRecognition ?
             <PictureRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
-          {ShowReactionTime ?
+          {!ShowSelector && ShowReactionTime ?
             <ReactionTime setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
-          {ShowWordRecognition ?
+          {!ShowSelector && ShowWordRecognition ?
             <WordRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
-          {ShowWorkingMemory ?
+          {!ShowSelector && ShowWorkingMemory ?
             <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
           :null}
 
           {ShowSignup ?
-            <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified}/>
+            <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} SignupTimer={SignupTimer} setSignupTimer={setSignupTimer}/>
           : null}
 
           {ShowLogin ?
-            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout}/>
+            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout} LoginTimer={LoginTimer} setLoginTimer={setLoginTimer}/>
           : null}
 
           {ShowProfile ?
@@ -457,13 +518,11 @@ export default function Home() {
       : null}
 
 
-      
-      {/* <Cognito Logout={Logout} /> */}
-
-      <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} Insert={Insert} setInsert={setInsert} setData={setData} setTestName={setTestName} Data={Data} Username={Username} Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve} Submit={Submit} setSubmit={setSubmit} setUsernameMatch={setUsernameMatch} setSignupSuccess={setSignupSuccess} UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert}/>
+      <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} Insert={Insert} setInsert={setInsert} setData={setData} setTestName={setTestName} Data={Data} Username={Username} Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve} Submit={Submit} setSubmit={setSubmit} setUsernameMatch={setUsernameMatch} setSignupSuccess={setSignupSuccess} UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert} setHerb={setHerb} Herb={Herb}/>
 
       <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/> 
-    </main>
 
+      
+    </main>
   )
 }

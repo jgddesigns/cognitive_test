@@ -22,6 +22,7 @@ export default function MongoDB(props: any) {
             // props.setSubmit(false)
             props.setTestName(null)
             props.setTable(null)
+            props.setHerb(null)
             props.setUsernameVerified(false)
             setInsertSuccess(false)
         }
@@ -50,6 +51,15 @@ export default function MongoDB(props: any) {
     }, [props.Table])
     
 
+    useEffect(() => {
+        if(props.Retrieve){
+          console.log("retrieve in mongodb")
+          retrieve_handler()
+        }
+      }, [props.Retrieve])
+
+
+
     async function test(){
         console.log(await retrieve_specific("attempt_num", test_table, "", [null, 500]))
     }
@@ -76,6 +86,7 @@ export default function MongoDB(props: any) {
                 user_id: props.Username,  
                 attempt_num: await increment_attempt(props.Table, props.TestName),
                 test_name: props.TestName,
+                herb: props.Herb,
                 attention: props.Data[0],
                 decisiveness: props.Data[1],
                 reaction: props.Data[2],
@@ -170,6 +181,14 @@ export default function MongoDB(props: any) {
         return false
     }
 
+    async function retrieve_handler(){
+        const data = await retrieve_all(test_table)
+        console.log("data retrieved")
+        console.log(data)
+        props.setRetrievedData(data)
+        props.setRetrieve(false)
+        return data
+      }
 
     async function retrieve_all(table: any){
         var retrieved = null

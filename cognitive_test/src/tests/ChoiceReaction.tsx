@@ -4,6 +4,7 @@ import {Button} from "@nextui-org/react"
 import {analysis} from "../helpers/Analysis"
 import ProgressBar from '@/helpers/ProgressBar';
 import ShowAnalysis from '@/helpers/ShowAnalysis';
+import {descriptions} from '../helpers/test_descriptions'
 
 export default function ChoiceReaction (props: any) {
 
@@ -367,7 +368,7 @@ export default function ChoiceReaction (props: any) {
             CHOICE REACTION TIME
         </div>
         <div className="row mt-12 text-sky-400">
-            Either the word Yes or the word No is presented in the center of the screen. The user is presented a simple question and has to press the button corresponding to the answer as quickly as possible. There are {list_length} trials and the intertrial interval varies randomly between 1 and 2.5 seconds.
+            {descriptions["choice_reaction"]}
         </div>
         {!EndTest ?
             !TestStart ? 
