@@ -11,7 +11,7 @@ export default function Tests(props: any) {
     function show_info(test: any){
         props.setMainClass(props.main_class[1])
         props.setShowPopover(true)
-        props.setShowSelector(true)
+        
 
         switch (test){
 
@@ -80,6 +80,8 @@ export default function Tests(props: any) {
                 break
 
         }
+
+        props.setShowSelector(true)
 
     }
 

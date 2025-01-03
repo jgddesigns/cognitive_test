@@ -409,7 +409,7 @@ export default function Home() {
             <MainPage/>  
           : null}
 
-          {ShowSelector ? 
+          {ShowSelector && !ShowTestInfo ? 
             <HerbSelector setShowSelector={setShowSelector} setHerb={setHerb} Herb={Herb} TestTitle={TestTitle}/>
           : null}
 

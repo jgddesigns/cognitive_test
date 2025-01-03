@@ -10,19 +10,18 @@ export default function RadarChart (props: any) {
     const [PercentArray, setPercentArray] = React.useState<any>([])
     const [DisplayedRadar, setDisplayedRadar] = React.useState<any>({})
     const [DisplayedStyle, setDisplayedStyle] = React.useState<any>("")
-    const [TextValues, setTextValues] = React.useState<any>(["Text 1", "Text 2", "Text 3", "Text 4", "Text 5"])
-    const [PointValue, setPointValue] = React.useState<any>(5)
+    const [TextValues, setTextValues] = React.useState<any>(["", "", "", "", "", "", "", ""])
+    const [PointValue, setPointValue] = React.useState<any>(3)
 
     const colors = ["red", "yellow", "blue", "green", "orange", "purple"]
 
     const [Color, setColor] = React.useState("")
 
-    const [Values, setValues] = React.useState([[5, 10], [3, 5], [6, 10], [8, 10], [5, 7]])
+    const [Values, setValues] = React.useState([[10, 10], [3, 5], [6, 10]])
 
-                           //0     //1      //2       //3     //4       //5          //6         //7        //8          //9        
+   
     const ending_points = [[0, 0], [25, 0], [50, 0], [75, 0], [100, 0], [87.5, 12.5], [100, 25], [100, 50], [100, 62.5], [100, 75], [100, 100], [75, 100], [50, 100], [25, 100], [0, 62.5], [0, 100], [0, 75], [0, 50], [0, 25], [12.5, 12.5]]
-    //10        //11       //12       //13       //14       //15      //16     //17     //18     //19
-
+ 
     const points_array: any = {
         "3": [2, 10, 15],
         "4": [0, 4, 10, 15],
@@ -36,7 +35,6 @@ export default function RadarChart (props: any) {
 
     const end_value = ")"
     
-
 
     useEffect(() => {
         calculate_points(PointValue)
@@ -98,12 +96,46 @@ export default function RadarChart (props: any) {
 
 
     function get_dimensions(){
-        return "w-12 h-12"
+        return "w-48 h-48"
     }
 
 
     function calculate_points(points: any){
         build_values(points_array[points])
+        set_text()
+    }
+
+
+    function get_text(){
+        return ["Text 1", "Text 2", "Text 3", "Text 8", "Text 4", "Text 7", "Text 6", "Text 5"]
+    }
+
+
+    function set_text(){
+        // ["Text 1", "Text 2", "Text 3", "Text 8", "Text 4", "Text 7", "Text 6", "Text 5"]
+        switch (PointValue){
+            case 3:
+                setTextValues(["", get_text()[1], "", "", "", get_text()[5], "", get_text()[7]])
+                break
+            case 4:
+                setTextValues([get_text()[0], "", get_text()[2], "", "", get_text()[5], "", get_text()[7]])
+                break
+            case 5:
+                //
+                break
+            case 6:
+                setTextValues([get_text()[0], "", get_text()[2], get_text()[3], get_text()[4], get_text()[5], "", get_text()[7]])
+                break
+            case 7:
+                //
+                break
+            case 8:
+                setTextValues([get_text()[0], get_text()[1], get_text()[2], get_text()[3], get_text()[4], get_text()[5], get_text()[6], get_text()[7]])
+                break
+        }
+
+        console.log("text values")
+        console.log(TextValues)
     }
 
 
@@ -141,44 +173,56 @@ export default function RadarChart (props: any) {
     }
 
 
-    return(
+    return(<div>
+        {/* <div style={{clipPath: DisplayedRadar}} className={DisplayedStyle}/> */}
         
-            <div className="w-full h-full grid grid-auto-rows grid-auto-cols place-items-center gap-96">
+            <div className="w-full h-full grid grid-auto-rows place-items-center gap-96">
                 <div className="grid grid-flow-col gap-48">
                     <span>
-                        Text 1
+                        {TextValues[1]} 
                     </span>
                     <span>
-                        Text 2
+                        {TextValues[1]} 
                     </span>
                     <span>
-                        Text 3
+                        {TextValues[2]} 
                     </span>
+                    <span>
+                        {TextValues[1]} 
+                    </span>
+                    <span>
+                        {TextValues[1]} 
+                    </span>      
                 </div>
-                <div className="grid grid-flow-col w-[50%] place-items-center gap-96">
+                <div className="grid grid-flow-col place-items-center gap-96">
                     <div>
-                        Text 4
+                        {TextValues[1]} 
                     </div>
+                    <div style={{clipPath: DisplayedRadar}} className={DisplayedStyle}/>
                     <div>
-                        <div style={{clipPath: DisplayedRadar}} className={DisplayedStyle}/>
-                    </div>
-                    <div>
-                        Text 5
+                        {TextValues[1]} 
                     </div>
                 </div>
                 <div className="grid grid-flow-col gap-48">
                     <span>
-                        Text 6
+                        {TextValues[1]} 
                     </span>
                     <span>
-                        Text 7
+                        {TextValues[1]} 
                     </span>
                     <span>
-                        Text 8
+                        {TextValues[1]} 
+                    </span>
+                    <span>
+                        {TextValues[1]} 
+                    </span>
+                    <span>
+                        {TextValues[1]} 
                     </span>
                 </div>
             </div>
-        
+            
+        </div>
     )
 }
 
