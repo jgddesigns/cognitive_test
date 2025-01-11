@@ -5,7 +5,7 @@ import React from 'react';
 export default function MainPage(props: any) {
     return(
         <div className="h-full">
-            <div className="row">
+            <div className="row grid place-items-center ">
                 WELCOME TO THE FLOURISH SCIENCE COGNITIVE TEST
             </div>
             <div className="row mt-12 text-sky-400">

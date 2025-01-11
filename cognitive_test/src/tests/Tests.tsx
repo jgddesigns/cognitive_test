@@ -85,7 +85,7 @@ export default function Tests(props: any) {
 
   return(
     <div>
-        <div className="row">
+        <div className="row grid place-items-center">
             FLOURISH SCIENCE COGNITIVE TESTS
         </div>
         <div className="row mt-12 text-sky-400">
