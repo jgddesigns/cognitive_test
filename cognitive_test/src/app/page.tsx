@@ -415,14 +415,14 @@ export default function Home() {
               <div onClick={(e) => link_handler(4)} className={ProfileClass}>
                 Profile
               </div>
-              <div className="text-sm text-black grid grid-rows-2 relative">
-                <span>Username: {Username}</span>
-                <span
-                  className="absolute top-3 right-0 text-xs text-blue-600 underline cursor-pointer"
+              <div className="text-sm text-black grid grid-auto-rows relative">
+                <div>Username: {Username}</div>
+                <div
+                  className="grid place-items-end text-xs text-blue-600 underline cursor-pointer"
                   onClick={(e) => toggle_login(false)}
                 >
                   Log Out
-                </span>
+                </div>
               </div>
             </div>
           )}
@@ -511,7 +511,7 @@ export default function Home() {
                 {LogoutTimer > 0 ? <div>{LogoutTimer}</div> : <div>Go!</div>}
               </div>
             </div>
-          ) : null}
+           : null}
         </div>
       </div>
 
@@ -519,7 +519,7 @@ export default function Home() {
         <div className="w-full h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
       ) : null}
 
-      {ShowPopover ? (
+      {ShowPopover ? 
         <div className="h-flex w-full sm:w-[80%] md:w-[60%] lg:w-[30%] z-99 fixed top-10 left-1/2 -translate-x-1/2 bg-blue-400 rounded-2xl text-white">
           <div className="p-6 md:p-12 grid grid-auto-rows overflow-y-auto max-h-[80vh]">
             <div className="text-lg sm:text-2xl md:text-3xl">{TestTitle}</div>
