@@ -22,6 +22,7 @@ export default function MongoDB(props: any) {
             // props.setSubmit(false)
             props.setTestName(null)
             props.setTable(null)
+            props.setHerb(null)
             props.setUsernameVerified(false)
             setInsertSuccess(false)
         }
@@ -85,6 +86,7 @@ export default function MongoDB(props: any) {
                 user_id: props.Username,  
                 attempt_num: await increment_attempt(props.Table, props.TestName),
                 test_name: props.TestName,
+                herb: props.Herb,
                 attention: props.Data[0],
                 decisiveness: props.Data[1],
                 reaction: props.Data[2],
