@@ -8,7 +8,7 @@ import ShowAnalysis from '@/helpers/ShowAnalysis'
 import {descriptions} from '../helpers/test_descriptions'
 
 
-export default function WorkingMemory(props: any) {
+export default function MotorFunction(props: any) {
     const [EndTest, setEndTest] = React.useState(false)
     const [TestStart, setTestStart] = React.useState(false)
     const [ShowData, setShowData] = React.useState(false)
@@ -464,7 +464,7 @@ export default function WorkingMemory(props: any) {
 
                             {/* REPLACE WITH MAP? */}
                             
-                                <div className="h-240 grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-gray-400"> 
+                                <div className="h-240 grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-gray-400 w-full"> 
                                     <div className="h-48 grid grid-cols-5 mt-12 ml-12">
                                         <div id="0" className={BoxGrid[0]} onClick={(event) => check_token(event)}/>
                                         <div id="1" className={BoxGrid[1]} onClick={(event) => check_token(event)}/>

@@ -130,7 +130,8 @@ export default function Profile(this: any, props: any) {
   // @param 'test': The place in the tests array that initiates the display of a particular set of data
   // @return: N/A
   function test_results_handler(test: any) {
-    tests[test][1](!tests[test][0]);
+    // tests[test][1](!tests[test][0]);
+    props.setFromProfile(test + 1)
   }
 
   // Sets the visibility of the password field.
@@ -343,7 +344,7 @@ export default function Profile(this: any, props: any) {
       <div className="row grid place-items-center">USER PROFILE</div>
 
       <div className="mt-24 grid grid-auto-rows grid-auto-cols place-items-center gap-12">
-        <div className="grid grid-cols-2">
+        <div>
           <div>Username</div>
           <textarea
             onChange={(e) => username_handler(e.target.value)}
@@ -353,7 +354,7 @@ export default function Profile(this: any, props: any) {
           />
         </div>
 
-        <div className="grid grid-cols-2">
+        <div>
           <div>Email</div>
           <textarea
             onChange={(e) => email_handler(e.target.value)}
@@ -363,9 +364,9 @@ export default function Profile(this: any, props: any) {
           />
         </div>
 
-        <div className="grid grid-cols-2 w-[110%]">
+        <div>
           <div>Password</div>
-          <div className="grid grid-auto-cols">
+          <div>
             {/* adjust to input with type 'password' (style error exists)*/}
             <input
               type={PasswordType}
@@ -411,7 +412,7 @@ export default function Profile(this: any, props: any) {
                     </div> */}
           <div className="grid grid-auto-rows" id="parent">
             <div>Tests:</div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -442,7 +443,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -473,7 +474,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -504,7 +505,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -535,7 +536,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -566,7 +567,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -597,7 +598,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -628,7 +629,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -659,7 +660,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2">
+            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"

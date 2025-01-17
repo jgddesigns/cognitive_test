@@ -1,6 +1,4 @@
 'use client'
-import HerbSelector from '@/helpers/HerbSelector';
-import RadarChart from '@/helpers/RadarChart';
 import React from 'react';
 
 //Landing page title and introduction

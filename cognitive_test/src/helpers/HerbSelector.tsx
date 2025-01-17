@@ -44,13 +44,13 @@ export default function HerbSelector (props: any) {
     }
 
     return(
-        <div className="grid grid-auto-rows place-items-center bg-gray-400 p-12">
-            <div className="grid grid-auto-rows ml-[50%] text-white">
+        <div className="bg-gray-400 p-24">
+            <div className="grid grid-auto-rows text-white">
                 <span>
                     Choose a pre-test variable for {props.TestTitle}: 
                 </span>
-                <div className="grid grid-auto-rows place-items-center mt-24 ml-12 gap-4">
-                    <div className="grid grid-cols-2 gap-4">       
+                <div className="grid grid-auto-rows place-items-center mt-24 gap-4 px-12">
+                    <div className="grid grid-cols-2">       
                         <span>
                             Herb 1
                         </span>                   
@@ -58,31 +58,31 @@ export default function HerbSelector (props: any) {
                             <input type="radio" id="0" className="w-[12px] h-[12px] appearance-none" checked={SelectionClasses[0]} onChange={e => variable_handler(e.target)}/>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2">
                         <span>  
                             Herb 2
                         </span>
                         <input type="radio" id="1" className="h-4" checked={SelectionClasses[1]} onChange={e => variable_handler(e.target)}/>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2">
                         <span>
                             Herb 3
                         </span>
                         <input type="radio" id="2" className="h-4" checked={SelectionClasses[2]} onChange={e => variable_handler(e.target)}/>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2">
                         <span>
                             Herb 4
                         </span>
                         <input type="radio" id="3" className="h-4" checked={SelectionClasses[3]} onChange={e => variable_handler(e.target)}/>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2">
                         <span>
                             Herb 5
                         </span>
                         <input type="radio" id="4" className="h-4" checked={SelectionClasses[4]} onChange={e => variable_handler(e.target)}/>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2">
                         <span>
                             Herb 6
                         </span>

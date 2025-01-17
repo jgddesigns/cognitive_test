@@ -20,8 +20,6 @@ import Profile from "@/login/Profile";
 import Cognito from '@/login/Cognito'
 import MongoDB from '@/database/MongoDB'
 import HerbSelector from '@/helpers/HerbSelector'
-import { noSSR } from 'next/dynamic'
-
 
 export default function Home() {
   // Includes classes for the main div.
@@ -175,6 +173,15 @@ export default function Home() {
   const [ShowSelector, setShowSelector] = React.useState(false)
   const [Herb, setHerb] = React.useState<any>(null)
 
+
+  const [FromProfile, setFromProfile] = React.useState<any>(null)
+
+
+  useEffect(() => {
+    FromProfile ? console.log(FromProfile) : null;
+  }, [FromProfile]);
+
+
   // Active only when the home page is first displayed. Checks if user login cookies currently exist.
   useEffect(() => {
     !CookiesChecked ? check_cookies() : null;
@@ -299,6 +306,7 @@ export default function Home() {
     setMainClass(main_class[0]);
     setPopoverMessage("");
     setTestTitle("");
+    setFromProfile(null)
   }
 
   // Loops through the 'classes' array and sets the link class to its desired style.
@@ -335,7 +343,9 @@ export default function Home() {
     setHomeClass(link_class[0]);
     setShowPopover(false);
     setShowTestInfo(false);
+    setShowProfile(false)
     clear_tests();
+    setShowSelector(true)
 
     switch (TestID) {
       case 1:
@@ -415,7 +425,7 @@ export default function Home() {
               <div onClick={(e) => link_handler(4)} className={ProfileClass}>
                 Profile
               </div>
-              <div className="text-sm text-black grid grid-auto-rows relative">
+              <div className="text-sm text-black grid grid-auto-rows relative w-24">
                 <div>Username: {Username}</div>
                 <div
                   className="grid place-items-end text-xs text-blue-600 underline cursor-pointer"
@@ -442,7 +452,8 @@ export default function Home() {
           : null}
 
           {ShowSelector && !ShowTestInfo ? 
-            <HerbSelector setShowSelector={setShowSelector} setHerb={setHerb} Herb={Herb} TestTitle={TestTitle}/>
+          <div className="xs:w-full lg:w-full">
+            <HerbSelector setShowSelector={setShowSelector} setHerb={setHerb} Herb={Herb} TestTitle={TestTitle}/></div>
           : null}
 
           {Herb && !ShowSelector ?
@@ -451,8 +462,8 @@ export default function Home() {
             </div>
           : null}
 
-          {ShowTestInfo && !ShowSelector ?
-            <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID} setTable={setTable} setShowSelector={setShowSelector}/>
+          {(ShowTestInfo || ShowProfile) && !ShowSelector ?
+            <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID} setTable={setTable} setShowSelector={setShowSelector} ShowProfile={ShowProfile} FromProfile={FromProfile}/>
           : null}
 
           {!ShowSelector && ShowChoiceReaction ?
@@ -500,7 +511,7 @@ export default function Home() {
           : null}
 
           {ShowProfile ?
-            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout} setRetrieve={setRetrieve} RetrievedData={RetrievedData} setRetrievedData={setRetrievedData}/>
+            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout} setRetrieve={setRetrieve} RetrievedData={RetrievedData} setRetrievedData={setRetrievedData} setFromProfile={setFromProfile}/>
           : null}
 
           {Logout ?
@@ -516,11 +527,11 @@ export default function Home() {
       </div>
 
       {ShowPopover ? (
-        <div className="w-full h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
+        <div className="w-full h-full xs:w-[120%] flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
       ) : null}
 
       {ShowPopover ? 
-        <div className="h-flex w-full sm:w-[80%] md:w-[60%] lg:w-[30%] z-99 fixed top-10 left-1/2 -translate-x-1/2 bg-blue-400 rounded-2xl text-white">
+        <div className="h-flex w-full xs:w-[70%] sm:w-[80%] md:w-[60%] lg:w-[30%] z-99 fixed top-[20%] left-1/2 -translate-x-1/2 bg-blue-400 rounded-2xl text-white">
           <div className="p-6 md:p-12 grid grid-auto-rows overflow-y-auto max-h-[80vh]">
             <div className="text-lg sm:text-2xl md:text-3xl">{TestTitle}</div>
             <div className="mt-[15%] text-xl">{PopoverMessage}</div>
