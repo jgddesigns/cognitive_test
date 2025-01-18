@@ -83,11 +83,12 @@ export default function Profile(this: any, props: any) {
 
   useEffect(() => {
     if (props.RetrievedData && !FoundData) {
+      console.log("checking retrieved data")
       for (let i = 0; i < 9; i++) {
         get_test_data(i);
       }
       setFoundData(true);
-      get_tests_taken();
+      // get_tests_taken();
       get_tests_repeated();
     }
   }, [props.RetrievedData]);
@@ -95,9 +96,9 @@ export default function Profile(this: any, props: any) {
   // Sets the 'TestsTaken' variable to the length of retrieved data (number of rows in the 'Test_Results' table)
   // @param: N/A
   // @return: N/A
-  function get_tests_taken() {
-    setTestsTaken(props.RetrievedData.length);
-  }
+  // function get_tests_taken() {
+  //   setTestsTaken(props.RetrievedData.length);
+  // }
 
   // Sets the 'Username' variable based on the text entry field
   // @param 'value': The text input
@@ -165,7 +166,7 @@ export default function Profile(this: any, props: any) {
     for (let j = 0; j < tests_string.length; j++) {
       count = 0;
       for (let i = 0; i < props.RetrievedData.length; i++) {
-        props.RetrievedData[i]["test_name"] == tests_string[j]
+        props.Username == props.RetrievedData[i]["user_id"] && props.RetrievedData[i]["test_name"] == tests_string[j]
           ? (count = count + 1)
           : null;
       }
@@ -189,7 +190,7 @@ export default function Profile(this: any, props: any) {
 
     for (let j = 0; j < tests_string.length; j++) {
       for (let i = 0; i < props.RetrievedData.length; i++) {
-        if (props.RetrievedData[i]["test_name"] == tests_string[j]) {
+        if (props.Username == props.RetrievedData[i]["user_id"] && props.RetrievedData[i]["test_name"] == tests_string[j]) {
           count = count + 1;
           break;
         }
@@ -276,6 +277,18 @@ export default function Profile(this: any, props: any) {
     }
   }
 
+  function check_data(test: any){
+    for(let i=0; i<props.RetrievedData.length; i++){
+      console.log("Compare " + props.Username + " to " + props.RetrievedData[i]["user_id"])
+      console.log("Compare " + test+ " to " + props.RetrievedData[i]["test_name"])
+      if(props.Username == props.RetrievedData[i]["user_id"] && test == props.RetrievedData[i]["test_name"]){
+        setTestsTaken(TestsTaken + 1)
+        return true
+      }
+    }
+    return false
+  }
+
   // Retrieves the analysis and results for a particular test
   // @param 'test': The test the analysis is for
   // @return (array): An array containing the data for each area of analysis [attention, decisiveness, reaction]
@@ -286,6 +299,11 @@ export default function Profile(this: any, props: any) {
     let data: any = null;
     let test_data: any = TestData;
     let found = false;
+    console.log(props.Username)
+    if(!check_data(test)){
+      console.log("User has not attempted any tests.")
+      return data
+    }
     for (let i = 0; i < props.RetrievedData.length; i++) {
       if (props.RetrievedData[i]["test_name"] == test) {
         (props.RetrievedData[i]["attention"] && !attention["score"]) ||
@@ -341,10 +359,10 @@ export default function Profile(this: any, props: any) {
 
   return (
     <div className="h-full">
-      <div className="row grid place-items-center">USER PROFILE</div>
+      {/* <div className="row grid place-items-center text-4xl">USER PROFILE</div> */}
 
-      <div className="mt-24 grid grid-auto-rows grid-auto-cols place-items-center gap-12">
-        <div>
+      <div className="grid grid-auto-rows grid-auto-cols place-items-center gap-12">
+        {/* <div>
           <div>Username</div>
           <textarea
             onChange={(e) => username_handler(e.target.value)}
@@ -367,7 +385,7 @@ export default function Profile(this: any, props: any) {
         <div>
           <div>Password</div>
           <div>
-            {/* adjust to input with type 'password' (style error exists)*/}
+ 
             <input
               type={PasswordType}
               className={PasswordClass}
@@ -381,14 +399,14 @@ export default function Profile(this: any, props: any) {
               {PasswordLink}
             </div>
           </div>
-        </div>
+        </div>  */}
 
-        <div className="mt-24 grid grid-auto-rows gap-12 w-[50%]">
-          <div className="underline">STATISTICS</div>
+        <div className="grid grid-auto-rows gap-12 w-[50%]">
+          {/* <div className="underline">STATISTICS</div> */}
           <div className="grid grid-cols-2 gap-12">
             <div>Tests Taken:</div>
             <div className="grid grid-cols-2">
-              <div>{props.RetrievedData && TestsTaken ? TestsTaken : null}</div>
+              <div>{props.RetrievedData && TestsTaken ? TestsTaken : "No Tests Taken"}</div>
               <div>
                 {props.RetrievedData && RepeatedAmount
                   ? get_repeated_string()
@@ -399,7 +417,7 @@ export default function Profile(this: any, props: any) {
           <div className="grid grid-cols-2 gap-12">
             <div>Completed:</div>
             <div className="grid grid-cols-2">
-              {props.RetrievedData && TestsTaken ? get_completion() : null}
+              {props.RetrievedData && TestsTaken ? get_completion() : "No Tests Completed"}
             </div>
           </div>
           {/* <div className="grid grid-cols-2 gap-12">

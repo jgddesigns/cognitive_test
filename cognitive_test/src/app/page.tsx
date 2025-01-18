@@ -20,6 +20,7 @@ import Profile from "@/login/Profile";
 import Cognito from '@/login/Cognito'
 import MongoDB from '@/database/MongoDB'
 import HerbSelector from '@/helpers/HerbSelector'
+import Google from "@/login/Google";
 
 export default function Home() {
   // Includes classes for the main div.
@@ -64,6 +65,7 @@ export default function Home() {
   const [ShowTestInfo, setShowTestInfo] = React.useState(false);
   const [ShowSignup, setShowSignup] = React.useState(false);
   const [ShowLogin, setShowLogin] = React.useState(false);
+  const [TriggerLogin, setTriggerLogin] = React.useState(false);
   const [ShowProfile, setShowProfile] = React.useState(false);
 
   // An array of the above state variables. Used to change the currently displayed page.
@@ -72,7 +74,8 @@ export default function Home() {
     setShowHome,
     setShowTestInfo,
     setShowSignup,
-    setShowLogin,
+    setTriggerLogin,
+    // setShowLogin,
     setShowProfile,
   ];
 
@@ -80,6 +83,7 @@ export default function Home() {
   // Used locally in: 'toggle_login' function.
   // Passed to: 'src/login/Signup', 'src/login/Login' components.
   const [LoggedIn, setLoggedIn] = React.useState(false);
+  const [GoogleStart, setGoogleStart] = React.useState(false)
 
   // A collection of boolean state variables that are set to true when a particular test is displayed.
   const [ShowPopover, setShowPopover] = React.useState(false);
@@ -192,6 +196,19 @@ export default function Home() {
     LoggedIn && Cookies && Username && Password ? toggle_login(true) : null;
   }, [LoggedIn, Cookies, Username, Password]);
 
+  useEffect(() => {
+    if(UsernameMatch || UsernameVerified){
+      setRetrieve(true)
+    }
+  }, [UsernameMatch, UsernameVerified]);
+
+  useEffect(() => {
+    if(RetrievedData && !LoggedIn){
+      setLoggedIn(true)
+      toggle_login(true)
+    } 
+  }, [RetrievedData, LoggedIn]);
+
   // If a user is logged in, sends them to the profile page. Otherwise, the user is sent to the home page.
   useEffect(() => {
     LoggedIn ? link_handler(4) : link_handler(0);
@@ -202,9 +219,9 @@ export default function Home() {
     Reset ? reset_handler() : null;
   }, [Reset]);
 
-  useEffect(() => {
-    !RetrievedData ? setRetrieve(true) : null;
-  }, [RetrievedData]);
+  // useEffect(() => {
+  //   !RetrievedData ? setRetrieve(true) : null;
+  // }, [RetrievedData]);
 
   useEffect(() => {
     // (Logout && LogoutTimer == 5) ? disable_links(true) : null
@@ -259,14 +276,16 @@ export default function Home() {
     for (var i = 0; i < cookies.length; i++) {
       cookie_arr.push(cookies[i].split("="));
     }
-    if (cookie_arr[0][1]) {
-      setUsername(cookie_arr[0][1]);
-      setEmail(cookie_arr[1][1]);
-      setPassword(cookie_arr[2][1]);
-      toggle_login(true);
-      setCookies(true);
-      return true;
-    }
+    try{
+      if (cookie_arr[0][1] && cookie_arr[1][1] && cookie_arr[2][1]) {
+        setUsername(cookie_arr[0][1]);
+        setEmail(cookie_arr[1][1]);
+        setPassword(cookie_arr[2][1]);
+        toggle_login(true);
+        setCookies(true);
+        return true;
+      }
+    }catch{}
     setCookies(false);
     setCookiesChecked(true);
     return false;
@@ -410,11 +429,11 @@ export default function Home() {
             </span>
           ) : null}
 
-          {!LoggedIn ? (
+          {/* {!LoggedIn ? (
             <span onClick={(e) => link_handler(2)} className={SignupClass}>
               Signup
             </span>
-          ) : null}
+          ) : null} */}
 
           {!LoggedIn ? (
             <span onClick={(e) => link_handler(3)} className={LoginClass}>
@@ -551,10 +570,11 @@ export default function Home() {
         </div>
       : null}
 
+      <Google setUsernameCheck={setUsernameCheck} setUsername={setUsername} TriggerLogin={TriggerLogin} setTriggerLogin={setTriggerLogin} setTable={setTable}/>
 
       <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} Insert={Insert} setInsert={setInsert} setData={setData} setTestName={setTestName} Data={Data} Username={Username} Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve} Submit={Submit} setSubmit={setSubmit} setUsernameMatch={setUsernameMatch} setSignupSuccess={setSignupSuccess} UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert} setHerb={setHerb} Herb={Herb}/>
 
-      <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/> 
+      {/* <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/>  */}
 
     </main>
   );

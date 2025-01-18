@@ -37,7 +37,8 @@ export default function MongoDB(props: any) {
     useEffect(() => {
         console.log(props.Submit)
         console.log(props.UsernameVerified)
-        props.UsernameVerified && props.Submit ? props.setUserInserted(true) : null 
+        // props.UsernameVerified && props.Submit ? props.setUserInserted(true) : null         
+        props.UsernameVerified ? handle_insert() : null 
     }, [props.Submit, props.UsernameVerified])
 
     useEffect(() => {
@@ -59,6 +60,12 @@ export default function MongoDB(props: any) {
       }, [props.Retrieve])
 
 
+    //   useEffect(() => {
+    //     if(props.CheckID){
+    //       console.log("Checking User ID")
+    //       retrieve_handler()
+    //     }
+    //   }, [props.Retrieve])
 
     async function test(){
         console.log(await retrieve_specific("attempt_num", test_table, "", [null, 500]))
@@ -71,7 +78,8 @@ export default function MongoDB(props: any) {
         console.log("username check: " + props.Username)
         let name: any = await retrieve_specific("username", user_table, props.Username, null)
         console.log(name)
-        name.length > 0 ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
+        name ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
+
     }
 
 
@@ -143,6 +151,12 @@ export default function MongoDB(props: any) {
 
         for(let i=0; i<rows.length; i++){
             check_condition(condition, value) ? data_arr.push(rows[i]) : isNaN(value) && value === rows[i][column] ? data_arr.push(rows[i]) : null
+        }
+
+
+        if(data_arr.length < 1){
+            console.log("No data matching " + value + " found.")
+            return false
         }
 
         console.log("retrieved specific data:")
@@ -232,5 +246,7 @@ export default function MongoDB(props: any) {
         // <Cognito handleInsertUser={handle_insert} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} setCheckConfirm={props.setCheckConfirm} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setLoggedIn={props.setLoggedIn} setConfirmSuccess={props.setConfirmSuccess}/> 
     )
 }
+
+
 
   
