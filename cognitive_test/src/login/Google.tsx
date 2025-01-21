@@ -8,37 +8,44 @@ export default function Google(props: any) {
     const [Start, setStart] = React.useState(false)
 
     useEffect(() => {
-        !Start ? initialize() : null
-    }, [Start]);
+        !props.Start && (props.CookiesChecked && !props.Cookies) ? initialize() : null
+    }, [props.Start, props.CookiesChecked, props.Cookies]);
     
 
     useEffect(() => {
         props.TriggerLogin ? initialize() : null
     }, [props.TriggerLogin]);
 
+
+    ///// CHECK IF USER ALEADY EXISTS IN 'users' TABLE, IF SO, UPDATE THE ROW WITH A NEW JWT. IF NOT, INSERT A NEW ROW. 
     function response_handler(response: any){
         console.log("Encoded JWT ID token: " + response.credential)
 
         const decoded = parse_jwt(response.credential)
         console.log("Decoded JWT: ", decoded)
 
+        props.setCookies(response.credential)
         props.setUsername(decoded["email"])
         props.setUsernameCheck(true)
         props.setTable("users")
+        props.setStartLogin(true)
+        props.setTriggerLogin(false)
+        props.setTriggerInsert(true)
     }
 
     function initialize(){
+        console.log("initialize")
 
-        if (window.google && !Start) {
+        if (window.google && !props.Start) {
             window.google.accounts.id.initialize({
             client_id: google_credentials["CLIENT_ID"], 
             callback: (response: any) => response_handler(response),
-            // auto_select: true, 
+            auto_select: false, 
             // context: "signin",
             })
     
             window.google.accounts.id.prompt();
-            setStart(true)
+            props.setStart(true)
             
         }else{
             console.log("start already called")

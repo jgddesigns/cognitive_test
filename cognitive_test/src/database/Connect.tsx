@@ -70,11 +70,11 @@ export default function Connect(props: any) {
 
 
   useEffect(() => {
-    if(props.Retrieve){
+    if(!props.RetrievedData){
       console.log("retrieve in connect")
       retrieveHandler()
     }
-  }, [props.Retrieve])
+  }, [props.RetrievedData])
 
 
   // Retrieve a user profile from the 'Users' table

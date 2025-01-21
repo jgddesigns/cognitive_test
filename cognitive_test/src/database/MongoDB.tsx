@@ -2,21 +2,18 @@
 'use client'
 import React, {useEffect, useRef} from 'react';
 import Cognito from '@/login/Cognito';
-import { Prosto_One } from 'next/font/google';
+
 
 export default function MongoDB(props: any) {
     const [InsertSuccess, setInsertSuccess] = React.useState(false)
     const [RetrieveAllSuccess, setRetrieveAllSuccess] = React.useState(false)
     const [RetrieveOneSuccess, setRetrieveOneSuccess] = React.useState(false)
 
-
     const user_table = "users"
-     
     const test_table = "test_results"
 
 
     useEffect(() => {
-        // test()
         if(InsertSuccess){
             console.log("insert success. resetting variables.")
             // props.setSubmit(false)
@@ -28,23 +25,31 @@ export default function MongoDB(props: any) {
         }
     }, [InsertSuccess, RetrieveOneSuccess, RetrieveAllSuccess])
 
-
     // insert for user signup
     useEffect(() => {
         props.UsernameCheck && !props.UsernameVerified ? username_check() : null
     }, [props.UsernameCheck, props.UsernameVerified])
 
-    useEffect(() => {
-        console.log(props.Submit)
-        console.log(props.UsernameVerified)
-        // props.UsernameVerified && props.Submit ? props.setUserInserted(true) : null         
-        props.UsernameVerified ? handle_insert() : null 
-    }, [props.Submit, props.UsernameVerified])
+    // useEffect(() => {   
+    //     props.UsernameVerified ? handle_insert() : null 
+    // }, [props.UsernameVerified])
 
     useEffect(() => {
-        props.TriggerInsert ? handle_insert() : null
+        if(props.TriggerInsert){
+            const promise = new Promise((resolve, reject) => {
+                resolve(handle_insert())
+            }).then(result => {
+                props.setStartLogin(true)
+            })
+
+        } 
+
+        
     }, [props.TriggerInsert])
     
+    useEffect(() => {
+        props.StartLogin ? check_cookies() : null
+    }, [props.StartLogin])
 
     //insert for test results table
     useEffect(() => {
@@ -52,23 +57,61 @@ export default function MongoDB(props: any) {
     }, [props.Table])
     
 
-    useEffect(() => {
-        if(props.Retrieve){
-          console.log("retrieve in mongodb")
-          retrieve_handler()
-        }
-      }, [props.Retrieve])
+    async function check_cookies(){
+        console.log("checking cookies")
+        console.log(props.Username)
+
+        var data: any = null
 
 
-    //   useEffect(() => {
-    //     if(props.CheckID){
-    //       console.log("Checking User ID")
-    //       retrieve_handler()
-    //     }
-    //   }, [props.Retrieve])
+        const promise = new Promise((resolve, reject) => {
 
-    async function test(){
-        console.log(await retrieve_specific("attempt_num", test_table, "", [null, 500]))
+            if(props.Username.length > 0){
+                data = retrieve_specific("username", user_table, props.Username, [null])
+
+                resolve(data)
+            }else{
+                resolve(null)
+            }
+
+        }).then(result => {
+            try{
+                data = result
+                if(data[0]["login_token"] != null){
+                    console.log("jwt token found")
+                    console.log(data[0]["login_token"])
+                    props.setCookies(data[0]["login_token"])
+    
+                    //add as cookie value to check during page visit. will trigger jwt. if login after jwt expiry, delete jwt from record and start new login process.
+
+                    props.setLoginCheck(true)
+
+                    return true
+                }else{
+                    console.log("no valid jwt token found. login required.")
+                }
+            }catch{
+    
+            }
+            props.setCookiesChecked(true)
+        }).then(result => {
+            const promise = new Promise((resolve, reject) => {
+                let data = retrieve_handler()
+                resolve(data)
+                
+            }).then(result => {
+                let data: any = result
+                props.setStartLogin(false)
+                console.log("retrieve handler")
+                if(data[0]){
+                    props.setRetrievedData(data) 
+                    props.setRetrieve(false)
+                    props.setUsernameCheck(true)
+                    
+                    
+                } 
+            })
+        })
     }
 
 
@@ -79,7 +122,6 @@ export default function MongoDB(props: any) {
         let name: any = await retrieve_specific("username", user_table, props.Username, null)
         console.log(name)
         name ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
-
     }
 
 
@@ -113,6 +155,7 @@ export default function MongoDB(props: any) {
                 total_test_time: '0',
                 variables_used:  null,
                 mind_type: null,
+                login_token: props.Cookies,
                 timestamp: get_timestamp()
             }
         }catch{
@@ -126,6 +169,7 @@ export default function MongoDB(props: any) {
         data ? insert(data, props.Table) : console.log("Error building insert test data.")
         props.setUsernameVerified(false)
         props.setTriggerInsert(false)
+
     }
 
 
@@ -153,7 +197,6 @@ export default function MongoDB(props: any) {
             check_condition(condition, value) ? data_arr.push(rows[i]) : isNaN(value) && value === rows[i][column] ? data_arr.push(rows[i]) : null
         }
 
-
         if(data_arr.length < 1){
             console.log("No data matching " + value + " found.")
             return false
@@ -166,7 +209,6 @@ export default function MongoDB(props: any) {
 
 
     function check_condition(condition: any, value: any){
-
         if(!Array.isArray(condition)){
             return false
         }
@@ -195,21 +237,22 @@ export default function MongoDB(props: any) {
         return false
     }
 
+
     async function retrieve_handler(){
         const data = await retrieve_all(test_table)
         console.log("data retrieved")
         console.log(data)
-        props.setRetrievedData(data)
-        props.setRetrieve(false)
+        // props.setRetrievedData(data)
+        // props.setRetrieve(false)
         return data
-      }
+    }
+
 
     async function retrieve_all(table: any){
         var retrieved = null
         console.log("Retrieving from MongoDB table " + table + "...")
         const response = await fetch('../api/mongo_db/retrieve?table=' + table, { method: 'GET' });
         const retrieve = await response.json().then((data) => retrieved = data)
-        console.log(retrieved)
         return retrieved
     }
 

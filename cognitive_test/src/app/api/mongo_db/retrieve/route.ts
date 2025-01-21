@@ -15,6 +15,7 @@ const client = new MongoClient(uri, {
 
 export async function GET(request: Request){
   try {
+    console.log(request)
     await client.connect()
     await client.db("admin").command({ ping: 1 })
     console.log("Successfully connected to MongoDB for retrieval...")
@@ -31,6 +32,8 @@ export async function GET(request: Request){
     }
 
     var table = url.searchParams.get('table')
+    console.log("table name")
+    console.log(table)
     var result = null
     var find_rows = null
 

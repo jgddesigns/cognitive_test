@@ -84,11 +84,12 @@ export default function Profile(this: any, props: any) {
   useEffect(() => {
     if (props.RetrievedData && !FoundData) {
       console.log("checking retrieved data")
+      console.log(props.RetrievedData)
       for (let i = 0; i < 9; i++) {
         get_test_data(i);
       }
       setFoundData(true);
-      // get_tests_taken();
+      get_tests_taken();
       get_tests_repeated();
     }
   }, [props.RetrievedData]);
@@ -96,9 +97,22 @@ export default function Profile(this: any, props: any) {
   // Sets the 'TestsTaken' variable to the length of retrieved data (number of rows in the 'Test_Results' table)
   // @param: N/A
   // @return: N/A
-  // function get_tests_taken() {
-  //   setTestsTaken(props.RetrievedData.length);
-  // }
+  function get_tests_taken() {
+    var taken_list: any = []
+
+    for (let j = 0; j < tests_string.length; j++) {
+      for (let i = 0; i < props.RetrievedData.length; i++) {
+        if(props.Username == props.RetrievedData[i]["user_id"] && props.RetrievedData[i]["test_name"] == tests_string[j] && !taken_list.includes(props.RetrievedData[i]["test_name"])){
+          taken_list.push(props.RetrievedData[i]["test_name"])
+          console.log()
+          console.log("taken list")
+          console.log(taken_list)
+          console.log()
+        }
+      }
+    }
+    setTestsTaken(taken_list.length);
+  }
 
   // Sets the 'Username' variable based on the text entry field
   // @param 'value': The text input
@@ -175,6 +189,7 @@ export default function Profile(this: any, props: any) {
     setRepeatedAmount(repeated);
   }
 
+  
   // Returns the string to display which includes the amount of repeated tests
   // @param: N/A
   // @return (string): The display string including the amount of repeated tests
@@ -221,19 +236,19 @@ export default function Profile(this: any, props: any) {
       data =
         data +
         "Attention: Score - " +
-        test_data[test][0]["score"] +
+        test_data[test][0]["score"].toFixed(2) +
         ", Rating - " +
         test_data[test][0]["rating"];
       data =
         data +
         " Decisiveness: Score - " +
-        test_data[test][1]["score"] +
+        test_data[test][1]["score"].toFixed(2) +
         ", Rating - " +
         test_data[test][1]["rating"];
       data =
         data +
         " Reaction: Score - " +
-        test_data[test][2]["score"] +
+        test_data[test][2]["score"].toFixed(2) +
         ", Rating - " +
         test_data[test][2]["rating"];
     } else {
@@ -278,11 +293,15 @@ export default function Profile(this: any, props: any) {
   }
 
   function check_data(test: any){
+    let taken = 0
     for(let i=0; i<props.RetrievedData.length; i++){
       console.log("Compare " + props.Username + " to " + props.RetrievedData[i]["user_id"])
       console.log("Compare " + test+ " to " + props.RetrievedData[i]["test_name"])
       if(props.Username == props.RetrievedData[i]["user_id"] && test == props.RetrievedData[i]["test_name"]){
-        setTestsTaken(TestsTaken + 1)
+        console.log("taken")
+        // console.log(TestsTaken)
+        // let taken = TestsTaken
+        // setTestsTaken(taken + 1)
         return true
       }
     }
@@ -401,7 +420,7 @@ export default function Profile(this: any, props: any) {
           </div>
         </div>  */}
 
-        <div className="grid grid-auto-rows gap-12 w-[50%]">
+        <div className="grid gap-12">
           {/* <div className="underline">STATISTICS</div> */}
           <div className="grid grid-cols-2 gap-12">
             <div>Tests Taken:</div>
@@ -414,9 +433,9 @@ export default function Profile(this: any, props: any) {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-12">
+          <div className="grid grid-cols-2 gap-4">
             <div>Completed:</div>
-            <div className="grid grid-cols-2">
+            <div className="">
               {props.RetrievedData && TestsTaken ? get_completion() : "No Tests Completed"}
             </div>
           </div>
@@ -430,7 +449,7 @@ export default function Profile(this: any, props: any) {
                     </div> */}
           <div className="grid grid-auto-rows" id="parent">
             <div>Tests:</div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -439,7 +458,7 @@ export default function Profile(this: any, props: any) {
                   Choice Reaction Time
                 </div>
                 {ShowChoiceReaction ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["choice_reaction"]}
                     </span>
@@ -461,7 +480,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -470,7 +489,7 @@ export default function Profile(this: any, props: any) {
                   Digit Vigilance
                 </div>
                 {ShowDigitVigilance ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["digit_vigilance"]}
                     </span>
@@ -492,7 +511,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -501,7 +520,7 @@ export default function Profile(this: any, props: any) {
                   Memory Scanning
                 </div>
                 {ShowMemoryScanning ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["memory_scanning"]}
                     </span>
@@ -523,7 +542,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -532,7 +551,7 @@ export default function Profile(this: any, props: any) {
                   Motor Function
                 </div>
                 {ShowMotorFunction ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["motor_function"]}
                     </span>
@@ -554,7 +573,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -563,7 +582,7 @@ export default function Profile(this: any, props: any) {
                   Number Vigilance
                 </div>
                 {ShowNumberVigilance ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["number_vigilance"]}
                     </span>
@@ -585,7 +604,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -594,7 +613,7 @@ export default function Profile(this: any, props: any) {
                   Picture Recognition
                 </div>
                 {ShowPictureRecognition ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["picture_recognition"]}
                     </span>
@@ -616,7 +635,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -625,7 +644,7 @@ export default function Profile(this: any, props: any) {
                   Visual Reaction Time
                 </div>
                 {ShowReactionTime ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["reaction_time"]}
                     </span>
@@ -647,7 +666,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -656,7 +675,7 @@ export default function Profile(this: any, props: any) {
                   <span className="text-blue-600">Word Recognition</span>
                 </div>
                 {ShowWordRecogntion ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["word_recognition"]}
                     </span>
@@ -678,7 +697,7 @@ export default function Profile(this: any, props: any) {
                 )}
               </div>
             </div>
-            <div className="grid ml-12 mt-8 grid-cols-2 gap-4">
+            <div className="grid ml-12 mt-12 gap-4">
               <div className="grid grid-auto-rows">
                 <div
                   className="text-blue-600 cursor-pointer"
@@ -687,7 +706,7 @@ export default function Profile(this: any, props: any) {
                   Working Memory
                 </div>
                 {ShowWorkingMemory ? (
-                  <div className="grid grid-auto-rows gap-8 w-48 mt-4 mb-12 bg-blue-400">
+                  <div className="grid grid-auto-rows gap-8 w-48 mt-4  bg-blue-400">
                     <span className="ml-12 p-[10px]">
                       {descriptions["working_memory"]}
                     </span>
