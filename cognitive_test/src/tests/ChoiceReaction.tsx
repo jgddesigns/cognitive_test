@@ -153,7 +153,7 @@ export default function ChoiceReaction (props: any) {
     //section interval, every 4 questions.. 5 sections total
     const time = 5
 
-    const time_measure = .5
+    const time_measure = 1.5
 
     const test_name = "choice_reaction"
 

@@ -124,7 +124,7 @@ export default function MongoDB(props: any) {
         name ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
     }
 
-
+    //check if username already exists in db
     async function handle_insert(){
         console.log("starting insert to: " + props.Table)
 
@@ -151,7 +151,7 @@ export default function MongoDB(props: any) {
                 username: props.Username,
                 // email_address: props.Email,
                 name: props.Name,
-                tests_completed: await retrieve_all("tests_table"),
+                tests_completed: await retrieve_all(test_table),
                 total_test_time: '0',
                 variables_used:  null,
                 mind_type: null,

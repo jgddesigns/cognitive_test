@@ -307,7 +307,8 @@ export default function Home() {
     var cookies = document.cookie.split(";");
     var cookie_arr = [];
     for (var i = 0; i < cookies.length; i++) {
-      cookies[i].split("=")[0] == "Username" || cookies[i].split("=")[0] == "Created" ? cookie_arr.push(cookies[i].split("=")) : null
+      // cookies[i].split("=")[0] == "Username" || cookies[i].split("=")[0] == "Created" ? cookie_arr.push(cookies[i].split("=")) : null
+      cookie_arr.push(cookies[i].split("=")) 
     }
     console.log("cookie array")
     console.log(cookie_arr)
