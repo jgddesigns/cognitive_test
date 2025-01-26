@@ -8,8 +8,8 @@ export default function Google(props: any) {
     const [Start, setStart] = React.useState(false)
 
     useEffect(() => {
-        !props.Start && (props.CookiesChecked && !props.Cookies) ? initialize() : null
-    }, [props.Start, props.CookiesChecked, props.Cookies]);
+        !props.Start && (props.CookiesChecked && !props.Cookies) && !props.Logout  ? initialize() : null
+    }, [props.Start, props.CookiesChecked, props.Cookies, props.Logout]);
     
 
     useEffect(() => {
@@ -31,6 +31,7 @@ export default function Google(props: any) {
         props.setStartLogin(true)
         props.setTriggerLogin(false)
         props.setTriggerInsert(true)
+        props.setLoginTimer(5)
     }
 
     function initialize(){

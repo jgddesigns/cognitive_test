@@ -101,7 +101,7 @@ export default function MongoDB(props: any) {
                 
             }).then(result => {
                 let data: any = result
-                props.setStartLogin(false)
+                // props.setStartLogin(false)
                 console.log("retrieve handler")
                 if(data[0]){
                     props.setRetrievedData(data) 

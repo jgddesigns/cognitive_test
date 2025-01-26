@@ -203,54 +203,37 @@ export default function Home() {
   //   LoggedIn && Cookies && Username && Password ? toggle_login(true) : null;
   // }, [LoggedIn, Cookies, Username, Password]);
 
-  useEffect(() => {
-    if(UsernameMatch || UsernameVerified){
-      // setRetrieve(true)
-    }
-  }, [UsernameMatch, UsernameVerified]);
-
-  useEffect(() => {
-    // if(RetrievedData && !LoggedIn && Cookies){
-    if(RetrievedData && LoginCheck && !LoggedIn){
-      console.log("logged in")
-      setStartLogin(false)
-      // setLoginTimer(null)
-      setLoggedIn(true)
-      cookie_handler(true)
-      toggle_login(true)
-    } 
-  }, [RetrievedData, LoggedIn, Cookies, LoginCheck]);
 
   // If a user is logged in, sends them to the profile page. Otherwise, the user is sent to the home page.
   useEffect(() => {
     LoggedIn ? link_handler(4) : link_handler(0);
-  }, [LoggedIn]);
+    LoggedIn && Start ? cookie_handler(true) : null
+  }, [LoggedIn, Start]);
+
 
   // When the 'Reset' state variable is true, triggers the 'reset_handler' function.
   useEffect(() => {
     Reset ? reset_handler() : null;
   }, [Reset]);
 
-  // useEffect(() => {
-  //   !RetrievedData ? setRetrieve(true) : null;
-  // }, [RetrievedData]);
 
   useEffect(() => {
-    // (Logout && LogoutTimer == 5) ? disable_links(true) : null
     LoginTimer == 5 ? disable_links(true) : null;
     LoginTimer == null ? disable_links(false) : null;
   }, [LoginTimer]);
 
+
   useEffect(() => {
-    // (Logout && LogoutTimer == 5) ? disable_links(true) : null
     LogoutTimer == 5 ? disable_links(true) : null;
     LogoutTimer == null ? disable_links(false) : null;
   }, [Logout, LogoutTimer]);
+
 
   useEffect(() => {
     SignupTimer == 5 ? disable_links(true) : null;
     SignupTimer == null ? disable_links(false) : null;
   }, [SignupTimer]);
+
 
   // Controls the logout timer and its associated display.
   useEffect(() => {
@@ -270,23 +253,24 @@ export default function Home() {
   }, [Logout, LogoutTimer]);
 
 
-    ///////////WORKING ON THIS//////////////////
-    // useEffect(() => {
-    //     StartLogin && Cookies ? setLoginTimer(5) : setLoginTimer(null)
-    // }, [StartLogin])
-
-
-    // useEffect(() => {
-    //     while(StartLogin && Cookies && LoginTimer >= 0 ){
-    //         const timeoutId = setTimeout(() => {
-    //             (LoginTimer - 1) >= 0 ? setLoginTimer(LoginTimer - 1) : setLoginTimer(null)
+    useEffect(() => {
+        while(StartLogin && LoginTimer >= -1 ){
+            const timeoutId = setTimeout(() => {
+              setLoginTimer(LoginTimer - 1)
+                if(LoginTimer < 0
+                ){
+                  setLoginTimer(null)
+                  setStartLogin(false)
+                  setLoggedIn(true)
+                  toggle_login(true)
+                }
          
-    //         }, 1000 )
+            }, 1000 )
 
-    //         return () => clearTimeout(timeoutId)
-    //     }
+            return () => clearTimeout(timeoutId)
+        }
         
-    // }, [LoginTimer])
+    }, [StartLogin, LoginTimer])
 
 
   // Resets the current test page if the 'reset' button is pressed.
@@ -304,26 +288,28 @@ export default function Home() {
   // @param: N/A
   // @return: true if cookies exist, false otherwise.
   function check_cookies() {
-    var cookies = document.cookie.split(";");
-    var cookie_arr = [];
+    var cookies = document.cookie.split("; ");
+    var cookie_arr: any = [];
+
     for (var i = 0; i < cookies.length; i++) {
-      // cookies[i].split("=")[0] == "Username" || cookies[i].split("=")[0] == "Created" ? cookie_arr.push(cookies[i].split("=")) : null
-      cookie_arr.push(cookies[i].split("=")) 
+      cookies[i].split("=")[0] === "Username" || cookies[i].split("=")[0] === "Created" ? cookie_arr.push(cookies[i].split("=")[1]) : null
     }
+
     console.log("cookie array")
     console.log(cookie_arr)
     try{
       if (cookie_arr[0][1] && cookie_arr[1][1]) {
         setStartLogin(true)
-        setUsername(cookie_arr[0][1]);
-        setCreated(cookie_arr[1][1]);
+        setUsername(cookie_arr[0]);
+        setCreated(cookie_arr[1]);
         return true;
       }
     }catch{}
-    setStartLogin(true)
 
+    setCookiesChecked(true)
     return false;
   }
+  
 
   function cookie_handler(condition: any){
     console.log("cookie handler")
@@ -331,15 +317,22 @@ export default function Home() {
     if(condition){
       console.log("setting cookies")
       date.setTime(date.getTime())
-      var utc = date.toUTCString()
-      document.cookie = "Username=" + Username + "; path=/"
-      document.cookie = "Created=" + utc + "; path=/"
+      var utc_current = date.toUTCString()
+      console.log("current date set to cookies")
+      console.log(utc_current)
+      date.setTime(date.getTime() + (24 * 60 * 60 * 1000 * 7))
+      var utc_expire = date.toUTCString()
+      console.log("expiration date set to cookies")
+      console.log(utc_expire)
+      document.cookie = "Username=" + Username + "; expires=" + utc_expire + "path=/"
+      document.cookie = "Created=" + utc_current + "; expires=" + utc_expire + "path=/"
     }else{
-      console.log("clearing cookies")
       date.setTime(date.getTime() - (24 * 60 * 60 * 1000))
-      var utc = date.toUTCString()
-      document.cookie = "Username=; expires=" + utc + "; path=/"
-      document.cookie = "Created=; expires=" + utc + "; path=/"
+      var utc_prev = date.toUTCString()
+      //delete jwt
+      console.log("clearing cookies")
+      document.cookie = "Username=; expires=" + utc_prev +  "path=/"
+      document.cookie = "Created=; expires=" + utc_prev + "path=/"
     }
 }
 
@@ -353,7 +346,7 @@ export default function Home() {
       setLoggedIn(false)
       setLoginCheck(false)
       setStart(false)
-      setCookiesChecked(false)
+      setCookiesChecked(true)
       setCookies(null)
       setUsername("");
       setPassword("");
@@ -365,7 +358,6 @@ export default function Home() {
   // Routes the user to the clicked page link in the header.
   // @param place: Number. The spot in the 'classes' and 'screens' array that corresponds to each page.
   // @return: N/A
-
   function link_handler(place: any){
     clear_tests()
     setTestID(0)
@@ -476,11 +468,6 @@ export default function Home() {
   return (
     <main className={MainClass}>
       <div className="z-1 max-w-screen-lg w-full font-mono text-base sm:text-lg grid grid-auto-rows place-items-center px-4 md:px-8">
-        {/* <div className="w-full grid place-items-end">
-          <div className="g-signin2" data-onsuccess="onSignIn"></div>
-        </div> */}
-
-      
         <div className="grid grid-flow-row sm:grid-flow-col gap-8 sm:gap-16 lg:gap-24">
           {LoggedIn ? (
             <span onClick={(e) => link_handler(0)} className={HomeClass}>
@@ -531,7 +518,7 @@ export default function Home() {
 
         <div className="mt-24">
 
-          {ShowHome && !Logout ? 
+          {ShowHome && !Logout && !StartLogin? 
             <MainPage/>  
           : null}
 
@@ -590,16 +577,13 @@ export default function Home() {
             <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} SignupTimer={SignupTimer} setSignupTimer={setSignupTimer}/>
           : null}
 
-          {/* {ShowLogin ?
-            <Login setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout} LoginTimer={LoginTimer} setLoginTimer={setLoginTimer}/>
-          : null} */}
 
           {ShowProfile ?
             <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout} setRetrieve={setRetrieve} RetrievedData={RetrievedData} setRetrievedData={setRetrievedData} setFromProfile={setFromProfile}/>
           : null}
 
-          {Logout ?
 
+          {Logout ?
             <div className="grid grid-rows-2 gap-12 place-items-center">
               <div className="mt-12">Logging Out...</div>
               <div>
@@ -608,20 +592,22 @@ export default function Home() {
             </div>
            : null}
 
-          {/* {StartLogin && Cookies ?
+          {LoginTimer || LoginTimer == 0 ?
             <div className="grid grid-rows-2 gap-12 place-items-center">
               <div className="mt-12">Logging In...</div>
               <div>
                 {LoginTimer > 0 ? <div>{LoginTimer}</div> : <div>Go!</div>}
               </div>
             </div>
-          : null} */}
+          : null}
         </div>
       </div>
+
 
       {ShowPopover ? (
         <div className="w-full h-full xs:w-[120%] flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
       ) : null}
+
 
       {ShowPopover ? 
         <div className="h-flex w-full xs:w-[70%] sm:w-[80%] md:w-[60%] lg:w-[30%] z-99 fixed top-[20%] left-1/2 -translate-x-1/2 bg-blue-400 rounded-2xl text-white">
@@ -644,7 +630,7 @@ export default function Home() {
         </div>
       : null}
 
-      <Google setUsernameCheck={setUsernameCheck} setUsername={setUsername} TriggerLogin={TriggerLogin} setTriggerLogin={setTriggerLogin} setTable={setTable} Cookies={Cookies} setCookies={setCookies} CookiesChecked={CookiesChecked} Start={Start} setStart={setStart} setStartLogin={setStartLogin} setTriggerInsert={setTriggerInsert} LogoutTimer={LogoutTimer}/>
+      <Google setUsernameCheck={setUsernameCheck} setUsername={setUsername} TriggerLogin={TriggerLogin} setTriggerLogin={setTriggerLogin} setTable={setTable} Cookies={Cookies} setCookies={setCookies} CookiesChecked={CookiesChecked} Start={Start} setStart={setStart} setStartLogin={setStartLogin} setTriggerInsert={setTriggerInsert} LogoutTimer={LogoutTimer} Logout={Logout} setLoginTimer={setLoginTimer}/>
 
       <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} setTestName={setTestName} Data={Data} Username={Username} setUsername={setUsername}  Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve}   setUsernameMatch={setUsernameMatch}  UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert} setHerb={setHerb} Herb={Herb} Cookies={Cookies} setCookies={setCookies} setCookiesChecked={setCookiesChecked} setLoginCheck={setLoginCheck} setStartLogin={setStartLogin} StartLogin={StartLogin}/>
 

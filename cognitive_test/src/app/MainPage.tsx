@@ -14,13 +14,6 @@ export default function MainPage(props: any) {
         script2.async = true;
         document.body.appendChild(script1);
         document.body.appendChild(script2);
-
-
-    
-        // return () => {
-        //   document.body.removeChild(script1);
-        //   document.body.removeChild(script2); 
-        // };
       }, []);
 
       
