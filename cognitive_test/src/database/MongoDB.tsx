@@ -55,6 +55,15 @@ export default function MongoDB(props: any) {
     useEffect(() => {
         props.Table && props.TestName ? handle_insert() : null
     }, [props.Table])
+
+
+    //clear token after logout or login cookie expire (when 'Username' and 'Created' cookies are empty or null)
+    useEffect(() => {
+        if(props.ClearToken){
+            update(["", ""], "username", props.Username, user_table)
+            props.setUsername("")
+        }
+    }, [props.ClearToken])
     
 
     async function check_cookies(){
@@ -63,7 +72,7 @@ export default function MongoDB(props: any) {
 
         var data: any = null
 
-
+        //check the 'users' table for existing user data.
         const promise = new Promise((resolve, reject) => {
 
             if(props.Username.length > 0){
@@ -74,44 +83,74 @@ export default function MongoDB(props: any) {
                 resolve(null)
             }
 
+        //after checking for existing data, initiate the neccesary triggers. if no data exists (resolve is null), create a new row in the db for the user.
         }).then(result => {
+
+            //when a user is found.
             try{
                 data = result
                 if(data[0]["login_token"] != null){
-                    console.log("jwt token found")
-                    console.log(data[0]["login_token"])
+                    console.log("token length")
+                    console.log(data[0]["login_token"].length)
+                    console.log(props.Username)
+                    data[0]["login_token"].length < 1 ? update([props.Cookies, get_date()], "username", props.Username, user_table) : null
+                    is_cookie_expired(data[0]["login_date"]) ? update([data[0]["login_token"], get_date()], "username", props.Username, user_table) : null
+                    console.log("jwt token found. commencing login...")
                     props.setCookies(data[0]["login_token"])
-    
-                    //add as cookie value to check during page visit. will trigger jwt. if login after jwt expiry, delete jwt from record and start new login process.
-
                     props.setLoginCheck(true)
 
                     return true
                 }else{
-                    console.log("no valid jwt token found. login required.")
+                    console.log("no valid jwt token found. adding new user to database...")
+                    props.setTriggerInsert(true)
                 }
+            
+            //when there is no existing user (resolve is null)
             }catch{
-    
+                console.log("no valid jwt token found. adding new user to database...")
+                props.setTriggerInsert(true)
+
+                return true
+                
             }
             props.setCookiesChecked(true)
+
+        //if a user exists in the 'users' table, retrieve the associated data 
         }).then(result => {
-            const promise = new Promise((resolve, reject) => {
-                let data = retrieve_handler()
-                resolve(data)
-                
-            }).then(result => {
-                let data: any = result
-                // props.setStartLogin(false)
-                console.log("retrieve handler")
-                if(data[0]){
-                    props.setRetrievedData(data) 
-                    props.setRetrieve(false)
-                    props.setUsernameCheck(true)
+
+            if(!props.TriggerInsert){
+                const promise = new Promise((resolve, reject) => {
+                    let data = retrieve_handler()
+                    resolve(data)
                     
-                    
-                } 
-            })
+                }).then(result => {
+                    let data: any = result
+                    console.log("retrieve handler")
+                    if(data[0]){
+                        props.setRetrievedData(data) 
+                        props.setRetrieve(false)
+                        props.setUsernameCheck(true)
+                    } 
+                })
+            }
         })
+    }
+
+
+    function is_cookie_expired(date: any){
+        const cookie = new Date(date)
+        cookie.setTime(cookie.getTime() + (24 * 60 * 60 * 1000 * 7))
+        const current_date = new Date()
+        current_date.setTime(current_date.getTime())
+        console.log("expire date")
+        console.log(cookie)
+        console.log("current date")
+        console.log(current_date)
+        if(cookie < current_date){
+            console.log("set new login cookies")
+            return true
+        }
+        return false
     }
 
 
@@ -150,11 +189,14 @@ export default function MongoDB(props: any) {
                 profile_data: null, 
                 username: props.Username,
                 // email_address: props.Email,
-                name: props.Name,
-                tests_completed: await retrieve_all(test_table),
+                // name: props.Name,
+                // tests_completed: await retrieve_all(test_table),
+                // if new user, there wont be any tests taken. add updates after tests are taken.
+                tests_completed: null,
                 total_test_time: '0',
                 variables_used:  null,
                 mind_type: null,
+                login_date: get_date(),
                 login_token: props.Cookies,
                 timestamp: get_timestamp()
             }
@@ -181,6 +223,15 @@ export default function MongoDB(props: any) {
         response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
     }
 
+    async function update(data: any, column: any, filter: any, table: any){
+        var retrieved = null
+        console.log("Updating MongoDB table " + table + "...")
+        const response = await fetch('../api/mongo_db/update?data=' + JSON.stringify(data) + "&column=" +  JSON.stringify(column) +  "&filter=" +  JSON.stringify(filter) + "&table=" + table, { method: 'GET' })
+        const retrieve = await response.json().then((data) => retrieved = data)
+        props.setClearToken(false)
+        return retrieved
+    }
+    
     
     // if condition exists (greater, lesser, within range) return all rows that fit the condition. otherwise, return 
     // add bool as condition and...???
@@ -242,11 +293,15 @@ export default function MongoDB(props: any) {
         const data = await retrieve_all(test_table)
         console.log("data retrieved")
         console.log(data)
-        // props.setRetrievedData(data)
-        // props.setRetrieve(false)
         return data
     }
 
+
+    function get_date(){
+        const date = new Date()
+        date.setTime(date.getTime())
+        return date.toUTCString()
+    }
 
     async function retrieve_all(table: any){
         var retrieved = null
@@ -286,7 +341,6 @@ export default function MongoDB(props: any) {
 
     return(
         null
-        // <Cognito handleInsertUser={handle_insert} UserInserted={UserInserted} setUserInserted={setUserInserted} setSignupSuccess={props.setSignupSuccess} Username={props.Username} Name={props.Name} Email={props.Email} Password={props.Password} setCheckConfirm={props.setCheckConfirm} CheckConfirm={props.CheckConfirm} ConfirmCode={props.ConfirmCode} setLoggedIn={props.setLoggedIn} setConfirmSuccess={props.setConfirmSuccess}/> 
     )
 }
 

@@ -30,7 +30,7 @@ export default function Google(props: any) {
         props.setTable("users")
         props.setStartLogin(true)
         props.setTriggerLogin(false)
-        props.setTriggerInsert(true)
+        // props.setTriggerInsert(true)
         props.setLoginTimer(5)
     }
 

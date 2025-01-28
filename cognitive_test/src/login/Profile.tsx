@@ -83,8 +83,8 @@ export default function Profile(this: any, props: any) {
 
   useEffect(() => {
     if (props.RetrievedData && !FoundData) {
-      console.log("checking retrieved data")
-      console.log(props.RetrievedData)
+      // console.log("checking retrieved data")
+      // console.log(props.RetrievedData)
       for (let i = 0; i < 9; i++) {
         get_test_data(i);
       }
@@ -104,10 +104,10 @@ export default function Profile(this: any, props: any) {
       for (let i = 0; i < props.RetrievedData.length; i++) {
         if(props.Username == props.RetrievedData[i]["user_id"] && props.RetrievedData[i]["test_name"] == tests_string[j] && !taken_list.includes(props.RetrievedData[i]["test_name"])){
           taken_list.push(props.RetrievedData[i]["test_name"])
-          console.log()
-          console.log("taken list")
-          console.log(taken_list)
-          console.log()
+          // console.log()
+          // console.log("taken list")
+          // console.log(taken_list)
+          // console.log()
         }
       }
     }
@@ -295,10 +295,10 @@ export default function Profile(this: any, props: any) {
   function check_data(test: any){
     let taken = 0
     for(let i=0; i<props.RetrievedData.length; i++){
-      console.log("Compare " + props.Username + " to " + props.RetrievedData[i]["user_id"])
-      console.log("Compare " + test+ " to " + props.RetrievedData[i]["test_name"])
+      // console.log("Compare " + props.Username + " to " + props.RetrievedData[i]["user_id"])
+      // console.log("Compare " + test+ " to " + props.RetrievedData[i]["test_name"])
       if(props.Username == props.RetrievedData[i]["user_id"] && test == props.RetrievedData[i]["test_name"]){
-        console.log("taken")
+        // console.log("taken")
         // console.log(TestsTaken)
         // let taken = TestsTaken
         // setTestsTaken(taken + 1)
@@ -318,7 +318,7 @@ export default function Profile(this: any, props: any) {
     let data: any = null;
     let test_data: any = TestData;
     let found = false;
-    console.log(props.Username)
+    // console.log(props.Username)
     if(!check_data(test)){
       console.log("User has not attempted any tests.")
       return data
@@ -334,9 +334,9 @@ export default function Profile(this: any, props: any) {
         attention["score"] < props.RetrievedData[i]["attention"]["score"]
           ? (attention["score"] = props.RetrievedData[i]["attention"]["score"])
           : null;
-        console.log(test);
-        console.log("attention");
-        console.log(attention);
+        // console.log(test);
+        // console.log("attention");
+        // console.log(attention);
 
         (props.RetrievedData[i]["decisiveness"] && !decisiveness["score"]) ||
         decisiveness["score"] <
@@ -350,8 +350,8 @@ export default function Profile(this: any, props: any) {
           ? (decisiveness["score"] =
               props.RetrievedData[i]["decisiveness"]["percentage"])
           : null;
-        console.log("decisiveness");
-        console.log(decisiveness);
+        // console.log("decisiveness");
+        // console.log(decisiveness);
 
         (props.RetrievedData[i]["reaction"] && !reaction["score"]) ||
         reaction["score"] < props.RetrievedData[i]["reaction"]["score"]
@@ -361,8 +361,8 @@ export default function Profile(this: any, props: any) {
         reaction["score"] < props.RetrievedData[i]["reaction"]["score"]
           ? (reaction["score"] = props.RetrievedData[i]["reaction"]["score"])
           : null;
-        console.log("reaction");
-        console.log(reaction);
+        // console.log("reaction");
+        // console.log(reaction);
         found = true;
       }
     }

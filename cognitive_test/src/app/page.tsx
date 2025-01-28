@@ -127,6 +127,7 @@ export default function Home() {
   // A boolean state variable that stores the current login cookies.
   // Used locally in: 'check_cookies' function.
   const [Cookies, setCookies] = React.useState(null);
+  const [ClearToken, setClearToken] = React.useState(false);
 
   // A boolean state variable that triggers the logout timer, and 'cookie_handler' function to remove cookies from the browser.
   // Used locally in: 'login_handler' function.
@@ -297,11 +298,18 @@ export default function Home() {
 
     console.log("cookie array")
     console.log(cookie_arr)
+
+    let expired = null
+    
+    cookie_arr[0] ? setUsername(cookie_arr[0]) : null
+    cookie_arr[1] ? expired = is_cookie_expired(cookie_arr[1]) : null
+
     try{
-      if (cookie_arr[0][1] && cookie_arr[1][1]) {
+      if (cookie_arr[0][1] && cookie_arr[1][1] && !expired) {
         setStartLogin(true)
         setUsername(cookie_arr[0]);
         setCreated(cookie_arr[1]);
+        
         return true;
       }
     }catch{}
@@ -310,6 +318,24 @@ export default function Home() {
     return false;
   }
   
+
+  function is_cookie_expired(date: any){
+    const cookie = new Date(date)
+    cookie.setTime(cookie.getTime() + (24 * 60 * 60 * 1000 * 7))
+    const current_date = new Date()
+    current_date.setTime(current_date.getTime())
+    console.log("expire date")
+    console.log(cookie)
+    console.log("current date")
+    console.log(current_date)
+    if(cookie < current_date){
+        console.log("set new login cookies")
+        cookie_handler(false)
+        setClearToken(true)
+        return true
+    }
+    return false
+  }
 
   function cookie_handler(condition: any){
     console.log("cookie handler")
@@ -329,8 +355,8 @@ export default function Home() {
     }else{
       date.setTime(date.getTime() - (24 * 60 * 60 * 1000))
       var utc_prev = date.toUTCString()
-      //delete jwt
       console.log("clearing cookies")
+      setClearToken(true)
       document.cookie = "Username=; expires=" + utc_prev +  "path=/"
       document.cookie = "Created=; expires=" + utc_prev + "path=/"
     }
@@ -348,7 +374,6 @@ export default function Home() {
       setStart(false)
       setCookiesChecked(true)
       setCookies(null)
-      setUsername("");
       setPassword("");
       setLogoutTimer(5);
       setLogout(true);
@@ -632,7 +657,7 @@ export default function Home() {
 
       <Google setUsernameCheck={setUsernameCheck} setUsername={setUsername} TriggerLogin={TriggerLogin} setTriggerLogin={setTriggerLogin} setTable={setTable} Cookies={Cookies} setCookies={setCookies} CookiesChecked={CookiesChecked} Start={Start} setStart={setStart} setStartLogin={setStartLogin} setTriggerInsert={setTriggerInsert} LogoutTimer={LogoutTimer} Logout={Logout} setLoginTimer={setLoginTimer}/>
 
-      <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} setTestName={setTestName} Data={Data} Username={Username} setUsername={setUsername}  Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve}   setUsernameMatch={setUsernameMatch}  UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert} setHerb={setHerb} Herb={Herb} Cookies={Cookies} setCookies={setCookies} setCookiesChecked={setCookiesChecked} setLoginCheck={setLoginCheck} setStartLogin={setStartLogin} StartLogin={StartLogin}/>
+      <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} setTestName={setTestName} Data={Data} Username={Username} setUsername={setUsername}  Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve}   setUsernameMatch={setUsernameMatch}  UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert} setHerb={setHerb} Herb={Herb} Cookies={Cookies} setCookies={setCookies} setCookiesChecked={setCookiesChecked} setLoginCheck={setLoginCheck} setStartLogin={setStartLogin} StartLogin={StartLogin} ClearToken={ClearToken} setClearToken={setClearToken}/>
 
       {/* <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/>  */}
 
