@@ -96,7 +96,8 @@ export default function WordRecognition (props: any) {
 
     function reset_time(){
         var arr = TimeArray
-        arr.push(ResponseTime*.001) 
+        console.log(CompareArray)
+        TimeArray.length + CompareArray.length != list_length ? arr.push(ResponseTime*.001) : null
         console.log("time")
         console.log(arr)
         setTimeArray(arr)
