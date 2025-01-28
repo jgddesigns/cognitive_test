@@ -280,7 +280,8 @@ export default function Home() {
   function reset_handler(){
     setStateKey(StateKey + 1)
     setReset(false)
-    setShowSelector(false)
+    setShowTestInfo(false)
+    setShowSelector(true)
     setHerb(null)
   }
 

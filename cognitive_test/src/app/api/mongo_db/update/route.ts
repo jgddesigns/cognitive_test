@@ -22,28 +22,43 @@ export async function GET(request: Request){
 
     const url: any = new URL(request.url)
 
+    var data_columns = url.searchParams.get('data_columns')
+    data_columns = JSON.parse(data_columns)
+
     var data = url.searchParams.get('data')
     data = JSON.parse(data)
 
-    var column = url.searchParams.get('column')
-    column = JSON.parse(column)
+    var filter_columns = url.searchParams.get('filter_columns')
+    filter_columns = JSON.parse(filter_columns)
 
     var filter =  url.searchParams.get('filter')
     filter = JSON.parse(filter)
 
-    filter = {
-      username: filter
-    }
+    // filter_update = {
+    //   username: filter
+    // }
+
+    const filter_update = 
+      filter_columns.reduce((acc: any, key: any, index: any) => {
+        acc[key] = filter[index];
+        return acc;
+    }, {})
+    
+
+    // const update_data = {
+    //     $set: { 
+    //       login_token: data[0], 
+    //       login_date: data[1]
+    //     }, 
+    // }
 
 
-    const update = {
-        $set: { 
-          login_token: data[0], 
-          login_date: data[1]
-        }, 
-    }
-
-
+    const data_update = {
+      $set: data_columns.reduce((acc: any, key: any, index: any) => {
+        acc[key] = data[index];
+        return acc;
+      }, {}),
+    };
 
 
 
@@ -54,10 +69,10 @@ export async function GET(request: Request){
 
 
     console.log("Data to update:")
-    console.log(update)
+    console.log(data_update)
     console.log("Column Condition:")
-    console.log(filter)
-    const result = await collection.updateMany(filter, update)
+    console.log(filter_update)
+    const result = await collection.updateMany(filter_update, data_update)
 
     console.log(`Updated data: ${result}`)
     return new Response(JSON.stringify({ message: 'MongoDB update success! Data: ' + JSON.stringify(result)}), {

@@ -162,6 +162,7 @@ export default function MemoryScanning (props: any) {
                     }
                     if(CompareDigits == -1){
                         setCompareString("")
+
                         setCompareNumbers(true)
                         setCompareMessage(false)
                         setCompareDigits(36)
@@ -184,15 +185,14 @@ export default function MemoryScanning (props: any) {
                         setCompareList(compare_arr)
                     }else{
                         setShowButtons(false)
-                        console.log(CompareString)
-                        console.log(Answered)
+                        setCompareString("")
+
                         if(!Answered){
                             setShowCirclesRed(true)
                             temp_arr.push(0)
                             setAnswers(temp_arr)
                             TimeArray.length < total_digits ? reset_time(true) : null
                         }
-                        check_answer(CompareString)
                     }
 
                     if(CompareDigits == -1){
@@ -317,19 +317,18 @@ export default function MemoryScanning (props: any) {
         setCompareString("")
 
         var temp_arr: any = StaticList
-        var temp_arr: any = Answers
+        var temp_arr2: any = Answers
         if (answer && temp_arr.includes(CompareString) || (!answer && !temp_arr.includes(CompareString))){
             setAnswerCount(AnswerCount + 1)
             setAnsweredStyle(answered_style[1])
             setShowCirclesGreen(true)
-            temp_arr.push(1) 
+            temp_arr2.push(1) 
         }else{
             setShowCirclesRed(true)
-            temp_arr.push(0)
+            temp_arr2.push(0)
         } 
-        console.log("answers")
-        console.log(temp_arr)
-        setAnswers(temp_arr)
+
+        setAnswers(temp_arr2)
         setResponseTime(0)
         TimeArray.length < total_digits ? reset_time() : null
     }
@@ -339,7 +338,6 @@ export default function MemoryScanning (props: any) {
     // @param: N/A
     // @return: N/A
     function start_handler(){
-        console.log(analysis["attention"](interval, [[1,1,1], [1,1,1], [1,1,1], [1,1,1], [1,0,0], [0,0,0]], time, proficiency))
         create_list()
         setDigits(4)
         setTestStart(true)
@@ -356,15 +354,15 @@ export default function MemoryScanning (props: any) {
     }
 
 
-    function check_answer(compare: any){
-        console.log("\n\ncompare string")
-        console.log(compare)
-        var temp_arr: any = StaticList
-
-        compare == "" ? setAnswer("") : temp_arr.includes(compare) ? setAnswer(answers[0]) : !temp_arr.includes(compare)
-        compare == "" ? setAnsweredString("") : null
-        setCompareString("")
-    }
+    // function check_answer(compare: any){
+    //     console.log("\n\ncompare string")
+    //     console.log(compare)
+    //     var temp_arr: any = StaticList
+    //     console.log(temp_arr)
+    //     compare == "" ? setAnswer("") : temp_arr.includes(compare) ? setAnswer(answers[0]) : setAnswer(answers[1])
+    //     compare == "" ? setAnsweredString("") : null
+    //     setCompareString("")
+    // }
 
 
     // Resets the test based on its state within /src/app/page.tsx'

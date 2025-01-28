@@ -30,9 +30,6 @@ export default function MongoDB(props: any) {
         props.UsernameCheck && !props.UsernameVerified ? username_check() : null
     }, [props.UsernameCheck, props.UsernameVerified])
 
-    // useEffect(() => {   
-    //     props.UsernameVerified ? handle_insert() : null 
-    // }, [props.UsernameVerified])
 
     useEffect(() => {
         if(props.TriggerInsert){
@@ -60,7 +57,7 @@ export default function MongoDB(props: any) {
     //clear token after logout or login cookie expire (when 'Username' and 'Created' cookies are empty or null)
     useEffect(() => {
         if(props.ClearToken){
-            update(["", ""], "username", props.Username, user_table)
+            update(["login_token", "login_date"], ["", ""], ["username"], [props.Username], user_table)
             props.setUsername("")
         }
     }, [props.ClearToken])
@@ -93,8 +90,8 @@ export default function MongoDB(props: any) {
                     console.log("token length")
                     console.log(data[0]["login_token"].length)
                     console.log(props.Username)
-                    data[0]["login_token"].length < 1 ? update([props.Cookies, get_date()], "username", props.Username, user_table) : null
-                    is_cookie_expired(data[0]["login_date"]) ? update([data[0]["login_token"], get_date()], "username", props.Username, user_table) : null
+                    data[0]["login_token"].length < 1 ? update(["login_token", "login_date"], [props.Cookies, get_timestamp()], ["username"], [props.Username], user_table) : null
+                    is_cookie_expired(data[0]["login_date"]) ? update(["login_token", "login_date"], [data[0]["login_token"], get_timestamp()], ["username"], [props.Username], user_table) : null
                     console.log("jwt token found. commencing login...")
                     props.setCookies(data[0]["login_token"])
                     props.setLoginCheck(true)
@@ -163,6 +160,67 @@ export default function MongoDB(props: any) {
         name ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
     }
 
+    async function update_user_data(){
+        var fetched_data: any = null
+        const promise = new Promise((resolve, reject) => {
+
+
+            var old_data = retrieve_specific("username", user_table, props.Username, [null])
+
+
+
+
+            resolve(old_data)
+
+        }).then(result => {
+            let tests = []
+            let variables = []
+            let columns = []
+            let data = []
+            console.log(result)
+            fetched_data = result
+            fetched_data = fetched_data[0]
+            console.log(fetched_data)
+            for(let i=0; i<fetched_data["tests_completed"].length; i++){
+                tests.push(fetched_data["tests_completed"][i])
+            }
+
+            console.log("tests completed")
+            console.log(tests)
+            console.log(props.TestName)
+            console.log(!tests.includes(props.TestName))
+            !tests.includes(props.TestName) ? tests.push(props.TestName) : null
+            for(let i=0; i<fetched_data["variables_used"].length; i++){
+                variables.push(fetched_data["variables_used"][i])
+            }
+            console.log("variables used")
+            console.log(variables)
+            !variables.includes(props.Herb) ? variables.push(props.Herb) : null
+
+
+            console.log("data")
+            console.log(tests)
+
+            console.log(variables)
+
+            if(tests != fetched_data["tests_completed"]){
+                columns.push("tests_completed")
+                data.push(tests)
+            }
+
+            if(variables != fetched_data["variables_used"]){
+                columns.push("variables_used")
+                data.push(variables)
+            }
+
+            console.log("to update")
+            console.log(columns)
+            console.log(data)
+            
+            columns.length > 0 ? update(columns, data, ["username"], [props.Username], user_table) : console.log("no test data to update")
+        })
+    }
+
     //check if username already exists in db
     async function handle_insert(){
         console.log("starting insert to: " + props.Table)
@@ -181,6 +239,7 @@ export default function MongoDB(props: any) {
                 reaction: props.Data[2],
                 timestamp: get_timestamp()
             } 
+            update_user_data()
         }catch{
             test_results = null
         }
@@ -192,11 +251,11 @@ export default function MongoDB(props: any) {
                 // name: props.Name,
                 // tests_completed: await retrieve_all(test_table),
                 // if new user, there wont be any tests taken. add updates after tests are taken.
-                tests_completed: null,
+                tests_completed: [],
                 total_test_time: '0',
-                variables_used:  null,
-                mind_type: null,
-                login_date: get_date(),
+                variables_used:  [],
+                mind_type: "",
+                login_date: get_timestamp(),
                 login_token: props.Cookies,
                 timestamp: get_timestamp()
             }
@@ -223,10 +282,19 @@ export default function MongoDB(props: any) {
         response.status === 200 ? setInsertSuccess(true) : setInsertSuccess(false)
     }
 
-    async function update(data: any, column: any, filter: any, table: any){
+    // async function update(data: any, column: any, filter: any, table: any){
+    //     var retrieved = null
+    //     console.log("Updating MongoDB table " + table + "...")
+    //     const response = await fetch('../api/mongo_db/update?data=' + JSON.stringify(data) + "&column=" +  JSON.stringify(column) +  "&filter=" +  JSON.stringify(filter) + "&table=" + table, { method: 'GET' })
+    //     const retrieve = await response.json().then((data) => retrieved = data)
+    //     props.setClearToken(false)
+    //     return retrieved
+    // }
+
+    async function update(data_columns: any, data: any, filter_columns: any, filter: any, table: any){
         var retrieved = null
         console.log("Updating MongoDB table " + table + "...")
-        const response = await fetch('../api/mongo_db/update?data=' + JSON.stringify(data) + "&column=" +  JSON.stringify(column) +  "&filter=" +  JSON.stringify(filter) + "&table=" + table, { method: 'GET' })
+        const response = await fetch('../api/mongo_db/update?data_columns=' + JSON.stringify(data_columns) + "&data=" +  JSON.stringify(data) + "&filter_columns=" +  JSON.stringify(filter_columns) +  "&filter=" +  JSON.stringify(filter) + "&table=" + table, { method: 'GET' })
         const retrieve = await response.json().then((data) => retrieved = data)
         props.setClearToken(false)
         return retrieved
@@ -298,8 +366,8 @@ export default function MongoDB(props: any) {
 
 
     function get_date(){
-        const date = new Date()
-        date.setTime(date.getTime())
+        const date = new Date(Date.now())
+        // date.setTime(date.getTime())
         return date.toUTCString()
     }
 
