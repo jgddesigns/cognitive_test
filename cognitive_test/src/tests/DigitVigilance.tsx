@@ -393,7 +393,7 @@ export default function DigitVigilance(props: any) {
                     {PossibleFound} possible numbers out of {Numbers.length * Numbers[0].length} total digits.
                 </span>
                 <div className="w-[100%]">
-                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData}/>
+                    {/* <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData}/> */}
                 </div>
                 <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                     Reset

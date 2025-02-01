@@ -457,7 +457,7 @@ export default function MemoryScanning (props: any) {
                     {AnswerCount} answers correct out of {total_digits}. ({calculate_ratio()}%)
                 </span>
                 <div className="w-[100%]">
-                    <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} />
+                    {/* <ShowAnalysis AttentionData={AttentionData} DecisionData={DecisionData} ReactionData={ReactionData} /> */}
                 </div>
                 <Button className="mt-24 bg-yellow-400 rounded px-10 h-12 text-red-600" onClick={reset_all}>
                      Reset

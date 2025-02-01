@@ -26,16 +26,19 @@ export default function MongoDB(props: any) {
     }, [InsertSuccess, RetrieveOneSuccess, RetrieveAllSuccess])
 
     // insert for user signup
-    useEffect(() => {
-        props.UsernameCheck && !props.UsernameVerified ? username_check() : null
-    }, [props.UsernameCheck, props.UsernameVerified])
+    // useEffect(() => {
+    //     props.UsernameCheck && !props.UsernameVerified ? username_check() : null
+    // }, [props.UsernameCheck, props.UsernameVerified])
 
 
     useEffect(() => {
         if(props.TriggerInsert){
             const promise = new Promise((resolve, reject) => {
-                resolve(handle_insert())
+                resolve(username_check())
             }).then(result => {
+                console.log(result)
+                !result ? handle_insert() : null
+                // resolve()
                 props.setStartLogin(true)
             })
 
@@ -57,79 +60,32 @@ export default function MongoDB(props: any) {
     //clear token after logout or login cookie expire (when 'Username' and 'Created' cookies are empty or null)
     useEffect(() => {
         if(props.ClearToken){
-            update(["login_token", "login_date"], ["", ""], ["username"], [props.Username], user_table)
-            props.setUsername("")
+            update(["login_token", "login_date"], ["", ""], ["username"], [props.EventID], user_table)
+            props.setEventID("")
         }
     }, [props.ClearToken])
     
 
     async function check_cookies(){
         console.log("checking cookies")
-        console.log(props.Username)
+        console.log(props.EventID)
 
         var data: any = null
 
         //check the 'users' table for existing user data.
         const promise = new Promise((resolve, reject) => {
 
-            if(props.Username.length > 0){
-                data = retrieve_specific("username", user_table, props.Username, [null])
+            // if(props.Username.length > 0){
+            //     data = retrieve_specific("username", user_table, props.Username, [null])
+            if(props.EventID.length > 0){
+                data = retrieve_specific("username", user_table, props.EventID, [null])
 
                 resolve(data)
             }else{
                 resolve(null)
             }
 
-        //after checking for existing data, initiate the neccesary triggers. if no data exists (resolve is null), create a new row in the db for the user.
-        }).then(result => {
 
-            //when a user is found.
-            try{
-                data = result
-                if(data[0]["login_token"] != null){
-                    console.log("token length")
-                    console.log(data[0]["login_token"].length)
-                    console.log(props.Username)
-                    data[0]["login_token"].length < 1 ? update(["login_token", "login_date"], [props.Cookies, get_timestamp()], ["username"], [props.Username], user_table) : null
-                    is_cookie_expired(data[0]["login_date"]) ? update(["login_token", "login_date"], [data[0]["login_token"], get_timestamp()], ["username"], [props.Username], user_table) : null
-                    console.log("jwt token found. commencing login...")
-                    props.setCookies(data[0]["login_token"])
-                    props.setLoginCheck(true)
-
-                    return true
-                }else{
-                    console.log("no valid jwt token found. adding new user to database...")
-                    props.setTriggerInsert(true)
-                }
-            
-            //when there is no existing user (resolve is null)
-            }catch{
-                console.log("no valid jwt token found. adding new user to database...")
-                props.setTriggerInsert(true)
-
-                return true
-                
-            }
-            props.setCookiesChecked(true)
-
-        //if a user exists in the 'users' table, retrieve the associated data 
-        }).then(result => {
-
-            if(!props.TriggerInsert){
-                const promise = new Promise((resolve, reject) => {
-                    let data = retrieve_handler()
-                    resolve(data)
-                    
-                }).then(result => {
-                    let data: any = result
-                    console.log("retrieve handler")
-                    if(data[0]){
-                        props.setRetrievedData(data) 
-                        props.setRetrieve(false)
-                        props.setUsernameCheck(true)
-                    } 
-                })
-            }
         })
     }
 
@@ -152,12 +108,16 @@ export default function MongoDB(props: any) {
 
 
     async function username_check(){
-        props.setUsernameCheck(false)
-        props.setUsernameVerified(false)
-        console.log("username check: " + props.Username)
-        let name: any = await retrieve_specific("username", user_table, props.Username, null)
+        // props.setUsernameCheck(false)
+        // props.setUsernameVerified(false)
+        console.log("username check: " + props.EventID)
+        let name: any = await retrieve_specific("username", user_table, props.EventID, null)
         console.log(name)
-        name ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
+        if(name){
+            return true
+        }
+        return false
+        // name ? props.setUsernameMatch(true) : props.setUsernameVerified(true)
     }
 
     async function update_user_data(){
@@ -165,7 +125,8 @@ export default function MongoDB(props: any) {
         const promise = new Promise((resolve, reject) => {
 
 
-            var old_data = retrieve_specific("username", user_table, props.Username, [null])
+            // var old_data = retrieve_specific("username", user_table, props.Username, [null])\
+            var old_data = retrieve_specific("username", user_table, props.EventID, [null])
 
 
 
@@ -173,6 +134,7 @@ export default function MongoDB(props: any) {
             resolve(old_data)
 
         }).then(result => {
+            if(result){
             let tests = []
             let variables = []
             let columns = []
@@ -217,7 +179,9 @@ export default function MongoDB(props: any) {
             console.log(columns)
             console.log(data)
             
-            columns.length > 0 ? update(columns, data, ["username"], [props.Username], user_table) : console.log("no test data to update")
+            // columns.length > 0 ? update(columns, data, ["username"], [props.Username], user_table) : console.log("no test data to update")
+            columns.length > 0 ? update(columns, data, ["username"], [props.EventID], user_table) : console.log("no test data to update")
+        }
         })
     }
 
@@ -230,8 +194,9 @@ export default function MongoDB(props: any) {
         var user_data = null
         try{
             test_results = {
-                user_id: props.Username,  
-                attempt_num: await increment_attempt(props.Table, props.TestName),
+                // user_id: props.Username,  
+                username: props.EventID, 
+                attempt_num: await increment_attempt(test_table, props.TestName),
                 test_name: props.TestName,
                 herb: props.Herb,
                 attention: props.Data[0],
@@ -239,14 +204,16 @@ export default function MongoDB(props: any) {
                 reaction: props.Data[2],
                 timestamp: get_timestamp()
             } 
-            update_user_data()
+            const check = await username_check()
+            check ? update_user_data() : null
         }catch{
             test_results = null
         }
         try{
             user_data = {
                 profile_data: null, 
-                username: props.Username,
+                username: props.EventID,
+                // username: props.Username,
                 // email_address: props.Email,
                 // name: props.Name,
                 // tests_completed: await retrieve_all(test_table),
@@ -256,7 +223,7 @@ export default function MongoDB(props: any) {
                 variables_used:  [],
                 mind_type: "",
                 login_date: get_timestamp(),
-                login_token: props.Cookies,
+                // login_token: props.Cookies,
                 timestamp: get_timestamp()
             }
         }catch{
@@ -313,7 +280,7 @@ export default function MongoDB(props: any) {
         let data_arr: any = []
 
         for(let i=0; i<rows.length; i++){
-            check_condition(condition, value) ? data_arr.push(rows[i]) : isNaN(value) && value === rows[i][column] ? data_arr.push(rows[i]) : null
+            check_condition(condition, value) ? data_arr.push(rows[i]) : value && value === rows[i][column] ? data_arr.push(rows[i]) : null
         }
 
         if(data_arr.length < 1){
@@ -397,7 +364,7 @@ export default function MongoDB(props: any) {
         let rows: any = await retrieve_all(table)
         let greatest = 0
         for (let i=0; i<rows.length; i++){
-            rows[i]["test_name"] === test_name ? greatest = rows[i]["attempt_num"] : null
+            rows[i]["username"] == props.EventID && rows[i]["test_name"] === test_name ? greatest = rows[i]["attempt_num"] : null
         }
         console.log(greatest + 1)
         return greatest + 1

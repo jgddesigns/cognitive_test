@@ -16,16 +16,19 @@ export default function MainPage(props: any) {
         document.body.appendChild(script2);
       }, []);
 
+
+
       
     return(
-        <div className="h-full">
+        <div className="h-full grid place-items-center">
             <meta name="google-signin-client_id" content={google_credentials["CLIENT_ID"]}></meta>
-            <div className="row grid place-items-center ">
+            <div className="">
                 WELCOME TO THE FLOURISH SCIENCE COGNITIVE TEST
             </div>
-            <div className="row mt-12 text-sky-400">
+            <div className="row mt-12 text-sky-400 ml-4">
                 This application includes a series of assessments that measure the mental prowess of a given subject. A baseline is first established by conducting the tests under normal circumstances. Afterward, tests are conducted after various variables are introduced. Examples include following the ingestion of certain herbal supplements, or after experiencing a period of time in nature.
             </div>  
+
         </div>
     )
 }

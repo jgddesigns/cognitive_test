@@ -41,33 +41,33 @@ export default function Tests(props: any) {
                 props.setTestID(test)
                 break
 
-            //MOTOR FUNCTION
-            case 4:
-                props.setPopoverMessage(descriptions["motor_function"])
-                props.setTestTitle("MOTOR FUNCTION")
-                props.setTestID(test)
-                break
+            // //MOTOR FUNCTION
+            // case 4:
+            //     props.setPopoverMessage(descriptions["motor_function"])
+            //     props.setTestTitle("MOTOR FUNCTION")
+            //     props.setTestID(test)
+            //     break
 
-            //NUMBER VIGILANCE
-            case 5:
-                props.setPopoverMessage(descriptions["number_vigilance"])
-                props.setTestTitle("NUMBER VIGILANCE")
-                props.setTestID(test)
-                break
+            // //NUMBER VIGILANCE
+            // case 5:
+            //     props.setPopoverMessage(descriptions["number_vigilance"])
+            //     props.setTestTitle("NUMBER VIGILANCE")
+            //     props.setTestID(test)
+            //     break
 
-            //PICTURE RECOGNITION
-            case 6:
-                props.setPopoverMessage(descriptions["picture_recognition"])
-                props.setTestTitle("PICTURE RECOGNITION")
-                props.setTestID(test)
-                break
+            // //PICTURE RECOGNITION
+            // case 6:
+            //     props.setPopoverMessage(descriptions["picture_recognition"])
+            //     props.setTestTitle("PICTURE RECOGNITION")
+            //     props.setTestID(test)
+            //     break
 
-            //REACTION TIME
-            case 7:
-                props.setPopoverMessage(descriptions["reaction_time"])
-                props.setTestTitle("REACTION TIME")
-                props.setTestID(test)
-                break
+            // //REACTION TIME
+            // case 7:
+            //     props.setPopoverMessage(descriptions["reaction_time"])
+            //     props.setTestTitle("REACTION TIME")
+            //     props.setTestID(test)
+            //     break
 
 
             //WORD RECOGNITION
@@ -77,12 +77,12 @@ export default function Tests(props: any) {
                 props.setTestID(test)
                 break
 
-            //WORKING MEMORY
-            case 9:
-                props.setPopoverMessage(descriptions["working_memory"])
-                props.setTestTitle("SPATIAL WORKING MEMORY")
-                props.setTestID(test)
-                break
+            // //WORKING MEMORY
+            // case 9:
+            //     props.setPopoverMessage(descriptions["working_memory"])
+            //     props.setTestTitle("SPATIAL WORKING MEMORY")
+            //     props.setTestID(test)
+            //     break
 
         }
 
@@ -101,7 +101,7 @@ export default function Tests(props: any) {
                 <div className="row mt-12 text-sky-400">
                     A list of the various cognitive tests. Click the test name to show its description. Click the &apos;Start Test&apos; button below a given test name to start the test. 
                 </div>
-                <div className="grid grid-auto-rows place-items-center auto-rows mt-24">
+                <div className="grid grid-auto-rows place-items-center auto-rows mt-24 gap-12">
                     <div>
                         <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(1)}>
                             Choice Reaction Time
@@ -117,7 +117,7 @@ export default function Tests(props: any) {
                             Memory Scanning
                         </div>
                     </div>
-                    <div>
+                    {/* <div>
                         <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(4)}>
                             Motor Function
                         </div>
@@ -136,17 +136,17 @@ export default function Tests(props: any) {
                         <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(7)}>
                             Reaction Time
                         </div>
-                    </div>
+                    </div> */}
                     <div>
                         <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(8)}>
                             Word Recognition
                         </div>
                     </div>
-                    <div>
+                    {/* <div>
                         <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(9)}>
                             Spatial Working Memory
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         : null} 

@@ -23,7 +23,7 @@ const config: Config = {
   variants: {
     extend: {
       backgroundColor: ['disabled'],
-      borderColor: ['disabled'],
+      // borderColor: ['disabled'],
       textColor: ['disabled'],
       cursor: ['disabled'],
     },
