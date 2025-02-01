@@ -392,11 +392,11 @@ export default function ChoiceReaction (props: any) {
                         </div>
                     </div>    
                 : 
-                    <div className="mt-[200px] grid grid-rows-2">
+                    <div className="mt-[200px] grid grid-rows-2 place-items-center">
                         <span className="invisible">
                             {CurrentPrompt}
                         </span>
-                        <div className="mt-12 grid grid-cols-2">
+                        <div className="mt-12 grid grid-cols-2 gap-12 w-[400px]">
                             <Button className="bg-green-400 rounded px-10 h-12 text-white invisible" onClick={yes_handler}>
                                 Yes
                             </Button>
@@ -428,10 +428,13 @@ export default function ChoiceReaction (props: any) {
             <div className="grid place-items-center">
                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={Position} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
             </div>
-                <div className="mt-24 grid place-items-end">
+                <div className="mt-24 grid grid-rows-2 place-items-end gap-4">
                     <Button className="bg-yellow-400 rounded px-10 h-[34px] text-white text-2xl" onClick={reset_all}>
                         Reset
                     </Button>
+                    <div className="grid mr-[4%]">
+                        <span className="text-blue-600 underline cursor-pointer text-xl" onClick={e => null}>Go Back</span>
+                    </div>
                 </div>
             </div>
         : null}

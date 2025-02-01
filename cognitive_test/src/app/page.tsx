@@ -524,12 +524,12 @@ export default function Home() {
       <div className="z-1 max-w-screen-lg w-full font-mono text-4xl grid grid-auto-rows place-items-center px-4 md:px-8">
 
           {EventLogin ? 
-              <div className="w-full text-lg text-black grid place-items-end">
+              <div className="w-full text-2xl text-black grid place-items-end">
                 <div>
                   Current ID: {EventID}
                 </div>
                 <div
-                  className="grid place-items-end text-sm text-blue-600 underline cursor-pointer"
+                  className="grid place-items-end text-lg text-blue-600 underline cursor-pointer"
                   onClick={(e) => toggle_login(false)}
                 >
                   Log Out

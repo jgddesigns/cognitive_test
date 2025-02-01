@@ -139,7 +139,7 @@ export default function WordRecognition (props: any) {
                         setAnsweredStyle(answered_style[0])
                         setShowButtons(true)
                         temp_arr = StaticArray
-                        temp_arr.includes(current_word(0)) ? setAnswer("Answer was: Yes, the word is in original set.") : setAnswer("Answer was: No, the word isn't in original set.")
+                        temp_arr.includes(current_word(0)) ? setAnswer("Answer was: \n\nYes, the word is in original set.") : setAnswer("Answer was: \n\nNo, the word isn't in original set.")
                     }else{
                         check_answer(CurrentWord)
                         setShowButtons(false)
@@ -301,7 +301,7 @@ export default function WordRecognition (props: any) {
         var temp_arr: any = StaticArray
         var time_arr: any = TimeArray
 
-        temp_arr.includes(compare) ? setAnswer("Answer was: Yes, the word is in original set.") : setAnswer("Answer was: No, the word isn't in original set.")         
+        temp_arr.includes(compare) ? setAnswer("Answer was: \nYes, the word is in original set.") : setAnswer("Answer was: \nNo, the word isn't in original set.")         
 
         if(!Answered){
             setShowCirclesRed(true)
@@ -396,15 +396,13 @@ export default function WordRecognition (props: any) {
                             </div>
                         :
                             <div>
-                                <div className="grid-cols-2 gap-x-[100px] place-items-center">
-                                    <span className={AnsweredStyle}>
+                                <div className="grid-rows-2 gap-x-[100px] place-items-center w-[800px] mt-[-5%] mb-[5%]">
+                                    <div className={AnsweredStyle}>
                                         {AnsweredString}
-                                    </span>
-                                    <span className="ml-48">
+                                    </div>
+                                    <div style={{ whiteSpace: "pre-line" }}className="mt-[2%]">
                                         {Answer}
-                                    </span>
-                                </div> 
-                                <div className="h-24">
+                                    </div>
                                 </div> 
                             </div>
                         }
