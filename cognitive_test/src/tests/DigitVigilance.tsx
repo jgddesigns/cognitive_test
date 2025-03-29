@@ -386,7 +386,7 @@ export default function DigitVigilance(props: any) {
                     </div>
                 : 
                     <div className="mt-12">
-                        <span>You didn't try to complete the test!</span>  
+                        <span>You didn@apos;t try to complete the test!</span>  
                     </div>
                 }
                 <span className="mt-12">
