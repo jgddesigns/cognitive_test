@@ -44,9 +44,9 @@ Typescript
 <br>
 Tailwind
 <br>
-AWS Dynamo DB -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Slack for further instructions.</i>
+AWS Dynamo DB -- <i>Needs AWS Keys.</i>
 <br>
-AWS Cognito -- <i>Needs AWS Keys. Contact @Jay Dunn on CrowdDoing Slack for further instructions.</i>
+AWS Cognito -- <i>Needs AWS Keys.</i>
 <br>
 Node.js & npm
 <br>
