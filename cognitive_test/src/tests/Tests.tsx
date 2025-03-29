@@ -96,7 +96,7 @@ export default function Tests(props: any) {
         {!props.ShowProfile ? 
             <div>
                 <div className="row grid place-items-center">
-                    FLOURISH SCIENCE COGNITIVE TESTS
+                    COGNITIVE TESTS
                 </div>
                 <div className="row mt-12 text-sky-400">
                     A list of the various cognitive tests. Click the test name to show its description. Click the &apos;Start Test&apos; button below a given test name to start the test. 
