@@ -324,6 +324,8 @@ export default function Profile(this: any, props: any) {
       return data
     }
     for (let i = 0; i < props.RetrievedData.length; i++) {
+      console.log("test data " + i)
+      console.log(props.RetrievedData[i])
       if (props.RetrievedData[i]["test_name"] == test) {
         (props.RetrievedData[i]["attention"] && !attention["score"]) ||
         attention["score"] < props.RetrievedData[i]["attention"]["score"]
