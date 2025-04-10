@@ -34,9 +34,9 @@ export default function MongoDB(props: any) {
     useEffect(() => {
         if(props.TriggerInsert){
             const promise = new Promise((resolve, reject) => {
-                resolve(handle_insert())
+                // resolve(handle_insert())
             }).then(result => {
-                props.setStartLogin(true)
+                // props.setStartLogin(true)
             })
 
         } 
@@ -45,12 +45,12 @@ export default function MongoDB(props: any) {
     }, [props.TriggerInsert])
     
     useEffect(() => {
-        props.StartLogin ? check_cookies() : null
+        // props.StartLogin ? check_cookies() : null
     }, [props.StartLogin])
 
     //insert for test results table
     useEffect(() => {
-        props.Table && props.TestName ? handle_insert() : null
+        // props.Table && props.TestName ? handle_insert() : null
     }, [props.Table])
 
 

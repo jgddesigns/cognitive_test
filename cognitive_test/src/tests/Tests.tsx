@@ -95,13 +95,10 @@ export default function Tests(props: any) {
     <div>
         {!props.ShowProfile ? 
             <div>
-                <div className="row grid place-items-center">
-                    FLOURISH SCIENCE COGNITIVE TESTS
-                </div>
-                <div className="row mt-12 text-sky-400">
+                <div className="row mt-12 text-sky-400 text-2xl">
                     A list of the various cognitive tests. Click the test name to show its description. Click the &apos;Start Test&apos; button below a given test name to start the test. 
                 </div>
-                <div className="grid grid-auto-rows place-items-center auto-rows mt-24">
+                <div className="grid grid-auto-rows place-items-center auto-rows mt-24 text-xl">
                     <div>
                         <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(1)}>
                             Choice Reaction Time

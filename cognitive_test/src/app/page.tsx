@@ -77,13 +77,13 @@ export default function Home() {
     setShowSignup,
     setTriggerLogin,
     // setShowLogin,
-    setShowProfile,
+    // setShowProfile,
   ];
 
   // A boolean variable that is set to true when a user is logged in. Only true when a correct username and password are compared to values stored in the app's associated Cognito user pool. Stored in local cookies.
   // Used locally in: 'toggle_login' function.
   // Passed to: 'src/login/Signup', 'src/login/Login' components.
-  const [LoggedIn, setLoggedIn] = React.useState(false);
+  const [LoggedIn, setLoggedIn] = React.useState(true);
   const [LoginCheck, setLoginCheck] = React.useState(false)
   const [GoogleStart, setGoogleStart] = React.useState(false)
 
@@ -206,10 +206,10 @@ export default function Home() {
 
 
   // If a user is logged in, sends them to the profile page. Otherwise, the user is sent to the home page.
-  useEffect(() => {
-    LoggedIn ? link_handler(4) : link_handler(0);
-    LoggedIn && Start ? cookie_handler(true) : null
-  }, [LoggedIn, Start]);
+  // useEffect(() => {
+  //   LoggedIn ? link_handler(0) : link_handler(0);
+  //   LoggedIn && Start ? cookie_handler(true) : null
+  // }, [LoggedIn, Start]);
 
 
   // When the 'Reset' state variable is true, triggers the 'reset_handler' function.
@@ -218,22 +218,22 @@ export default function Home() {
   }, [Reset]);
 
 
-  useEffect(() => {
-    LoginTimer == 5 ? disable_links(true) : null;
-    LoginTimer == null ? disable_links(false) : null;
-  }, [LoginTimer]);
+  // useEffect(() => {
+  //   LoginTimer == 5 ? disable_links(true) : null;
+  //   LoginTimer == null ? disable_links(false) : null;
+  // }, [LoginTimer]);
 
 
-  useEffect(() => {
-    LogoutTimer == 5 ? disable_links(true) : null;
-    LogoutTimer == null ? disable_links(false) : null;
-  }, [Logout, LogoutTimer]);
+  // useEffect(() => {
+  //   LogoutTimer == 5 ? disable_links(true) : null;
+  //   LogoutTimer == null ? disable_links(false) : null;
+  // }, [Logout, LogoutTimer]);
 
 
-  useEffect(() => {
-    SignupTimer == 5 ? disable_links(true) : null;
-    SignupTimer == null ? disable_links(false) : null;
-  }, [SignupTimer]);
+  // useEffect(() => {
+  //   SignupTimer == 5 ? disable_links(true) : null;
+  //   SignupTimer == null ? disable_links(false) : null;
+  // }, [SignupTimer]);
 
 
   // Controls the logout timer and its associated display.
@@ -494,7 +494,7 @@ export default function Home() {
   return (
     <main className={MainClass}>
       <div className="z-1 max-w-screen-lg w-full font-mono text-base sm:text-lg grid grid-auto-rows place-items-center px-4 md:px-8">
-        <div className="grid grid-flow-row sm:grid-flow-col gap-8 sm:gap-16 lg:gap-24">
+        <div className="grid grid-flow-row text-xl sm:grid-flow-col gap-8 sm:gap-16 lg:gap-24">
           {LoggedIn ? (
             <span onClick={(e) => link_handler(0)} className={HomeClass}>
               Home
@@ -513,9 +513,9 @@ export default function Home() {
             </span>
           ) : null} */}
 
-          {!LoggedIn ? (
+          {/* {!LoggedIn ? (
             <span onClick={(e) => link_handler(3)} className={LoginClass}>
-              {/* Login */}
+              Login 
             </span>
           ) : (
             <div className="grid grid-rows-2 gap-6 place-items-top">
@@ -532,7 +532,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* 
@@ -544,8 +544,9 @@ export default function Home() {
 
         <div className="mt-24">
 
-          {ShowHome && !Logout && !StartLogin? 
-            <MainPage/>  
+          {/* {ShowHome && !Logout && !StartLogin?  */}
+          {ShowHome ?
+            <MainPage/> 
           : null}
 
           {ShowSelector && !ShowTestInfo ? 
