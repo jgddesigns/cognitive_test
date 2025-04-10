@@ -6,13 +6,16 @@ COGNITIVE TEST APP
 INTRODUCTION:
 <br>
 <br>
-The purpose of this app is for users to take a set of 10-15 different cognitive tests. Initially the baseline is determined by taking a test under regular circumstances. 
+What can help or hurt a person's cognitive ability?
 <br>
 <br>
-Afterward, various variables pertaining to the CrowdDoing platform are introduced such as use of herbal supplements or walks in nature. Previously attempted tests are to be taken again following the introduction of a specific variable. 
+This application features a series of brain games that are intended to demonstrate a person's mental aptitude. Potential areas of analysis include awareness, consistency, reaction time, memory and decisiveness. A baseline can be established by conducting the tests under normal circumstances. Tests can then be taken after a variable is introduced and compared to the user's baseline performance for each test.
 <br>
 <br>
-A comparison is made with subsequent analysis, based on typically expected results and how the variables affect or have no influence on a particular test.
+Examples of pre-test variables include the ingestion of certain herbal supplements, food or medication, drinking alcohol, or going for a jog. These tests are for entertainment purposes only, and in no way are intended to diagnose or categorize anyone. The analysis extracted from the test results might only reveal small details of a person's ability. The data gathered is arbitrary based on who takes each test and various other factors.
+<br>
+<br>
+For instance, if a user isn't good with computers they might have trouble responding to the test prompts. Maybe a person doesn't take the test seriously at the time and doesn't put forth their maximum effort. They could be ill or simply having a bad day. Repeated test attempts over a significant length of time can provide better data for analytics, but this process can still include certain caveats and does not guarantee a definitive depiction of a person's functionality.
 <br>
 <br>
 <br>

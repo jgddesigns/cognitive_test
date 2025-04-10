@@ -24,16 +24,16 @@ export default function MainPage(props: any) {
             </div>
             <div className="row mt-24 text-sky-400 text-2xl grid gap-12">
                 <div className="italic font-bold grid place-items-center">
-                    What can help or hurt a person's cognitive ability?
+                    What can help or hurt a person&apos;s cognitive ability?
                 </div>
                 <div>
-                    This application features a series of brain games that are intended to demonstrate a person's mental aptitude. Potential areas of analysis include awareness, consistency, reaction time, memory and decisiveness. A baseline can be established by conducting the tests under normal circumstances. Tests can then be taken after a variable is introduced and compared to the user's baseline performance for each test. 
+                    This application features a series of brain games that are intended to demonstrate a person&apos;s mental aptitude. Potential areas of analysis include awareness, consistency, reaction time, memory and decisiveness. A baseline can be established by conducting the tests under normal circumstances. Tests can then be taken after a variable is introduced and compared to the user&apos;s baseline performance for each test. 
                 </div>
                 <div>
-                    Examples of pre-test variables include the ingestion of certain herbal supplements, food or medication, drinking alcohol, or going for a jog. These tests are for entertainment purposes only, and in no way are intended to diagnose or categorize anyone. The analysis extracted from the test results might only reveal small details of a person's ability. The data gathered is arbitrary based on who takes each test and various other factors.
+                    Examples of pre-test variables include the ingestion of certain herbal supplements, food or medication, drinking alcohol, or going for a jog. These tests are for entertainment purposes only, and in no way are intended to diagnose or categorize anyone. The analysis extracted from the test results might only reveal small details of a person&apos;s ability. The data gathered is arbitrary based on who takes each test and various other factors.
                 </div>
                 <div>
-                     For instance, if a user isn't good with computers they might have trouble responding to the test prompts. Maybe a person doesn't take the test seriously at the time and doesn't put forth their maximum effort. They could be ill or simply having a bad day. Repeated test attempts over a significant length of time can provide better data for analytics, but this process can still include certain caveats and does not guarantee a definitive depiction of a person's functionality. 
+                     For instance, if a user isn&apos;t good with computers they might have trouble responding to the test prompts. Maybe a person doesn&apos;t take the test seriously at the time and doesn&apos;t put forth their maximum effort. They could be ill or simply having a bad day. Repeated test attempts over a significant length of time can provide better data for analytics, but this process can still include certain caveats and does not guarantee a definitive depiction of a person&apos;s functionality. 
                 </div>
 
                 <div className="mt-24 grid place-items-center text-xl text-black italic">

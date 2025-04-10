@@ -1,0 +1,11 @@
+runtime: nodejs18  # or nodejs16
+
+env_variables:
+  NODE_ENV: production
+  NODE_OPTIONS: "--no-warnings"
+  
+handlers:
+  - url: /static
+    static_dir: static
+  - url: /.*
+    script: auto
