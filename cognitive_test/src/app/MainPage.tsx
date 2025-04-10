@@ -20,8 +20,8 @@ export default function MainPage(props: any) {
     return(
         <div className="h-full">
             {/* <meta name="google-signin-client_id" content={google_credentials["CLIENT_ID"]}></meta> */}
-            <div className="row grid place-items-center text-3xl">
-                WELCOME TO THE COGNITIVE TEST
+            <div className="row grid place-items-center text-4xl font-bold">
+                WELCOME TO THE COGNITIVE TEST!
             </div>
             <div className="row mt-24 text-sky-400 text-2xl grid gap-12">
                 <div className="italic font-bold grid place-items-center">
@@ -37,7 +37,7 @@ export default function MainPage(props: any) {
                      For instance, if a user isn't good with computers they might have trouble responding to the test prompts. Maybe a person doesn't take the test seriously at the time and doesn't put forth their maximum effort. They could be ill or simply having a bad day. Repeated test attempts over a significant length of time can provide better data for analytics, but this process can still include certain caveats and does not guarantee a definitive depiction of a person's functionality. 
                 </div>
 
-                <div className="mt-24 grid place-items-center text-xl italic">
+                <div className="mt-24 grid place-items-center text-xl text-black italic">
                     DEMO VERSION ONLY. LOGIN/PROFILE & DATABASE SYSTEM IS OMITTED. 
                 </div>
             </div>  
