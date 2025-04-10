@@ -19,7 +19,6 @@ export default function MainPage(props: any) {
       
     return(
         <div className="h-full">
-            {/* <meta name="google-signin-client_id" content={google_credentials["CLIENT_ID"]}></meta> */}
             <div className="row grid place-items-center text-4xl font-bold">
                 WELCOME TO THE COGNITIVE TEST!
             </div>
