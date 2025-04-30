@@ -5,7 +5,7 @@ import Cognito from './Cognito'
 import {validate} from '../helpers/Validation'
 
 // Login form and related functions 
-export default function Login(props: any) {
+export default function LoginPage(props: any) {
     const [Username, setUsername] = React.useState("")
     const [Password, setPassword] = React.useState("")
     const [LoginMessage, setLoginMessage] = React.useState("")

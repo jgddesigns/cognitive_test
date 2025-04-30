@@ -11,7 +11,7 @@ import WorkingMemory from "@/tests/WorkingMemory";
 import MotorFunction from "@/tests/MotorFunction";
 import WordRecognition from "@/tests/WordRecognition";
 import Tests from "@/tests/Tests";
-import Login from "@/login/Login";
+import Login from "@/login/LoginPage";
 import Signup from "@/login/Signup";
 import MainPage from "./MainPage";
 import Profile from "@/login/Profile";
@@ -22,6 +22,7 @@ import MongoDB from '@/database/MongoDB'
 import HerbSelector from '@/helpers/HerbSelector'
 import Google from "@/login/Google";
 import { google_credentials } from "@/credentials/Credentials";
+import LoginPage from "@/login/LoginPage";
 
 export default function Home() {
   // Includes classes for the main div.
@@ -76,7 +77,7 @@ export default function Home() {
     setShowTestInfo,
     setShowSignup,
     setTriggerLogin,
-    // setShowLogin,
+    setShowLogin,
     setShowProfile,
   ];
 
@@ -495,11 +496,11 @@ export default function Home() {
     <main className={MainClass}>
       <div className="z-1 max-w-screen-lg w-full font-mono text-base sm:text-lg grid grid-auto-rows place-items-center px-4 md:px-8">
         <div className="grid grid-flow-row sm:grid-flow-col gap-8 sm:gap-16 lg:gap-24">
-          {LoggedIn ? (
+          {/* {LoggedIn ? ( */}
             <span onClick={(e) => link_handler(0)} className={HomeClass}>
               Home
             </span>
-          ) : null}
+          {/* ) : null} */}
 
           {LoggedIn ? (
             <span onClick={(e) => link_handler(1)} className={TestClass}>
@@ -507,19 +508,19 @@ export default function Home() {
             </span>
           ) : null}
 
-          {/* {!LoggedIn ? (
+          {!LoggedIn ? (
             <span onClick={(e) => link_handler(2)} className={SignupClass}>
               Signup
             </span>
-          ) : null} */}
+          ) : null}
 
           {!LoggedIn ? (
-            <span onClick={(e) => link_handler(3)} className={LoginClass}>
-              {/* Login */}
+            <span onClick={(e) => link_handler(4)} className={LoginClass}>
+              Login
             </span>
           ) : (
             <div className="grid grid-rows-2 gap-6 place-items-top">
-              <div onClick={(e) => link_handler(4)} className={ProfileClass}>
+              <div onClick={(e) => link_handler(5)} className={ProfileClass}>
                 Profile
               </div>
               <div className="text-sm text-black grid grid-auto-rows relative w-24">
@@ -601,6 +602,11 @@ export default function Home() {
 
           {ShowSignup ?
             <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} SignupTimer={SignupTimer} setSignupTimer={setSignupTimer}/>
+          : null}
+
+
+          {ShowLogin ?
+            <LoginPage setLoggedIn={setLoggedIn} setUsername={setUsername} setPassword={setPassword} Logout={Logout} setLoginTimer={setLoginTimer}/>
           : null}
 
 
