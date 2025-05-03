@@ -207,7 +207,7 @@ export default function Home() {
 
   // If a user is logged in, sends them to the profile page. Otherwise, the user is sent to the home page.
   useEffect(() => {
-    LoggedIn ? link_handler(4) : link_handler(0);
+    LoggedIn ? link_handler(1) : link_handler(0);
     LoggedIn && Start ? cookie_handler(true) : null
   }, [LoggedIn, Start]);
 
