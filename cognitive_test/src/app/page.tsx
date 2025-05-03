@@ -83,7 +83,7 @@ export default function Home() {
   // A boolean variable that is set to true when a user is logged in. Only true when a correct username and password are compared to values stored in the app's associated Cognito user pool. Stored in local cookies.
   // Used locally in: 'toggle_login' function.
   // Passed to: 'src/login/Signup', 'src/login/Login' components.
-  const [LoggedIn, setLoggedIn] = React.useState(false);
+  const [LoggedIn, setLoggedIn] = React.useState(true);
   const [LoginCheck, setLoginCheck] = React.useState(false)
   const [GoogleStart, setGoogleStart] = React.useState(false)
 
@@ -513,9 +513,9 @@ export default function Home() {
             </span>
           ) : null} */}
 
-          {!LoggedIn ? (
+          {/* {!LoggedIn ? (
             <span onClick={(e) => link_handler(3)} className={LoginClass}>
-              {/* Login */}
+              {/* Login 
             </span>
           ) : (
             <div className="grid grid-rows-2 gap-6 place-items-top">
@@ -532,7 +532,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* 
