@@ -4,7 +4,7 @@
 # /src/database
 
 #aws credentials
-/src/credentials
+# /src/credentials
  
 # dependencies
 /node_modules
