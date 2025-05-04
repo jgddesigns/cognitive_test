@@ -494,7 +494,7 @@ export default function Home() {
   return (
     <main className={MainClass}>
       <div className="grid place-items-center">
-        {window.screen.width < 800 ?
+        {typeof window !== "undefined" ? window.screen.width < 800 ?
           <div className="mt-72 text-black">
             No mobile support. Intended for desktop use only.
           </div>
@@ -669,7 +669,7 @@ export default function Home() {
 
           {/* <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/>  */}
           </div>
-        }
+        :null}
       </div>
     </main>
   );
