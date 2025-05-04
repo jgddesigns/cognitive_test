@@ -493,175 +493,184 @@ export default function Home() {
 
   return (
     <main className={MainClass}>
-      <div className="z-1 max-w-screen-lg w-full font-mono text-base sm:text-lg grid grid-auto-rows place-items-center px-4 md:px-8">
-        <div className="grid grid-flow-row sm:grid-flow-col gap-8 sm:gap-16 lg:gap-24">
-          {LoggedIn ? (
-            <span onClick={(e) => link_handler(0)} className={HomeClass}>
-              Home
-            </span>
+      <div className="grid place-items-center">
+        {window.screen.width < 800 ?
+          <div className="mt-72 text-black">
+            No mobile support. Intended for desktop use only.
+          </div>
+        :
+        <div>
+          <div className="z-1 max-w-screen-lg w-full font-mono text-base sm:text-lg grid grid-auto-rows place-items-center px-4 md:px-8">
+            <div className="grid grid-flow-row sm:grid-flow-col gap-8 sm:gap-16 lg:gap-24">
+              {LoggedIn ? (
+                <span onClick={(e) => link_handler(0)} className={HomeClass}>
+                  Home
+                </span>
+              ) : null}
+
+              {LoggedIn ? (
+                <span onClick={(e) => link_handler(1)} className={TestClass}>
+                  Tests
+                </span>
+              ) : null}
+
+              {/* {!LoggedIn ? (
+                <span onClick={(e) => link_handler(2)} className={SignupClass}>
+                  Signup
+                </span>
+              ) : null} */}
+
+              {/* {!LoggedIn ? (
+                <span onClick={(e) => link_handler(3)} className={LoginClass}>
+                  {/* Login 
+                </span>
+              ) : (
+                <div className="grid grid-rows-2 gap-6 place-items-top">
+                  <div onClick={(e) => link_handler(4)} className={ProfileClass}>
+                    Profile
+                  </div>
+                  <div className="text-sm text-black grid grid-auto-rows relative w-24">
+                    <div>Username: {Username}</div>
+                    <div
+                      className="grid place-items-end text-xs text-blue-600 underline cursor-pointer"
+                      onClick={(e) => toggle_login(false)}
+                    >
+                      Log Out
+                    </div>
+                  </div>
+                </div>
+              )} */}
+            </div>
+
+            {/* 
+              FOR AWS DATABASE. IF USED, NEEDS MODIFICATION FOR NEWER FUNCTIONS CREATED WHEN MONGO DB WAS IMPLEMENTED. 
+              <div> 
+                <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
+              </div> 
+            */}
+
+            <div className="mt-24">
+
+              {ShowHome && !Logout && !StartLogin? 
+                <MainPage/>  
+              : null}
+
+              {ShowSelector && !ShowTestInfo ? 
+              <div className="xs:w-full lg:w-full">
+                <HerbSelector setShowSelector={setShowSelector} setHerb={setHerb} Herb={Herb} TestTitle={TestTitle}/></div>
+              : null}
+
+              {Herb && !ShowSelector ?
+                <div className="mb-12">
+                  Chosen Herb: {Herb}
+                </div>
+              : null}
+
+              {(ShowTestInfo || ShowProfile) && !ShowSelector ?
+                <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID} setTable={setTable} setShowSelector={setShowSelector} ShowProfile={ShowProfile} FromProfile={FromProfile}/>
+              : null}
+
+              {!ShowSelector && ShowChoiceReaction ?
+                <ChoiceReaction setInsert={setInsert} setData={setData} setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
+              : null}
+
+              {!ShowSelector && ShowDigitVigilance ?
+                <DigitVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
+              : null}
+
+              {!ShowSelector && ShowMemoryScanning ?
+                <MemoryScanning setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
+              : null}
+            
+              {!ShowSelector && ShowMotorFunction ?
+                <MotorFunction setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
+              : null}
+
+              {!ShowSelector && ShowNumberVigilance ?
+                <NumberVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
+              :null}
+
+              {!ShowSelector && ShowPictureRecognition ?
+                <PictureRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
+              :null}
+
+              {!ShowSelector && ShowReactionTime ?
+                <ReactionTime setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
+              :null}
+
+              {!ShowSelector && ShowWordRecognition ?
+                <WordRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
+              :null}
+
+              {!ShowSelector && ShowWorkingMemory ?
+                <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
+              :null}
+
+              {ShowSignup ?
+                <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} SignupTimer={SignupTimer} setSignupTimer={setSignupTimer}/>
+              : null}
+
+
+              {ShowProfile ?
+                <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout} setRetrieve={setRetrieve} RetrievedData={RetrievedData} setRetrievedData={setRetrievedData} setFromProfile={setFromProfile}/>
+              : null}
+
+
+              {Logout ?
+                <div className="grid grid-rows-2 gap-12 place-items-center">
+                  <div className="mt-12">Logging Out...</div>
+                  <div>
+                    {LogoutTimer > 0 ? <div>{LogoutTimer}</div> : <div>Go!</div>}
+                  </div>
+                </div>
+              : null}
+
+              {LoginTimer || LoginTimer == 0 ?
+                <div className="grid grid-rows-2 gap-12 place-items-center">
+                  <div className="mt-12">Logging In...</div>
+                  <div>
+                    {LoginTimer > 0 ? <div>{LoginTimer}</div> : <div>Go!</div>}
+                  </div>
+                </div>
+              : null}
+            </div>
+          </div>
+
+
+          {ShowPopover ? (
+            <div className="w-full h-full xs:w-[120%] flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
           ) : null}
 
-          {LoggedIn ? (
-            <span onClick={(e) => link_handler(1)} className={TestClass}>
-              Tests
-            </span>
-          ) : null}
 
-          {/* {!LoggedIn ? (
-            <span onClick={(e) => link_handler(2)} className={SignupClass}>
-              Signup
-            </span>
-          ) : null} */}
-
-          {/* {!LoggedIn ? (
-            <span onClick={(e) => link_handler(3)} className={LoginClass}>
-              {/* Login 
-            </span>
-          ) : (
-            <div className="grid grid-rows-2 gap-6 place-items-top">
-              <div onClick={(e) => link_handler(4)} className={ProfileClass}>
-                Profile
-              </div>
-              <div className="text-sm text-black grid grid-auto-rows relative w-24">
-                <div>Username: {Username}</div>
+          {ShowPopover ? 
+            <div className="h-flex w-full xs:w-[70%] sm:w-[80%] md:w-[60%] lg:w-[30%] z-99 fixed top-[20%] left-1/2 -translate-x-1/2 bg-blue-400 rounded-2xl text-white">
+              <div className="p-6 md:p-12 grid grid-auto-rows overflow-y-auto max-h-[80vh]">
+                <div className="text-lg sm:text-2xl md:text-3xl">{TestTitle}</div>
+                <div className="mt-[15%] text-xl">{PopoverMessage}</div>
                 <div
-                  className="grid place-items-end text-xs text-blue-600 underline cursor-pointer"
-                  onClick={(e) => toggle_login(false)}
+                  className="mt-[15%] w-full static underline cursor-pointer text-2xl"
+                  onClick={(e) => take_test()}
                 >
-                  Log Out
+                  Take Test
+                </div>
+                <div
+                  className="mt-[15%] w-full static underline cursor-pointer"
+                  onClick={(e) => hide_popover()}
+                >
+                  Close
                 </div>
               </div>
             </div>
-          )} */}
-        </div>
-
-        {/* 
-          FOR AWS DATABASE. IF USED, NEEDS MODIFICATION FOR NEWER FUNCTIONS CREATED WHEN MONGO DB WAS IMPLEMENTED. 
-          <div> 
-            <Connect Insert={Insert} setInsert={setInsert} setData={setData}  setTestName={setTestName} Data={Data} Username={Username} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve} Retrieve={Retrieve}/>
-          </div> 
-        */}
-
-        <div className="mt-24">
-
-          {ShowHome && !Logout && !StartLogin? 
-            <MainPage/>  
           : null}
 
-          {ShowSelector && !ShowTestInfo ? 
-          <div className="xs:w-full lg:w-full">
-            <HerbSelector setShowSelector={setShowSelector} setHerb={setHerb} Herb={Herb} TestTitle={TestTitle}/></div>
-          : null}
+          <Google setUsernameCheck={setUsernameCheck} setUsername={setUsername} TriggerLogin={TriggerLogin} setTriggerLogin={setTriggerLogin} setTable={setTable} Cookies={Cookies} setCookies={setCookies} CookiesChecked={CookiesChecked} Start={Start} setStart={setStart} setStartLogin={setStartLogin} setTriggerInsert={setTriggerInsert} LogoutTimer={LogoutTimer} Logout={Logout} setLoginTimer={setLoginTimer}/>
 
-          {Herb && !ShowSelector ?
-            <div className="mb-12">
-              Chosen Herb: {Herb}
-            </div>
-          : null}
+          <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} setTestName={setTestName} Data={Data} Username={Username} setUsername={setUsername}  Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve}   setUsernameMatch={setUsernameMatch}  UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert} setHerb={setHerb} Herb={Herb} Cookies={Cookies} setCookies={setCookies} setCookiesChecked={setCookiesChecked} setLoginCheck={setLoginCheck} setStartLogin={setStartLogin} StartLogin={StartLogin} ClearToken={ClearToken} setClearToken={setClearToken}/>
 
-          {(ShowTestInfo || ShowProfile) && !ShowSelector ?
-            <Tests setMainClass={setMainClass} main_class={main_class} setShowPopover={setShowPopover} setPopoverMessage={setPopoverMessage} setTestTitle={setTestTitle} setTestID={setTestID} setTable={setTable} setShowSelector={setShowSelector} ShowProfile={ShowProfile} FromProfile={FromProfile}/>
-          : null}
-
-          {!ShowSelector && ShowChoiceReaction ?
-            <ChoiceReaction setInsert={setInsert} setData={setData} setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
-          : null}
-
-          {!ShowSelector && ShowDigitVigilance ?
-            <DigitVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
-          : null}
-
-          {!ShowSelector && ShowMemoryScanning ?
-            <MemoryScanning setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
-          : null}
-        
-          {!ShowSelector && ShowMotorFunction ?
-            <MotorFunction setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>
-          : null}
-
-          {!ShowSelector && ShowNumberVigilance ?
-            <NumberVigilance setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
-          :null}
-
-          {!ShowSelector && ShowPictureRecognition ?
-            <PictureRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
-          :null}
-
-          {!ShowSelector && ShowReactionTime ?
-            <ReactionTime setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
-          :null}
-
-          {!ShowSelector && ShowWordRecognition ?
-            <WordRecognition setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
-          :null}
-
-          {!ShowSelector && ShowWorkingMemory ?
-            <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
-          :null}
-
-          {ShowSignup ?
-            <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} SignupTimer={SignupTimer} setSignupTimer={setSignupTimer}/>
-          : null}
-
-
-          {ShowProfile ?
-            <Profile LoggedIn={LoggedIn} Username={Username} Password={Password} Email={Email} Logout={Logout} setRetrieve={setRetrieve} RetrievedData={RetrievedData} setRetrievedData={setRetrievedData} setFromProfile={setFromProfile}/>
-          : null}
-
-
-          {Logout ?
-            <div className="grid grid-rows-2 gap-12 place-items-center">
-              <div className="mt-12">Logging Out...</div>
-              <div>
-                {LogoutTimer > 0 ? <div>{LogoutTimer}</div> : <div>Go!</div>}
-              </div>
-            </div>
-           : null}
-
-          {LoginTimer || LoginTimer == 0 ?
-            <div className="grid grid-rows-2 gap-12 place-items-center">
-              <div className="mt-12">Logging In...</div>
-              <div>
-                {LoginTimer > 0 ? <div>{LoginTimer}</div> : <div>Go!</div>}
-              </div>
-            </div>
-          : null}
-        </div>
-      </div>
-
-
-      {ShowPopover ? (
-        <div className="w-full h-full xs:w-[120%] flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
-      ) : null}
-
-
-      {ShowPopover ? 
-        <div className="h-flex w-full xs:w-[70%] sm:w-[80%] md:w-[60%] lg:w-[30%] z-99 fixed top-[20%] left-1/2 -translate-x-1/2 bg-blue-400 rounded-2xl text-white">
-          <div className="p-6 md:p-12 grid grid-auto-rows overflow-y-auto max-h-[80vh]">
-            <div className="text-lg sm:text-2xl md:text-3xl">{TestTitle}</div>
-            <div className="mt-[15%] text-xl">{PopoverMessage}</div>
-            <div
-              className="mt-[15%] w-full static underline cursor-pointer text-2xl"
-              onClick={(e) => take_test()}
-            >
-              Take Test
-            </div>
-            <div
-              className="mt-[15%] w-full static underline cursor-pointer"
-              onClick={(e) => hide_popover()}
-            >
-              Close
-            </div>
+          {/* <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/>  */}
           </div>
-        </div>
-      : null}
-
-      <Google setUsernameCheck={setUsernameCheck} setUsername={setUsername} TriggerLogin={TriggerLogin} setTriggerLogin={setTriggerLogin} setTable={setTable} Cookies={Cookies} setCookies={setCookies} CookiesChecked={CookiesChecked} Start={Start} setStart={setStart} setStartLogin={setStartLogin} setTriggerInsert={setTriggerInsert} LogoutTimer={LogoutTimer} Logout={Logout} setLoginTimer={setLoginTimer}/>
-
-      <MongoDB Table={Table} setTable={setTable} setUserInserted={setUserInserted} setTestName={setTestName} Data={Data} Username={Username} setUsername={setUsername}  Email={Email} Name={Name} TestName={TestName} setRetrievedData={setRetrievedData} setRetrieve={setRetrieve}   setUsernameMatch={setUsernameMatch}  UsernameCheck={UsernameCheck} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} setTriggerInsert={setTriggerInsert} TriggerInsert={TriggerInsert} setHerb={setHerb} Herb={Herb} Cookies={Cookies} setCookies={setCookies} setCookiesChecked={setCookiesChecked} setLoginCheck={setLoginCheck} setStartLogin={setStartLogin} StartLogin={StartLogin} ClearToken={ClearToken} setClearToken={setClearToken}/>
-
-      {/* <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/>  */}
-
+        }
+      </div>
     </main>
   );
 }
