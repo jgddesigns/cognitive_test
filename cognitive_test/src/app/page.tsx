@@ -669,7 +669,9 @@ export default function Home() {
 
           {/* <Cognito UserInserted={UserInserted} setTriggerInsert={setTriggerInsert} setUserInserted={setUserInserted} setSignupSuccess={setSignupSuccess} Username={Username} Name={Name} Email={Email} Password={Password} setCheckConfirm={setCheckConfirm} CheckConfirm={CheckConfirm} ConfirmCode={ConfirmCode} setLoggedIn={setLoggedIn} setConfirmSuccess={setConfirmSuccess} Logout={Logout}/>  */}
           </div>
-        :null}
+        : <div>
+            Abnormal page error. Window object is undefined. 
+          </div>}
       </div>
     </main>
   );
