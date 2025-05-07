@@ -495,8 +495,8 @@ export default function Home() {
     <main className={MainClass}>
       <div className="grid place-items-center">
         {typeof window !== "undefined" ? window.screen.width < 800 ?
-          <div className="mt-72 text-black">
-            No mobile support. Intended for desktop use only.
+          <div className="mt-48 text-black">
+            No mobile support. Intended for desktop only.
           </div>
         :
         <div>
