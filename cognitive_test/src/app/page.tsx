@@ -179,6 +179,7 @@ export default function Home() {
   const [UserInserted, setUserInserted] = React.useState(false);
   const [UsernameVerified, setUsernameVerified] = React.useState(false);
   const [TriggerInsert, setTriggerInsert] = React.useState(false);
+  const [WindowWidth, setWindowWidth] = React.useState(801);
 
   const [ShowSelector, setShowSelector] = React.useState(false)
   const [Herb, setHerb] = React.useState<any>(null)
@@ -186,6 +187,12 @@ export default function Home() {
 
 
   const [FromProfile, setFromProfile] = React.useState<any>(null)
+
+
+
+    useEffect(() => {
+    setWindowWidth(window.screen.width)
+    }, []);
 
 
   useEffect(() => {
@@ -494,7 +501,10 @@ export default function Home() {
   return (
     <main className={MainClass}>
       <div className="grid place-items-center">
-        {typeof window !== "undefined" ? window.screen.width < 800 ?
+        {ShowPopover ? (
+          <div className="w-[1000%] h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
+        ) : null}
+        {WindowWidth ? WindowWidth < 800 ?
           <div className="mt-48 text-black">
             No mobile support. Intended for desktop only.
           </div>
@@ -637,9 +647,7 @@ export default function Home() {
           </div>
 
 
-          {ShowPopover ? (
-            <div className="w-screen h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
-          ) : null}
+
 
 
           {ShowPopover ? 
@@ -672,7 +680,9 @@ export default function Home() {
         : <div>
             Abnormal page error. Window object is undefined. 
           </div>}
+
       </div>
+      
     </main>
   );
 }

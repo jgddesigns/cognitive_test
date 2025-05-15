@@ -37,20 +37,20 @@ export default function Google(props: any) {
     function initialize(){
         console.log("initialize")
 
-        if (window.google && !props.Start) {
-            window.google.accounts.id.initialize({
-            client_id: google_credentials["CLIENT_ID"], 
-            callback: (response: any) => response_handler(response),
-            auto_select: false, 
-            // context: "signin",
-            })
+        // if (window.google && !props.Start) {
+        //     window.google.accounts.id.initialize({
+        //     client_id: google_credentials["CLIENT_ID"], 
+        //     callback: (response: any) => response_handler(response),
+        //     auto_select: false, 
+        //     // context: "signin",
+        //     })
     
-            window.google.accounts.id.prompt();
-            props.setStart(true)
+        //     window.google.accounts.id.prompt();
+        //     props.setStart(true)
             
-        }else{
-            console.log("start already called")
-        }
+        // }else{
+        //     console.log("start already called")
+        // }
     }
     
     function parse_jwt(token: any){
