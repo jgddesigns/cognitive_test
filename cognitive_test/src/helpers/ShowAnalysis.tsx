@@ -58,7 +58,7 @@ export default function ShowAnalysis (props: any) {
         <div>
             <div className="mt-24">
                 <div className="text-2xl">
-                    TEST ANALYSIS
+                    GAMES ANALYSIS
                 </div>
                 <div>
                     <div className={ClickAttentionClass} onClick={e => click_handler(0)}>

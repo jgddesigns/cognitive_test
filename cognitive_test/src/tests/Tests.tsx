@@ -99,7 +99,7 @@ export default function Tests(props: any) {
                     COGNITIVE GAMES
                 </div>
                 <div className="row mt-12 text-sky-400">
-                    A list of the various cognitive tests. Click the test name to show its description. Click the &apos;Start Test&apos; button below a given test name to start the test. 
+                    A list of the various cognitive games. Click the game name to show its description. Click the &apos;Start&apos; button below a game name to start the game. 
                 </div>
                 <div className="grid grid-auto-rows place-items-center auto-rows mt-24">
                     <div>

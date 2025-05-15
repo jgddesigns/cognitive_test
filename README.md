@@ -1,4 +1,4 @@
-COGNITIVE TEST APP 
+COGNITIVE GAMES APP 
 ###
 <br>
 <br>
@@ -169,7 +169,7 @@ Example:
 MAIN PAGE LOCATION: cognitive_test/src/app/page.tsx
 <br>
 <br>
-TEST COMPONENETS LOCATION: cognitive_test/src/tests
+GAMES COMPONENETS LOCATION: cognitive_test/src/tests
 <br>
 <br>
 DATABASE COMPONENT LOCATION: cognitive_test/src/database

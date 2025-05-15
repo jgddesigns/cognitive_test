@@ -1,4 +1,4 @@
-COGNITIVE TEST APP FOR CROWDDOING
+COGNITIVE GAMES APP FOR CROWDDOING
 
 Built with:
  React (Next framework)
@@ -56,7 +56,7 @@ Example:
 MAIN PAGE LOCATION:
 cognitive_test/src/app/page.tsx
 
-TEST COMPONENETS LOCATION:
+GAMES COMPONENETS LOCATION:
 cognitive_test/src/tests
 
 ================================================
