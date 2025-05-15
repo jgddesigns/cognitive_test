@@ -638,7 +638,7 @@ export default function Home() {
 
 
           {ShowPopover ? (
-            <div className="w-full h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
+            <div className="w-min-screen h-full flex justify-center items-center fixed top-0 z-2 bg-black opacity-65"></div>
           ) : null}
 
 
