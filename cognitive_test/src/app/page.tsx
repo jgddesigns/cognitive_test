@@ -190,9 +190,9 @@ export default function Home() {
 
 
 
-    useEffect(() => {
+  useEffect(() => {
     setWindowWidth(window.screen.width)
-    }, []);
+  }, []);
 
 
   useEffect(() => {
@@ -213,11 +213,16 @@ export default function Home() {
 
 
   // If a user is logged in, sends them to the profile page. Otherwise, the user is sent to the home page.
-  useEffect(() => {
-    LoggedIn ? link_handler(1) : link_handler(0);
-    LoggedIn && Start ? cookie_handler(true) : null
-  }, [LoggedIn, Start]);
+  // useEffect(() => {
+  //   LoggedIn ? link_handler(1) : link_handler(0);
+  //   LoggedIn && Start ? cookie_handler(true) : null
+  // }, [LoggedIn, Start]);
 
+  useEffect(() => {
+    link_handler(0) 
+    setHomeClass(link_class[1])
+    // setTestClass
+  }, []);
 
   // When the 'Reset' state variable is true, triggers the 'reset_handler' function.
   useEffect(() => {
@@ -513,13 +518,13 @@ export default function Home() {
           <div className="z-1 max-w-screen-lg w-full font-mono text-base sm:text-lg grid grid-auto-rows place-items-center px-4 md:px-8">
             <div className="grid grid-flow-row sm:grid-flow-col gap-8 sm:gap-16 lg:gap-24">
               {LoggedIn ? (
-                <span onClick={(e) => link_handler(0)} className={HomeClass}>
+                <span onClick={(e) => link_handler(0)} className={ShowHome ? link_class[1] : link_class[0]}>
                   Home
                 </span>
               ) : null}
 
               {LoggedIn ? (
-                <span onClick={(e) => link_handler(1)} className={TestClass}>
+                <span onClick={(e) => link_handler(1)} className={ShowTestInfo ? link_class[1] : link_class[0]}>
                   Tests
                 </span>
               ) : null}
@@ -616,9 +621,9 @@ export default function Home() {
                 <WorkingMemory setInsert={setInsert} setData={setData}  setTestName={setTestName} setReset={setReset} key={StateKey} setTable={setTable}/>        
               :null}
 
-              {ShowSignup ?
-                <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} SignupTimer={SignupTimer} setSignupTimer={setSignupTimer}/>
-              : null}
+              {/* {ShowSignup ?
+                // <Signup link_handler={link_handler} toggle_login={toggle_login} setTable={setTable} setLoggedIn={setLoggedIn} setName={setName} setUsername={setUsername} Password={Password} setPassword={setPassword} Email={Email} setEmail={setEmail} setConfirmSuccess={setConfirmSuccess} setCheckConfirm={setCheckConfirm} setShowConfirm={setShowConfirm} ShowConfirm={ShowConfirm} ConfirmCode={ConfirmCode} setConfirmCode={setConfirmCode} ConfirmSuccess={ConfirmSuccess} setSubmit={setSubmit} UsernameMatch={UsernameMatch} setUsernameMatch={setUsernameMatch} SignupSuccess={SignupSuccess} setUsernameCheck={setUsernameCheck} UsernameVerified={UsernameVerified} setUsernameVerified={setUsernameVerified} SignupTimer={SignupTimer} setSignupTimer={setSignupTimer}/>
+              : null} */}
 
 
               {ShowProfile ?
