@@ -559,7 +559,7 @@ export default function Home() {
               </div> 
             */}
 
-            <div className="mt-24">
+            <div className="mt-4">
 
               {ShowHome && !Logout && !StartLogin? 
                 <MainPage/>  

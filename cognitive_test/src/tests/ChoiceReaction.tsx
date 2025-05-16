@@ -378,7 +378,7 @@ export default function ChoiceReaction (props: any) {
                     </Button>                                  
                 </div>
             :   ShowPrompt ?
-                    <div className="mt-[200px] grid grid-rows-2">
+                    <div className="mt-[100px] grid grid-rows-2">
                         <span>
                             {CurrentPrompt}
                         </span>

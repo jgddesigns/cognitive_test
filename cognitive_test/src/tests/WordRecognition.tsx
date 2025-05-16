@@ -410,7 +410,7 @@ export default function WordRecognition (props: any) {
                         }
 
                         {!EndTest && CompareDigits > 1 ?
-                            <div>
+                            <div className="mt-24">
                                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={list_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
                             </div>
                         : null}

@@ -18,7 +18,7 @@ export default function MainPage(props: any) {
 
       
     return(
-        <div className="h-full">
+        <div className="h-full mt-12">
             <meta name="google-signin-client_id" content={google_credentials["CLIENT_ID"]}></meta>
             <div className="row grid place-items-center ">
                 WELCOME TO THE COGNITIVE GAMES APP

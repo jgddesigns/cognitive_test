@@ -414,7 +414,7 @@ export default function MemoryScanning (props: any) {
                 </span>
                 </div> 
                 : ShowCompare ?
-                    <div className="mt-[150px] h-72 grid grid-rows-2 text-xl">
+                    <div className="mt-[50px] h-72 grid grid-rows-2 text-xl">
                         {!ShowButtons && CompareString == "" ?
                             <div className="mt-12 grid grid-rows-2 place-items-center gap-24">
                                 <span className={AnsweredStyle}>

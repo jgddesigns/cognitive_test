@@ -95,56 +95,62 @@ export default function Tests(props: any) {
     <div>
         {!props.ShowProfile ? 
             <div>
-                <div className="row grid place-items-center">
+                <div className="row grid place-items-center mt-12">
                     COGNITIVE GAMES
                 </div>
                 <div className="row mt-12 text-sky-400">
                     A list of the various cognitive games. Click the game name to show its description. Click the &apos;Start&apos; button below a game name to start the game. 
                 </div>
-                <div className="grid grid-auto-rows place-items-center auto-rows mt-24">
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(1)}>
-                            Choice Reaction Time
+                <div className="grid grid-rows-1 md:grid-cols-3 place-items-center  mt-12">
+                    <div className="grid place-items-center">
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(1)}>
+                                Choice Reaction Time
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(2)}>
+                                Digit Vigilance
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(3)}>
+                                Memory Scanning
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(2)}>
-                            Digit Vigilance
+                    <div className="grid place-items-center">
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(4)}>
+                                Motor Function
+                            </div>
+                        </div>
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(5)}>
+                                Number Vigilance
+                            </div>
+                        </div>            
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(6)}>
+                                Picture Recognition
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(3)}>
-                            Memory Scanning
+                    <div className="grid place-items-center">
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(7)}>
+                                Reaction Time
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(4)}>
-                            Motor Function
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(8)}>
+                                Word Recognition
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(5)}>
-                            Number Vigilance
-                        </div>
-                    </div>            
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(6)}>
-                            Picture Recognition
-                        </div>
-                    </div>
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(7)}>
-                            Reaction Time
-                        </div>
-                    </div>
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(8)}>
-                            Word Recognition
-                        </div>
-                    </div>
-                    <div>
-                        <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(9)}>
-                            Spatial Working Memory
+                        <div>
+                            <div className="text-green-400 mt-12 cursor-pointer underline" onClick={e => show_info(9)}>
+                                Spatial Working Memory
+                            </div>
                         </div>
                     </div>
                 </div>

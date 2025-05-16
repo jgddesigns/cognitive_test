@@ -422,22 +422,22 @@ export default function PictureRecognition (props: any) {
                     </Button>  
                 </div>
             :   ShowPrompt ?
-                    <div className="h-[60%] mt-12 grid grid-rows-2 gap-4 place-items-center">
+                    <div className="h-48 mt-48 grid grid-rows-2 gap-4 place-items-center">
                         {ShowMessage ? 
                             <span>
                                 {CurrentMessage} 
                             </span>
                         : 
-                            <img src={CurrentPicture} className="h-[518px]"/> 
+                            <img src={CurrentPicture} className="h-[300px]"/> 
                         }
                     </div>    
                 : ShowCompare ?
-                    <div className="h-[40%] mt-12 grid grid-auto-rows gap-12 place-items-center">
-                        <div className="h-[100%] mt-[20px]">
+                    <div className="h-48 mt-12 grid grid-auto-rows gap-12 place-items-center">
+                        <div>
                             {CompareDigits >= 0 && CurrentPicture != "" ? 
-                                <img src={CurrentPicture} className="h-[518px]"/> 
+                                <img src={CurrentPicture} className="h-[300px]"/> 
                             :
-                                <div className="h-[15%] mt-[200px] grid-cols-2 gap-x-[100px] place-items-center">
+                                <div className="h-[15%] mt-[100px] grid-cols-2 gap-x-[100px] place-items-center">
                                     <span className={AnsweredStyle}>
                                         {AnsweredString}
                                     </span>
@@ -447,7 +447,7 @@ export default function PictureRecognition (props: any) {
                                 </div>  
                             }
                         </div>
-                        <div className="h-[55%] mt-[75px]">
+                        <div>
                             {ShowButtons ?
                                 <div className="grid-cols-2 gap-x-[100px] place-items-center">
                                     <Button className="bg-green-400 rounded px-10 h-12 text-white" onClick={yes_handler}>
@@ -478,7 +478,7 @@ export default function PictureRecognition (props: any) {
             </div>
         }
         {ShowCompare && !EndTest ? 
-            <div className="grid place-items-center">
+            <div className="grid place-items-center mt-36">
                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={pictures_value} CurrentPosition={Math.ceil(CompareDigits/2)} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
             </div>
         : null} 

@@ -259,7 +259,7 @@ export default function ReactionTime (props: any) {
                 </div>        
             </div>
         }
-        <div className="grid place-items-center mt-24">
+        <div className="grid place-items-center mt-16">
             {ClickedButton ? 
             <div>
                 <ProgressBar setRestart={setRestart} Restart={Restart} LengthValue={test_length} CurrentPosition={get_position()} ShowCirclesGreen={ShowCirclesGreen} setShowCirclesGreen={setShowCirclesGreen} ShowCirclesRed={ShowCirclesRed} setShowCirclesRed={setShowCirclesRed}/>
