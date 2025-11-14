@@ -414,45 +414,18 @@ export default function WorkingMemory(props: any) {
 
                         {/* REPLACE WITH MAP? */}
                         {!Delay ?
-                            <div className="h-240 grid grid-flow-rows auto-rows-max mt-12 gap-12 bg-blue-400 border-24"> 
-                                <div className="h-48 grid grid-cols-5 mt-12 ml-12">
-                                    <div id="0" className={BoxGrid[0]} onClick={(event) => check_token(event)}/>
-                                    <div id="1" className={BoxGrid[1]} onClick={(event) => check_token(event)}/>
-                                    <div id="2" className={BoxGrid[2]} onClick={(event) => check_token(event)}/>
-                                    <div id="3" className={BoxGrid[3]} onClick={(event) => check_token(event)}/>
-                                    <div id="4" className={BoxGrid[4]} onClick={(event) => check_token(event)}/>
-                                </div>
-                                <div className="h-48 grid grid-cols-5 ml-12">
-                                    <div id="5" className={BoxGrid[5]} onClick={(event) => check_token(event)}/>
-                                    <div id="6" className={BoxGrid[6]} onClick={(event) => check_token(event)}/>
-                                    <div id="7" className={BoxGrid[7]} onClick={(event) => check_token(event)}/>
-                                    <div id="8" className={BoxGrid[8]} onClick={(event) => check_token(event)}/>
-                                    <div id="9" className={BoxGrid[9]} onClick={(event) => check_token(event)}/>
-                                </div>
-                                <div className="h-48 grid grid-cols-5 ml-12">
-                                    <div id="10" className={BoxGrid[10]} onClick={(event) => check_token(event)}/>
-                                    <div id="11" className={BoxGrid[11]} onClick={(event) => check_token(event)}/>
-                                    <div id="12" className={BoxGrid[12]} onClick={(event) => check_token(event)}/>
-                                    <div id="13" className={BoxGrid[13]} onClick={(event) => check_token(event)}/>
-                                    <div id="14" className={BoxGrid[14]} onClick={(event) => check_token(event)}/>
-                                </div>
-                                <div className="h-48 grid grid-cols-5 ml-12">
-                                    <div id="15" className={BoxGrid[15]} onClick={(event) => check_token(event)}/>
-                                    <div id="16" className={BoxGrid[16]} onClick={(event) => check_token(event)}/>
-                                    <div id="17" className={BoxGrid[17]} onClick={(event) => check_token(event)}/>
-                                    <div id="18" className={BoxGrid[18]} onClick={(event) => check_token(event)}/>
-                                    <div id="19" className={BoxGrid[19]} onClick={(event) => check_token(event)}/>
-                                </div>
-                                <div className="h-48 grid grid-cols-5 ml-12">
-                                    <div id="20" className={BoxGrid[20]} onClick={(event) => check_token(event)}/>
-                                    <div id="21" className={BoxGrid[21]} onClick={(event) => check_token(event)}/>
-                                    <div id="22" className={BoxGrid[22]} onClick={(event) => check_token(event)}/>
-                                    <div id="23" className={BoxGrid[23]} onClick={(event) => check_token(event)}/>
-                                    <div id="24" className={BoxGrid[24]} onClick={(event) => check_token(event)}/>
+                            <div className="w-full h-screen flex items-center justify-center bg-blue-400">
+                                <div className="grid grid-cols-5 grid-rows-5 w-[90vmin] h-[90vmin] gap-2">
+                                    {Array.from({ length: 25 }).map((_, i) => (
+                                        <div
+                                            key={i}
+                                            id={i.toString()}
+                                            className={BoxGrid[i]}
+                                            onClick={check_token}
+                                        />
+                                    ))}
                                 </div>
                             </div>
-
-
                         :   
                             <div className="grid place-items-center h-240">
                                 <div>

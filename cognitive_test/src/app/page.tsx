@@ -656,7 +656,7 @@ export default function Home() {
 
 
           {ShowPopover ? 
-            <div className="h-flex w-full xs:w-[70%] sm:w-[80%] md:w-[60%] lg:w-[30%] z-99 fixed top-[20%] left-1/2 -translate-x-1/2 bg-blue-400 rounded-2xl text-white">
+            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full xs:w-[70%] sm:w-[80%] md:w-[60%] lg:w-[30%] z-50 bg-blue-400 rounded-2xl text-white">
               <div className="p-6 md:p-12 grid grid-auto-rows overflow-y-auto max-h-[80vh]">
                 <div className="text-lg sm:text-2xl md:text-3xl">{TestTitle}</div>
                 <div className="mt-[15%] text-xl">{PopoverMessage}</div>
